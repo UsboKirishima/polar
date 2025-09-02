@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, useTransitionState } from 'vue';
-
+import { ref } from 'vue';
 
 const unreadMessages = ref([
     { username: 'usbo', avatar: '/pfp_placeholder.png', last_message: 'hello, how are you doing', count: 3 },
@@ -8,7 +7,6 @@ const unreadMessages = ref([
     { username: 'camy_b_', avatar: '/pfp_placeholder.png', last_message: 'I finish work at 7pm', count: 1 },
     { username: 'bia', avatar: '/pfp_placeholder.png', last_message: 'Why are you so hungry', count: 7 },
 ])
-
 </script>
 
 <template>
@@ -16,7 +14,7 @@ const unreadMessages = ref([
         <h2>Unread messages</h2>
         <p v-if="unreadMessages.length == 0" class="no_messages">There are no messages here.</p>
         <ul v-else>
-            <li v-for="message in unreadMessages">
+            <li v-for="message in unreadMessages" :key="message.username">
                 <div class="user_info">
                     <span class="message_count">{{ message.count }}</span>
                     <a href="#">{{ message.username }}</a>
@@ -38,12 +36,6 @@ h2 {
     color: #afb6dfcf;
 }
 
-img {
-    width: 30px;
-    border-radius: 100%;
-    margin-right: 12px;
-}
-
 a {
     text-decoration: none;
 }
@@ -62,6 +54,8 @@ a {
     height: 380px;
     background-color: #0000002f;
     border-radius: 16px;
+    display: flex;
+    flex-direction: column;
 }
 
 .user_info {
@@ -72,8 +66,8 @@ a {
 }
 
 .unread_messages ul {
-    height: 340px;
-    overflow-y: scroll;
+    flex: 1;
+    overflow-y: auto;
     list-style: none;
     padding: 4px;
     padding-right: 9px;
@@ -109,8 +103,8 @@ a {
     background: #f0f0f00a;
     padding: 8px;
     border-radius: 12px;
-    height: 28px;
     cursor: pointer;
+    transition: background 0.3s ease;
 }
 
 .unread_messages ul li:nth-child(odd) {
@@ -119,5 +113,48 @@ a {
 
 .unread_messages ul li:hover {
     background: #f0f0f02a;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .unread_messages {
+        height: auto;
+        padding: 12px;
+    }
+
+    .unread_messages ul {
+        max-height: 60vh;
+    }
+
+    .unread_messages ul li {
+        flex-direction: column;
+        align-items: flex-start;
+        height: auto;
+    }
+
+    .user_info {
+        margin-bottom: 4px;
+    }
+
+    .last_msg {
+        font-size: 13px;
+        color: #ffffff6b;
+    }
+}
+
+/* Tablet */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .unread_messages {
+        height: auto;
+    }
+
+    .unread_messages ul {
+        max-height: 70vh;
+    }
+
+    .unread_messages ul li {
+        height: auto;
+        padding: 10px;
+    }
 }
 </style>

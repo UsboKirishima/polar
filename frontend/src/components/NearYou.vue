@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, useTransitionState } from 'vue';
-
+import { ref } from 'vue';
 
 const nearYouPeople = ref([
     { username: 'usbo', avatar: '/pfp_placeholder.png', distance: '4km', status: 'Aperitivo stare in centro a Milano?' },
@@ -11,24 +10,23 @@ const nearYouPeople = ref([
     { username: 'erb3tt4', avatar: '/pfp_placeholder.png', distance: '40km', status: 'Qualcuno che vende concerto di Drake?' },
     { username: 'viscida', avatar: '/pfp_placeholder.png', distance: '41km', status: '' },
 ])
-
 </script>
 
 <template>
-
     <transition name="fade">
         <div class="near_you">
             <h2>Near You</h2>
             <p v-if="nearYouPeople.length == 0" class="no_people">No people found near you.</p>
             <ul v-else>
-                <li v-for="user in nearYouPeople">
+                <li v-for="user in nearYouPeople" :key="user.username">
                     <div class="user_info">
                         <div>
                             <img :src="user.avatar" alt="">
                             <a href="#">{{ user.username }}</a>
                         </div>
-                        <p class="status">{{ user.status.slice(0, 50) || 'No Status' }}{{ user.status.length > 50 ?
-                            '...' : '' }}</p>
+                        <p class="status">
+                            {{ user.status.slice(0, 50) || 'No Status' }}{{ user.status.length > 50 ? '...' : '' }}
+                        </p>
                     </div>
                     <div class="details">
                         <p class="distance">{{ user.distance }}</p>
@@ -71,7 +69,7 @@ a {
     padding: 4px;
     border-radius: 12px;
     font-size: 14px;
-    width: 40px;
+    min-width: 40px;
     text-align: center;
 }
 
@@ -102,12 +100,12 @@ a {
     flex-direction: row;
     align-items: center;
     justify-content: start;
-    width: 15%;
+    width: 30%;
 }
 
 .near_you ul {
     height: 340px;
-    overflow-y: scroll;
+    overflow-y: auto;
     list-style: none;
     padding: 4px;
     padding-right: 9px;
@@ -139,13 +137,12 @@ a {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    margin: 8px 0;
+    margin: 8px auto;
     background: #f0f0f00a;
     padding: 8px;
     border-radius: 12px;
     cursor: pointer;
 }
-
 
 .near_you ul li:nth-child(odd) {
     background: #f0f0f00f;
@@ -168,5 +165,56 @@ a {
 .fade-enter-to,
 .fade-leave-from {
     opacity: 1;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .near_you {
+        height: auto;
+        padding: 12px;
+    }
+
+    .near_you ul {
+        height: auto;
+        max-height: 60vh;
+    }
+
+    .user_info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .user_info div {
+        width: 100%;
+        margin-bottom: 6px;
+    }
+
+    img {
+        width: 30px;
+    }
+
+    .status {
+        margin-left: 40px;
+        font-size: 13px;
+    }
+
+    .details {
+        align-self: center;
+    }
+}
+
+/* Tablet */
+@media (min-width: 601px) and (max-width: 900px) {
+    .near_you {
+        height: auto;
+    }
+
+    .near_you ul {
+        max-height: 70vh;
+    }
+
+    img {
+        width: 35px;
+    }
 }
 </style>

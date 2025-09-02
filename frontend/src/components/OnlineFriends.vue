@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, useTransitionState } from 'vue';
 
-
 const onlineFriends = ref([
     { username: 'usbo', avatar: '/pfp_placeholder.png', last_access: 'now' },
     { username: 'aL3x_', avatar: '/pfp_placeholder.png', last_access: 'now' },
@@ -18,16 +17,14 @@ const onlineFriends = ref([
     { username: 'erb3tt4', avatar: '/pfp_placeholder.png', last_access: '4h' },
     { username: 'viscida', avatar: '/pfp_placeholder.png', last_access: '7h' },
 ])
-
 </script>
 
 <template>
-
     <div class="online_friends">
         <h2>Online friends</h2>
         <p v-if="onlineFriends.length == 0" class="no_friends">There are no friends here.</p>
         <ul v-else>
-            <li v-for="friend in onlineFriends">
+            <li v-for="friend in onlineFriends" :key="friend.username">
                 <div class="user_info">
                     <img :src="friend.avatar" alt="">
                     <a href="#">{{ friend.username }}</a>
@@ -100,6 +97,8 @@ img {
     height: 380px;
     background-color: #0000002f;
     border-radius: 16px;
+    display: flex;
+    flex-direction: column;
 }
 
 .user_info {
@@ -110,11 +109,12 @@ img {
 }
 
 .online_friends ul {
-    height: 340px;
-    overflow-y: scroll;
+    flex: 1;
+    overflow-y: auto;
     list-style: none;
     padding: 4px;
     padding-right: 9px;
+    margin: 0;
 }
 
 .online_friends ul:hover {
@@ -150,7 +150,6 @@ img {
     cursor: pointer;
 }
 
-
 .online_friends ul li:nth-child(odd) {
     background: #f0f0f00f;
 }
@@ -159,18 +158,27 @@ img {
     background: #f0f0f02a;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.3s ease;
-}
+@media (max-width: 768px) {
+    .online_friends {
+        padding: 12px;
+        height: auto;
+    }
 
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
-}
+    .online_friends ul {
+        max-height: 260px;
+    }
 
-.fade-enter-to,
-.fade-leave-from {
-    opacity: 1;
+    .online_friends ul li {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .online_friends ul li p {
+        align-self: flex-start;
+        font-size: 13px;
+        margin-left: 43px;
+    }
+
 }
 </style>

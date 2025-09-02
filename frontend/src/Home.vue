@@ -26,7 +26,7 @@ import TrendingCategories from './components/TrendingCategories.vue';
 
 <style scoped>
 main {
-    height: 100vh;
+    min-height: 100vh;
     padding: 0% 2% 2% 2%;
 }
 
@@ -39,5 +39,19 @@ main {
 .container>div {
     display: flex;
     position: relative;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Desktop largo */
+@media (min-width: 1400px) {
+    .container {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 </style>
