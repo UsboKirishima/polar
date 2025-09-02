@@ -3,21 +3,21 @@ import { ref } from 'vue';
 
 
 const menuItems = ref([
-    { label: 'home', path: '/' },
-    { label: 'feed', path: '/' },
-    { label: 'near me', path: '/' },
-    { label: 'chats', path: '/' },
-    { label: 'friends', path: '/' },
-    { label: 'categories', path: '/' },
-    { label: 'requests', path: '/' },
-    { label: 'my profile', path: '/' }
+    { label: 'home', path: '#/' },
+    { label: 'feed', path: '#/feed' },
+    { label: 'near me', path: '#/near-me' },
+    { label: 'chats', path: '#/chats' },
+    { label: 'friends', path: '#/friends' },
+    { label: 'categories', path: '#/categories' },
+    { label: 'requests', path: '#/requests' },
+    { label: 'my profile', path: '#/profile' }
 ]);
 
 </script>
 
 <template>
     <nav class="desktop_nav">
-        <a class="logo" href="/"><img src="/logo_no_bg.png" alt="Polar"></a>
+        <a class="logo" href="/"><img src="/polar_no_bg_resized.png" alt="Polar"></a>
         <ul>
             <li v-for="item in menuItems">
                 <a :href="item.path">{{ item.label }}</a>
@@ -32,6 +32,11 @@ const menuItems = ref([
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: 0;
+    background-color: #14141b;
+    z-index: 50;
+    padding: 16px;
 }
 
 .desktop_nav>ul {
@@ -46,14 +51,12 @@ const menuItems = ref([
     margin: 0 12px;
 }
 
-.desktop_nav>ul>li>a {}
-
 .logo {
     margin-left: 12px;
 
 }
 
 .logo img {
-    width: 60px;
+    width: 120px;
 }
 </style>

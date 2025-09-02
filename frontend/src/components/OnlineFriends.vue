@@ -23,21 +23,19 @@ const onlineFriends = ref([
 
 <template>
 
-    <transition name="fade">
-        <div class="online_friends">
-            <h2>Online friends</h2>
-            <p v-if="onlineFriends.length == 0" class="no_friends">There are no friends here.</p>
-            <ul v-else>
-                <li v-for="friend in onlineFriends">
-                    <div class="user_info">
-                        <img :src="friend.avatar" alt="">
-                        <a href="#">{{ friend.username }}</a>
-                    </div>
-                    <p :class="friend.last_access == 'now' ? 'online' : 'past'">{{ friend.last_access }}</p>
-                </li>
-            </ul>
-        </div>
-    </transition>
+    <div class="online_friends">
+        <h2>Online friends</h2>
+        <p v-if="onlineFriends.length == 0" class="no_friends">There are no friends here.</p>
+        <ul v-else>
+            <li v-for="friend in onlineFriends">
+                <div class="user_info">
+                    <img :src="friend.avatar" alt="">
+                    <a href="#">{{ friend.username }}</a>
+                </div>
+                <p :class="friend.last_access == 'now' ? 'online' : 'past'">{{ friend.last_access }}</p>
+            </li>
+        </ul>
+    </div>
 </template>
 
 <style scoped>
@@ -82,6 +80,10 @@ h2::before {
     color: #0b0;
 }
 
+a {
+    text-decoration: none;
+}
+
 .past {
     opacity: 80%;
 }
@@ -93,9 +95,11 @@ img {
 }
 
 .online_friends {
-    width: 40%;
+    width: 100%;
     padding: 20px;
     height: 380px;
+    background-color: #0000002f;
+    border-radius: 16px;
 }
 
 .user_info {
@@ -106,7 +110,7 @@ img {
 }
 
 .online_friends ul {
-    height: 380px;
+    height: 340px;
     overflow-y: scroll;
     list-style: none;
     padding: 4px;
@@ -143,10 +147,16 @@ img {
     background: #f0f0f00a;
     padding: 8px;
     border-radius: 12px;
+    cursor: pointer;
 }
+
 
 .online_friends ul li:nth-child(odd) {
     background: #f0f0f00f;
+}
+
+.online_friends ul li:hover {
+    background: #f0f0f02a;
 }
 
 .fade-enter-active,
