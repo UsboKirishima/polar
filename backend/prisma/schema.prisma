@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/**
+ * The model 'user' contains the basic information
+ * about the User, It also contains a link to the account,
+ * that contains all the extra info such as username, desription...
+ */
+model User {
+  id            String         @id @unique @default(uuid())
+  email         String         @unique
+  password      String
+  refreshTokens RefreshToken[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  profile       Profile?       @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId     String?        @unique
+}
+
+model RefreshToken {
+  id          String   @id @unique @default(uuid())
+  hashedToken String   @unique
+  userId      String
+  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  revoked     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  expireAt    DateTime
+}
+
+model Profile {
+  id          String   @id @unique @default(uuid())
+  username    String   @unique
+  dateOfBirth DateTime
+  User        User?
+}

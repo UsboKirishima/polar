@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useAuthStore } from '@/stores/auth';
 
+const auth = useAuthStore();
 
-const menuItems = ref([
+const menuItems = computed(() => [
     { label: 'home', path: '#/' },
     { label: 'feed', path: '#/feed' },
     { label: 'near me', path: '#/near-me' },
@@ -10,14 +12,14 @@ const menuItems = ref([
     { label: 'friends', path: '#/friends' },
     { label: 'categories', path: '#/categories' },
     { label: 'requests', path: '#/requests' },
-    { label: 'my profile', path: '#/profile' }
+    { label: auth.isLoggedIn ? 'my profile' : 'login', path: auth.isLoggedIn ? '#/profile' : '#/login' }
 ]);
 
 </script>
 
 <template>
     <nav class="desktop_nav">
-        <a class="logo" href="/"><img src="/polar_no_bg_resized.png" alt="Polar"></a>
+        <a href='#/' class="logo"><img src="/polar_no_bg_resized.png" alt="Polar"></a>
         <ul>
             <li v-for="item in menuItems">
                 <a :href="item.path">{{ item.label }}</a>
