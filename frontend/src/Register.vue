@@ -8,6 +8,7 @@ const email = ref('');
 const username = ref('');
 const dayOfBirth = ref(new Date());
 const password = ref('');
+const fullname = ref('');
 const confirmPassword = ref('');
 const error = ref('');
 const isLoading = ref(false);
@@ -15,7 +16,7 @@ const isLoading = ref(false);
 const handleRegister = async () => {
     error.value = '';
 
-    const success = await auth.register(email.value, password.value);
+    const success = await auth.register(email.value, password.value, username.value, dayOfBirth.value, fullname.value);
 
     if (success) {
         window.location.href = '#/profile'
@@ -52,6 +53,18 @@ onMounted(() => {
                 <label for="username">Username:</label>
                 <input id="username" type="text" v-model="username" @keypress="handleKeyPress" placeholder="Nickname"
                     required :disabled="isLoading" />
+            </div>
+
+            <div class="form-group">
+                <label for="fullname">Full name:</label>
+                <input id="fullname" type="text" v-model="fullname" @keypress="handleKeyPress" placeholder="Full Name"
+                    required :disabled="isLoading" />
+            </div>
+
+            <div class="form-group">
+                <label for="dayOfBirth">Date of birth:</label>
+                <input id="dayOfBirth" type="date" v-model="dayOfBirth" @keypress="handleKeyPress"
+                    placeholder="Date of birth" required :disabled="isLoading" />
             </div>
 
             <div class="form-group">

@@ -3,7 +3,15 @@ import api from '@/api';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        user: null as null | { id: string; email: string },
+        user: null as null | {
+            id: string;
+            email: string;
+            profile: {
+                username: string,
+                dateOfBirth: Date,
+                fullName: string
+            }
+        },
         isLoggedIn: false,
         loading: false,
     }),
@@ -26,10 +34,21 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
-        async register(email: string, password: string) {
+        async register(email: string, password: string,
+            username: string,
+            dateOfBirth: Date,
+            fullName: string) {
             try {
                 this.loading = true;
-                const res = await api.post('/auth/register', { email, password });
+                const res = await api.post('/auth/register', {
+                    email: email,
+                    password: password,
+                    profile: {
+                        username,
+                        dateOfBirth,
+                        fullName
+                    }
+                });
 
                 return await this.login(email, password);
             } catch (err) {

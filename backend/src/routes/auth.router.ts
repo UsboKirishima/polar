@@ -14,25 +14,42 @@ import {
     findUserByEmail,
     createUserByEmailAndPassword,
     findUserById,
+    createUserWithProfile,
+    createProfile,
 } from '../services/users.service';
+import { TUserSchema } from '../types/zod';
+import { validateLoginData } from '../controllers/auth.controller';
+import { Profile, User } from '../generated/prisma';
+import { SimpleProfileSchema } from '../types/general';
 
-router.post('/register', async (req, res, next) => {
+router.post('/register', validateLoginData, async (req, res, next) => {
     try {
-        const { email, password } = req.body;
-        if (!email || !password) {
+        const userRequest: TUserSchema = req.body;
+        if (!userRequest.email || !userRequest.password) {
             res.status(400);
             throw new Error('You must provide an email and a password.');
         }
 
-        const existingUser = await findUserByEmail(email);
+        const existingUser = await findUserByEmail(userRequest.email);
 
         if (existingUser) {
             res.status(400);
             throw new Error('Email already in use.');
         }
 
-        const user = await createUserByEmailAndPassword({ email, password });
-        const { accessToken, refreshToken } = generateTokens(user);
+        const profile = await createProfile(userRequest.profile);
+
+        console.log(profile);
+        console.log(userRequest.profile);
+        console.log(req.body)
+
+        const user = await createUserWithProfile({
+            email: userRequest.email,
+            password: userRequest.password,
+            profileId: profile.id
+        });
+
+        const { accessToken, refreshToken } = generateTokens(user as User);
         await addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
 
         res.json({

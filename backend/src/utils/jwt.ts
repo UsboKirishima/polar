@@ -1,11 +1,7 @@
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import 'dotenv/config'
-import { TUserSchema } from '../types/zod';
-
-interface User extends TUserSchema {
-    id: string;
-}
+import { User } from '../generated/prisma';
 
 // Usually I keep the token between 5 minutes - 15 minutes
 export function generateAccessToken(user: User) {

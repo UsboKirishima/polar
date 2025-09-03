@@ -45,10 +45,10 @@ getUser();
                 </div>
             </div>
             <div class="profile-info">
-                <p class="username">usbo</p>
-                <p><b>full name:</b> Davide Usberti</p>
+                <p class="username">{{ auth.user?.profile.username }}</p>
+                <p><b>full name:</b> {{ auth.user?.profile.fullName }}</p>
                 <p><b>email:</b> {{ email }} </p>
-                <p><b>day of birth:</b> 11/19/2000</p>
+                <p><b>day of birth:</b> {{ auth.user?.profile.dateOfBirth }}</p>
                 <p><b>id:</b> {{ id }}</p>
             </div>
             <div class="controls">
@@ -59,12 +59,26 @@ getUser();
             </div>
         </div>
     </div>
-    <div v-else>
-        <h1>No logged in</h1>
+    <div v-else class="err">
+        <img src="/logo_no_bg.png" alt="Polar">
+        <h1>Error <b>401</b></h1>
+        <p>Sorry but you need to <a href="#/login">login</a> to view this page.</p>
     </div>
 </template>
 
 <style scoped>
+.err {
+    text-align: center;
+}
+
+.err h1 b {
+    color: rgba(255, 0, 0, 0.644);
+}
+
+.err h1 {
+    margin-bottom: 30px;
+}
+
 .profile-container {
     min-height: 100vh;
     padding: 2% 2% 2% 2%;

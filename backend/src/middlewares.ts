@@ -21,6 +21,16 @@ export function errorHandler(err: Error, req: Request, res: Response<ErrorRespon
     });
 }
 
+interface JwtPayload {
+    userId: string;
+    iat: number;
+    exp: number;
+}
+
+export interface AuthenticatedRequest extends Request {
+    payload?: JwtPayload;
+}
+
 export function isAuthenticated(req: Request, res: Response, next: NextFunction): void {
     const { authorization } = req.headers;
 

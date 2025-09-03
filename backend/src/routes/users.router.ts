@@ -1,7 +1,7 @@
 import { Router, Response, NextFunction } from 'express';
 import { isAuthenticated, AuthenticatedRequest } from '../middlewares';
-import { findUserById } from '../services/users.service';
-import { User } from '../generated/prisma';
+import { findProfileById, findUserById } from '../services/users.service';
+import { Profile, User } from '../generated/prisma';
 
 const router = Router();
 
@@ -17,6 +17,19 @@ router.get('/profile', isAuthenticated, async (req: AuthenticatedRequest, res: R
         }
 
         const { password, ...safeUser } = user;
+
+        if (user.profileId) {
+            const profile: Profile | null = await findProfileById(user.profileId);
+
+            if(!profile) {
+                res.status(404).json({ message: 'Profile associated to user not found' });
+                return;
+            }
+
+            res.json({ ...safeUser, profile });
+            return;
+        }
+
         res.json(safeUser);
     } catch (err) {
         next(err);

@@ -42,8 +42,9 @@ model RefreshToken {
 }
 
 model Profile {
-  id          String   @id @unique @default(uuid())
-  username    String   @unique
-  dateOfBirth DateTime
+  id          String    @id @unique @default(uuid())
+  username    String?   @unique
+  dateOfBirth DateTime?
+  fullName    String?
   User        User?
 }
