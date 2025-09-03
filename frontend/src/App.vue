@@ -13,12 +13,14 @@ import Home from './Home.vue';
 import Feed from './Feed.vue';
 import Login from './Login.vue';
 import Profile from './Profile.vue';
+import Register from './Register.vue';
 
 const routes = {
     '/': Home,
     '/feed': Feed,
     '/login': Login,
-    '/profile': Profile
+    '/profile': Profile,
+    '/register': Register
 }
 
 const auth = useAuthStore();

@@ -26,6 +26,19 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
+        async register(email: string, password: string) {
+            try {
+                this.loading = true;
+                const res = await api.post('/auth/register', { email, password });
+
+                return await this.login(email, password);
+            } catch (err) {
+                return false;
+            } finally {
+                this.loading = false;
+            }
+        },
+
         async checkAuth() {
             try {
                 const res = await api.get('/users/profile');

@@ -34,12 +34,121 @@ getUser();
 </script>
 
 <template>
-    <div v-if="auth.isLoggedIn">
-        <h1> id: {{ id }}</h1>
-        <h2> email: {{ email }} </h2>
-        <button @click="auth.logout">Logout</button>
+    <div v-if="auth.isLoggedIn" class="profile-container">
+        <div class="profile-card">
+            <div class="profile-image">
+                <img src="/pfp_placeholder.png" alt="Profile pic">
+                <div class="stats">
+                    <p>Posts: 22</p>
+                    <p>Friends: 122</p>
+                    <p>Likes: 13k</p>
+                </div>
+            </div>
+            <div class="profile-info">
+                <p class="username">usbo</p>
+                <p><b>full name:</b> Davide Usberti</p>
+                <p><b>email:</b> {{ email }} </p>
+                <p><b>day of birth:</b> 11/19/2000</p>
+                <p><b>id:</b> {{ id }}</p>
+            </div>
+            <div class="controls">
+                <button id="edit">Edit</button>
+                <button id="share">Share</button>
+                <button id="settings">Settings</button>
+                <button @click="auth.logout" id="logout">Logout</button>
+            </div>
+        </div>
     </div>
     <div v-else>
         <h1>No logged in</h1>
     </div>
 </template>
+
+<style scoped>
+.profile-container {
+    min-height: 100vh;
+    padding: 2% 2% 2% 2%;
+}
+
+.profile-card {
+    background: #0000002f;
+    padding: 2%;
+    width: 45%;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: row;
+    height: 250px;
+}
+
+.profile-image {
+    width: 20%;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 2%;
+}
+
+.profile-image img {
+    width: 100%;
+    border-radius: 16px;
+}
+
+.stats {
+    padding: 10% 0 0 5%;
+}
+
+.stats p {
+    font-size: 0.8rem;
+    color: #f1f1f1c9;
+}
+
+.profile-info p b {
+    color: #f1f1f1be;
+}
+
+.profile-info .username {
+    color: #f1f1f1;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 5%;
+}
+
+.profile-info p {
+    font-size: 0.9rem;
+    margin: 2% 0;
+}
+
+.controls {
+    margin-left: auto;
+    height: 35%;
+}
+
+.controls button {
+    display: block;
+    width: 100%;
+    padding: 7px 17px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: #31313180;
+    color: #fff;
+    font-weight: 600;
+    margin: 5px 0;
+}
+
+#logout {
+    background: rgba(255, 0, 0, 0.397);
+}
+
+#share {
+    background: rgba(0, 255, 0, 0.26);
+}
+
+#settings {
+    background: rgba(110, 110, 255, 0.171);
+}
+
+.controls button:hover {
+    opacity: 75%;
+}
+</style>
