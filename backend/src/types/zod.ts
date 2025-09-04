@@ -1,6 +1,15 @@
 import { z } from "zod";
 
 
+// Some useful types
+export const userIdSchema = z.string().uuid({ message: 'userId does not respect the UUID regex.' });
+export type TUserId = z.infer<typeof userIdSchema>;
+
+export const usernameSchema = z.string().min(4, { message: 'username must be at least 4 characters long' }).max(20, {
+    message: 'username cannot be longer than 20 characters'
+});
+export type TUsername = z.infer<typeof usernameSchema>;
+
 // ------------------- User Schema Login ------------------- 
 
 const userBaseSchema = {

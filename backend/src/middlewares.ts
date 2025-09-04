@@ -36,7 +36,7 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
 
     if (!authorization) {
         res.status(401);
-        throw new Error('🚫 Un-Authorized 🚫');
+        throw new Error('Un-Authorized');
     }
 
     try {
@@ -49,7 +49,7 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
         if (err.name === 'TokenExpiredError') {
             throw new Error(err.name);
         }
-        throw new Error('🚫 Un-Authorized 🚫');
+        throw new Error('Un-Authorized');
     }
 
     return next();

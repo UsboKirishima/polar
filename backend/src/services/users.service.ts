@@ -51,10 +51,34 @@ export function findUserById(id: string) {
     });
 }
 
-export function findProfileById(id: string) {
+export function findProfileById(profileId: string) {
     return db.profile.findUnique({
         where: {
-            id,
+            id: profileId,
         },
     });
 }
+
+
+export async function findUserAndProfileById(id: string) {
+    const user = await findUserById(id);
+    const profile = await findProfileById(user?.profileId!);
+    
+    if (!user || !profile) return;
+
+    return {
+        ...user,
+        profile
+    };
+}
+
+export function updateProfileUsernameById(profileId: string, newUsername: string) {
+    return db.profile.update({
+        where: {
+            id: profileId
+        },
+        data: {
+            username: newUsername
+        }
+    })
+} 

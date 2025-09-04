@@ -2,6 +2,7 @@ import { Router, Response, NextFunction } from 'express';
 import { isAuthenticated, AuthenticatedRequest } from '../middlewares';
 import { findProfileById, findUserById } from '../services/users.service';
 import { Profile, User } from '../generated/prisma';
+import * as UsersController from '../controllers/users.controller';
 
 const router = Router();
 
@@ -18,6 +19,10 @@ router.get('/profile', isAuthenticated, async (req: AuthenticatedRequest, res: R
 
         const { password, ...safeUser } = user;
 
+        /**
+         * Append to the result the profile information
+         * if it exists.
+         */
         if (user.profileId) {
             const profile: Profile | null = await findProfileById(user.profileId);
 
@@ -36,5 +41,10 @@ router.get('/profile', isAuthenticated, async (req: AuthenticatedRequest, res: R
     }
 });
 
+
+router.get('/:id', isAuthenticated, UsersController.getUserById);
+
+// Profile settings
+router.patch('/:id/username', isAuthenticated, UsersController.modifyUsername);
 
 export default router;
