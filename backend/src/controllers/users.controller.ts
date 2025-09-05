@@ -44,9 +44,6 @@ export const modifyUsername = async (req: Request, res: Response, next: NextFunc
         const userId: TUserId = req.params.id;
         const usernameData: TUsername = req.body.username;
 
-        console.log(userId)
-        console.log(usernameData)
-
         const parsedUsername = usernameSchema.parse(usernameData);
 
         const validatedId = validateUserId(res, userId);

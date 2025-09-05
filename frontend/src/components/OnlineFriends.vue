@@ -43,7 +43,7 @@ const onlineFriends = ref([
 }
 
 h2 {
-    color: #afb6dfcf;
+    color: #ffffffc7;
 }
 
 @keyframes pulse {

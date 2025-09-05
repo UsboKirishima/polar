@@ -45,7 +45,7 @@ const nearYouPeople = ref([
 }
 
 h2 {
-    color: #afb6dfcf;
+    color: #ffffffc7;
 }
 
 img {

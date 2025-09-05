@@ -19,7 +19,8 @@ const unreadMessages = ref([
                     <span class="message_count">{{ message.count }}</span>
                     <a href="#">{{ message.username }}</a>
                 </div>
-                <p class="last_msg">{{ message.last_message.slice(0, 30) }}...</p>
+                <p class="last_msg">{{ message.last_message.slice(0, 50) }}{{ message.last_message.length > 50 ? '...' :
+                    '' }}</p>
             </li>
         </ul>
     </div>
@@ -33,7 +34,7 @@ const unreadMessages = ref([
 }
 
 h2 {
-    color: #afb6dfcf;
+    color: #ffffffc7;
 }
 
 a {
@@ -73,9 +74,6 @@ a {
     padding-right: 9px;
 }
 
-.unread_messages ul:hover {
-    padding-right: 4px;
-}
 
 .unread_messages ul::-webkit-scrollbar {
     width: 5px;
@@ -113,6 +111,11 @@ a {
 
 .unread_messages ul li:hover {
     background: #f0f0f02a;
+}
+
+.last_msg {
+    font-size: 14px;
+    color: #ffffff4b;
 }
 
 /* Mobile */

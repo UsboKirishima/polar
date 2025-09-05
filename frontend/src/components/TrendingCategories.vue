@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
+
 const trendingCategories = ref([
     { name: 'Music', posts: 1240 },
     { name: 'Gaming', posts: 980 },
@@ -22,7 +23,66 @@ const trendingCategories = ref([
     { name: 'Politics', posts: 340 },
     { name: 'Economy', posts: 315 },
     { name: 'Memes', posts: 298 },
-    // ...
+    { name: 'DIY', posts: 276 },
+    { name: 'Parenting', posts: 250 },
+    { name: 'Pets', posts: 230 },
+    { name: 'Anime', posts: 210 },
+    { name: 'Comics', posts: 195 },
+    { name: 'Cars', posts: 180 },
+    { name: 'Motorcycles', posts: 170 },
+    { name: 'Coding', posts: 160 },
+    { name: 'Cybersecurity', posts: 150 },
+    { name: 'AI & ML', posts: 145 },
+    { name: 'UX/UI Design', posts: 132 },
+    { name: 'Startup', posts: 125 },
+    { name: 'Marketing', posts: 118 },
+    { name: 'Business', posts: 110 },
+    { name: 'Philosophy', posts: 102 },
+    { name: 'Psychology', posts: 98 },
+    { name: 'Languages', posts: 90 },
+    { name: 'Geography', posts: 85 },
+    { name: 'Astronomy', posts: 80 },
+    { name: 'Space Exploration', posts: 78 },
+    { name: 'Blockchain', posts: 75 },
+    { name: 'NFTs', posts: 72 },
+    { name: 'Investing', posts: 70 },
+    { name: 'Stocks', posts: 68 },
+    { name: 'Crypto', posts: 65 },
+    { name: 'Cooking', posts: 60 },
+    { name: 'Baking', posts: 58 },
+    { name: 'Street Food', posts: 55 },
+    { name: 'Luxury', posts: 52 },
+    { name: 'Minimalism', posts: 50 },
+    { name: 'Tattoo Art', posts: 48 },
+    { name: 'Streetwear', posts: 45 },
+    { name: 'Sneakers', posts: 42 },
+    { name: 'Photography Gear', posts: 40 },
+    { name: 'Watches', posts: 38 },
+    { name: 'Jewelry', posts: 35 },
+    { name: 'Interior Design', posts: 33 },
+    { name: 'Architecture', posts: 30 },
+    { name: 'Gardening', posts: 28 },
+    { name: 'Wildlife', posts: 26 },
+    { name: 'Marine Life', posts: 24 },
+    { name: 'Board Games', posts: 22 },
+    { name: 'Card Games', posts: 20 },
+    { name: 'Esports', posts: 18 },
+    { name: 'VR & AR', posts: 16 },
+    { name: 'Smartphones', posts: 15 },
+    { name: 'Laptops', posts: 14 },
+    { name: 'PC Building', posts: 13 },
+    { name: 'Retro Gaming', posts: 12 },
+    { name: 'Hiking', posts: 11 },
+    { name: 'Camping', posts: 10 },
+    { name: 'Surfing', posts: 9 },
+    { name: 'Skateboarding', posts: 8 },
+    { name: 'Snowboarding', posts: 7 },
+    { name: 'Martial Arts', posts: 6 },
+    { name: 'Dance', posts: 5 },
+    { name: 'Theatre', posts: 4 },
+    { name: 'Opera', posts: 3 },
+    { name: 'Classical Music', posts: 2 },
+    { name: 'Poetry', posts: 1 },
 ])
 
 function openCategory(name: string) {
@@ -81,7 +141,7 @@ function openCategory(name: string) {
 }
 
 h2 {
-    color: #afb6dfcf;
+    color: #ffffffc7;
     margin-bottom: 16px;
 }
 

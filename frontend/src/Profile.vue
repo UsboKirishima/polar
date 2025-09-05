@@ -31,6 +31,11 @@ const getUser = async () => {
 
 getUser();
 
+const logout = () => {
+    auth.logout();
+    window.location.href = '#/login'
+}
+
 </script>
 
 <template>
@@ -55,7 +60,7 @@ getUser();
                 <button id="edit">Edit</button>
                 <button id="share">Share</button>
                 <button id="settings">Settings</button>
-                <button @click="auth.logout" id="logout">Logout</button>
+                <button @click="logout" id="logout">Logout</button>
             </div>
         </div>
     </div>

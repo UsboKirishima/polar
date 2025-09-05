@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import Navbar from './components/Navbar.vue';
+import Sidebar from './components/Sidebar.vue';
 import OnlineFriends from './components/OnlineFriends.vue';
 import UnreadMessages from './components/UnreadMessages.vue';
 import NearYou from './components/NearYou.vue';
@@ -14,9 +15,10 @@ import Feed from './Feed.vue';
 import Login from './Login.vue';
 import Profile from './Profile.vue';
 import Register from './Register.vue';
+import ExHome from './ExHome.vue';
 
 const routes = {
-    '/': Home,
+    '/': ExHome,
     '/feed': Feed,
     '/login': Login,
     '/profile': Profile,
@@ -54,8 +56,27 @@ watch(currentPath, (path: string) => {
 </script>
 
 <template>
-    <Navbar />
-    <component :is="currentView" />
+    <div class="container">
+        <Sidebar />
+        <div class="view">
+            <div class="padding"></div>
+            <component :is="currentView" class="page" />
+        </div>
+
+    </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.container {
+    width: 100%;
+}
+
+.padding {
+    width: 100%;
+}
+
+.view {
+    display: grid;
+    grid-template-columns: 14.5% auto;
+}
+</style>
