@@ -29,12 +29,19 @@ const emits = defineEmits<{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 10px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    position: sticky;
+    top: 0;
+    background: #14141b;
+    height: 3%;
+    width: 100%;
 }
 
 .controls {
     display: flex;
     gap: 20px;
+    z-index: 100;
 }
 
 .feed-header p {
@@ -45,6 +52,10 @@ const emits = defineEmits<{
 }
 
 .feed-header p:hover {
+    color: #fff;
+}
+
+h2 {
     color: #fff;
 }
 

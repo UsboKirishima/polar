@@ -4,7 +4,7 @@ import type { Friend, Suggestion } from './ListItem.vue';
 
 const props = defineProps<{
     data: Array<Friend | Suggestion>
-    type: 'feed' | 'suggestion'
+    type: 'feed' | 'suggestion' | 'verified'
 }>()
 </script>
 

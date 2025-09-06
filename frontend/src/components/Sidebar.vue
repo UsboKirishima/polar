@@ -66,7 +66,7 @@ li {
 li a {
     display: flex;
     align-items: center;
-    color: #ffffffc7;
+    color: #fff;
     font-size: 1.1rem;
     font-weight: 400;
     text-decoration: none;
@@ -74,7 +74,7 @@ li a {
 }
 
 li a:hover {
-    color: #fff;
+    color: #ffffffc7;
     transition: 300ms;
 }
 

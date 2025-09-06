@@ -20,6 +20,10 @@ const props = defineProps<{
             <h2>Suggestions</h2>
             <List :data="suggestions" type="suggestion" />
         </div>
+        <div class="sb-friends">
+            <h2>Verified</h2>
+            <List :data="suggestions" type="verified" />
+        </div>
     </div>
 </template>
 
@@ -32,7 +36,7 @@ const props = defineProps<{
     height: 100vh;
     display: flex;
     flex-direction: column;
-    padding-top: 20px;
+    padding-top: 28px;
 }
 
 .sb-friends {
@@ -42,7 +46,7 @@ const props = defineProps<{
 }
 
 h2 {
-    color: #ffffffc7;
+    color: #fff;
     margin-bottom: 13px;
 }
 </style>
