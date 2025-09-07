@@ -70,11 +70,12 @@ const router = createRouter({
     routes
 });
 
-/**
- * Check if you need to be authenticated to view the page
- */
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     const auth = useAuthStore()
+
+    if (!auth.loading) {
+        await auth.checkAuth()
+    }
 
     if (to.meta.requiresAuth && !auth.isLoggedIn) {
         next('/login')
