@@ -8,6 +8,7 @@ import NotFound from '@/components/NotFound.vue';
 import ExHome from '@/ExHome.vue';
 import UserDetails from '@/UserDetails.vue';
 import { useAuthStore } from '@/stores/auth';
+import Friends from '@/Friends.vue';
 
 const routes = [
     {
@@ -20,6 +21,12 @@ const routes = [
         path: '/feed',
         name: 'feed',
         component: Feed,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/friends',
+        name: 'friends',
+        component: Friends,
         meta: { requiresAuth: true }
     },
     {
