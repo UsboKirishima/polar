@@ -25,23 +25,37 @@ export function createUserByEmailAndPassword(user: UserMailNPassword) {
 }
 
 
-export function createUserWithProfile(user: SimpleUserSchema) {
-    user.password = bcrypt.hashSync(user.password, 12);
+export function createUserWithProfile(user: Omit<SimpleUserSchema, 'profile.bio'> & { profile: Omit<SimpleProfileSchema, 'bio'> }) {
+    const hashedPassword = bcrypt.hashSync(user.password, 12);
     return db.user.create({
-        data: user,
+        data: {
+            email: user.email,
+            password: hashedPassword,
+            profile: {
+                create: {
+                    username: user.profile.username,
+                    dateOfBirth: new Date(user.profile.dateOfBirth),
+                    fullName: user.profile.fullName,
+                    // bio not included, prisma will use default param
+                },
+            },
+        },
     });
 }
 
 
-export function createProfile(profile: SimpleProfileSchema) {
+export function createProfile(profile: SimpleProfileSchema, userId: string) {
     return db.profile.create({
         data: {
-            username: profile?.username,
-            dateOfBirth: new Date(profile?.dateOfBirth ?? Date.now()),
-            fullName: profile?.fullName,
+            username: profile.username,
+            dateOfBirth: new Date(profile.dateOfBirth),
+            fullName: profile.fullName,
+            bio: profile.bio ?? "unknown",
+            userId: userId,
         },
-    })
+    });
 }
+
 
 export function findUserById(id: string) {
     return db.user.findUnique({
@@ -60,25 +74,32 @@ export function findProfileById(profileId: string) {
 }
 
 
-export async function findUserAndProfileById(id: string) {
-    const user = await findUserById(id);
-    const profile = await findProfileById(user?.profileId!);
-    
-    if (!user || !profile) return;
-
-    return {
-        ...user,
-        profile
-    };
+export function findUserAndProfileById(userId: string) {
+    return db.user.findUnique({
+        where: { id: userId },
+        include: { profile: true },
+    });
 }
 
-export function updateProfileUsernameById(profileId: string, newUsername: string) {
+
+export function updateProfileById(profileId: string, updates: Partial<SimpleProfileSchema>) {
     return db.profile.update({
-        where: {
-            id: profileId
-        },
+        where: { id: profileId },
         data: {
-            username: newUsername
+            ...updates,
+            dateOfBirth: updates.dateOfBirth ? new Date(updates.dateOfBirth) : undefined,
+        },
+    });
+}
+
+/**
+ * Returns all the users (id, profile)
+ */
+export function getAllUsers() {
+    return db.user.findMany({
+        select: {
+            id: true,
+            profile: true
         }
-    })
-} 
+    });
+}

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import api from '@/api';
+import api from '@/axiosApi';
 import { onMounted, ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
 const auth = useAuthStore();
 
 const email = ref('');
@@ -9,13 +10,15 @@ const password = ref('');
 const error = ref('');
 const isLoading = ref(false);
 
+const router = useRouter()
+
 const handleLogin = async () => {
     error.value = '';
 
     const success = await auth.login(email.value, password.value);
 
     if (success) {
-        window.location.href = '#/profile'
+        router.push(`/profile`)
     } else {
         error.value = 'Invalid email or password.'
     }
@@ -28,7 +31,7 @@ const handleKeyPress = (event: KeyboardEvent) => {
 
 onMounted(() => {
     if (auth.isLoggedIn) {
-        window.location.href = '#/profile'
+        router.push(`/profile`)
     }
 })
 </script>
@@ -62,6 +65,8 @@ onMounted(() => {
                 <span v-if="isLoading">Loading...</span>
                 <span v-else>Login</span>
             </button>
+
+            <router-link id="register" to="/register">Create new account</router-link>
         </form>
     </div>
 </template>
@@ -87,6 +92,7 @@ onMounted(() => {
 h2 {
     text-align: center;
     margin-bottom: 1.5rem;
+    color: #fff;
 }
 
 .form-group {
@@ -147,6 +153,7 @@ input:disabled {
     cursor: pointer;
     margin-top: 1rem;
     transition: background-color 0.2s;
+    margin-bottom: 5px;
 }
 
 .login-button:hover:not(:disabled) {
@@ -156,5 +163,10 @@ input:disabled {
 .login-button:disabled {
     background-color: #f0f0f007;
     cursor: not-allowed;
+}
+
+#register {
+    font-size: 0.9rem;
+    text-decoration: none;
 }
 </style>

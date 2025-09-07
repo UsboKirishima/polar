@@ -1,5 +1,5 @@
 import { Profile } from "../generated/prisma";
-import { TUserSchema } from "./zod";
+import { TProfileSchema, TUserSchema } from "./zod";
 
-export type SimpleUserSchema = Omit<TUserSchema, 'profile'>;
-export type SimpleProfileSchema = Omit<Partial<Profile>, 'id' | 'User'> | null | undefined;
+export type SimpleUserSchema = TUserSchema;
+export type SimpleProfileSchema = TProfileSchema;

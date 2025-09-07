@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 
 const trendingCategories = ref([
@@ -86,7 +89,7 @@ const trendingCategories = ref([
 ])
 
 function openCategory(name: string) {
-    window.open(`#/category/${name.toLowerCase()}`, '_self');
+    router.push(`/category/${name.toLowerCase()}`);
 }
 
 </script>

@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import api from '@/api';
+import api from '@/axiosApi';
 import { onMounted, ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
+
 const auth = useAuthStore();
+const router = useRouter()
 
 const email = ref('');
 const username = ref('');
@@ -19,7 +22,7 @@ const handleRegister = async () => {
     const success = await auth.register(email.value, password.value, username.value, dayOfBirth.value, fullname.value);
 
     if (success) {
-        window.location.href = '#/profile'
+        router.push('/profile')
     } else {
         error.value = 'Failed to register account.'
     }
@@ -33,7 +36,7 @@ const handleKeyPress = (event: KeyboardEvent) => {
 
 onMounted(() => {
     if (auth.isLoggedIn) {
-        window.location.href = '#/profile'
+        router.push('/profile')
     }
 })
 </script>

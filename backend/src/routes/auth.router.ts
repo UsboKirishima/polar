@@ -7,60 +7,54 @@ import {
     deleteRefreshTokenById,
     revokeTokens,
 } from '../services/auth.service';
+import {
+    findUserByEmail,
+    findUserById,
+    createUserWithProfile,
+} from '../services/users.service';
+import { TUserSchema } from '../types/zod';
 
 const router = express.Router();
 
-import {
-    findUserByEmail,
-    createUserByEmailAndPassword,
-    findUserById,
-    createUserWithProfile,
-    createProfile,
-} from '../services/users.service';
-import { TUserSchema } from '../types/zod';
-import { validateLoginData } from '../controllers/auth.controller';
-import { Profile, User } from '../generated/prisma';
-import { SimpleProfileSchema } from '../types/general';
-
-router.post('/register', validateLoginData, async (req, res, next) => {
+// -------------------- REGISTER --------------------
+router.post('/register', async (req, res, next) => {
     try {
         const userRequest: TUserSchema = req.body;
+
         if (!userRequest.email || !userRequest.password) {
             res.status(400);
             throw new Error('You must provide an email and a password.');
         }
 
+        // Check if use already exists
         const existingUser = await findUserByEmail(userRequest.email);
-
         if (existingUser) {
             res.status(400);
             throw new Error('Email already in use.');
         }
 
-        const profile = await createProfile(userRequest.profile);
-
-        console.log(profile);
-        console.log(userRequest.profile);
-        console.log(req.body)
-
+        // User creation with nested profile
         const user = await createUserWithProfile({
             email: userRequest.email,
             password: userRequest.password,
-            profileId: profile.id
+            profile: {
+                username: userRequest.profile.username,
+                dateOfBirth: userRequest.profile.dateOfBirth,
+                fullName: userRequest.profile.fullName
+            },
         });
 
-        const { accessToken, refreshToken } = generateTokens(user as User);
+        // Token generation
+        const { accessToken, refreshToken } = generateTokens(user);
         await addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
 
-        res.json({
-            accessToken,
-            refreshToken,
-        });
+        res.json({ accessToken, refreshToken });
     } catch (err) {
         next(err);
     }
 });
 
+// -------------------- LOGIN --------------------
 router.post('/login', async (req, res, next) => {
     try {
         const { email, password } = req.body;
@@ -70,7 +64,6 @@ router.post('/login', async (req, res, next) => {
         }
 
         const existingUser = await findUserByEmail(email);
-
         if (!existingUser) {
             res.status(403);
             throw new Error('Invalid login credentials.');
@@ -85,15 +78,13 @@ router.post('/login', async (req, res, next) => {
         const { accessToken, refreshToken } = generateTokens(existingUser);
         await addRefreshTokenToWhitelist({ refreshToken, userId: existingUser.id });
 
-        res.json({
-            accessToken,
-            refreshToken,
-        });
+        res.json({ accessToken, refreshToken });
     } catch (err) {
         next(err);
     }
 });
 
+// -------------------- REFRESH TOKEN --------------------
 router.post('/refreshToken', async (req, res, next) => {
     try {
         const { refreshToken } = req.body;
@@ -101,12 +92,12 @@ router.post('/refreshToken', async (req, res, next) => {
             res.status(400);
             throw new Error('Missing refresh token.');
         }
-        const savedRefreshToken = await findRefreshToken(refreshToken);
 
+        const savedRefreshToken = await findRefreshToken(refreshToken);
         if (
-            !savedRefreshToken
-            || savedRefreshToken.revoked === true
-            || Date.now() >= savedRefreshToken.expireAt.getTime()
+            !savedRefreshToken ||
+            savedRefreshToken.revoked === true ||
+            Date.now() >= savedRefreshToken.expireAt.getTime()
         ) {
             res.status(401);
             throw new Error('Unauthorized');
@@ -122,17 +113,13 @@ router.post('/refreshToken', async (req, res, next) => {
         const { accessToken, refreshToken: newRefreshToken } = generateTokens(user);
         await addRefreshTokenToWhitelist({ refreshToken: newRefreshToken, userId: user.id });
 
-        res.json({
-            accessToken,
-            refreshToken: newRefreshToken,
-        });
+        res.json({ accessToken, refreshToken: newRefreshToken });
     } catch (err) {
         next(err);
     }
 });
 
-// This endpoint is only for demo purpose.
-// Move this logic where you need to revoke the tokens( for ex, on password reset)
+// -------------------- REVOKE TOKENS --------------------
 router.post('/revokeRefreshTokens', async (req, res, next) => {
     try {
         const { userId } = req.body;

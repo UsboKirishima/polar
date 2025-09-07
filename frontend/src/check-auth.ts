@@ -1,4 +1,4 @@
-import api from "./api";
+import api from "./axiosApi";
 
 export const checkAuth = async () => {
     let isLoggedIn = false;
@@ -11,5 +11,5 @@ export const checkAuth = async () => {
 export const authRequired = async () => {
     if (await checkAuth()) return;
 
-    window.location.href = '#/login';
+    window.location.href = '/login';
 }

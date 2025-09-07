@@ -8,7 +8,7 @@ import 'dotenv/config.js';
 
 export function notFound(req: Request, res: Response, next: NextFunction) {
     res.status(404);
-    const error = new Error(`🔍 - Not Found - ${req.originalUrl}`);
+    const error = new Error(`- Not Found - ${req.originalUrl}`);
     next(error);
 }
 
@@ -21,7 +21,7 @@ export function errorHandler(err: Error, req: Request, res: Response<ErrorRespon
     });
 }
 
-interface JwtPayload {
+export interface JwtPayload {
     userId: string;
     iat: number;
     exp: number;
@@ -41,9 +41,8 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
 
     try {
         const token = authorization.split(' ')[1];
-        const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string);
+        const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
         req.payload = payload;
-
     } catch (err: any) {
         res.status(401);
         if (err.name === 'TokenExpiredError') {

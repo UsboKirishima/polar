@@ -7,28 +7,28 @@ import { faHouse, faBomb, faLocationDot, faComment, faUserGroup, faList, faBell,
 const auth = useAuthStore();
 
 const menuItems = computed(() => [
-    { icon: faHouse, label: 'home', path: '#/' },
-    { icon: faBomb, label: 'feed', path: '#/feed' },
-    { icon: faLocationDot, label: 'near me', path: '#/near-me' },
-    { icon: faComment, label: 'chats', path: '#/chats' },
-    { icon: faUserGroup, label: 'friends', path: '#/friends' },
-    { icon: faList, label: 'categories', path: '#/categories' },
-    { icon: faBell, label: 'requests', path: '#/requests' },
-    { icon: faUser, label: auth.isLoggedIn ? 'my profile' : 'login', path: auth.isLoggedIn ? '#/profile' : '#/login' },
-    { icon: faBars, label: 'other', path: '#' }
+    { icon: faHouse, label: 'home', path: '/' },
+    { icon: faBomb, label: 'feed', path: '/feed' },
+    { icon: faLocationDot, label: 'near me', path: '/near-me' },
+    { icon: faComment, label: 'chats', path: '/chats' },
+    { icon: faUserGroup, label: 'friends', path: '/friends' },
+    { icon: faList, label: 'categories', path: '/categories' },
+    { icon: faBell, label: 'requests', path: '/requests' },
+    { icon: faUser, label: auth.isLoggedIn ? 'my profile' : 'login', path: auth.isLoggedIn ? '/profile' : '/login' },
+    { icon: faBars, label: 'other', path: '/users' }
 ]);
 
 </script>
 
 <template>
     <nav class="desktop_nav">
-        <a href='#/' class="logo"><img src="/logo_no_bg.png" alt="Polar"></a>
+        <router-link to='/' class="logo"><img src="/logo_no_bg.png" alt="Polar"></router-link>
         <ul>
             <li v-for="item in menuItems">
-                <a :href="item.path">
+                <router-link :to="item.path" class="box">
                     <FontAwesomeIcon class="icon" :icon="item.icon" />
                     {{ item.label[0].toUpperCase() + item.label.slice(1) }}
-                </a>
+                </router-link>
             </li>
         </ul>
         <p class="copyright">© {{ new Date(Date.now()).getFullYear() }} Polar</p>
@@ -63,7 +63,7 @@ li {
     margin: 6px 12px;
 }
 
-li a {
+li .box {
     display: flex;
     align-items: center;
     color: #fff;
@@ -73,17 +73,15 @@ li a {
     padding: 6px;
 }
 
-li a:hover {
+li .box:hover {
     color: #ffffffc7;
     transition: 300ms;
 }
 
-a .icon {
+.box .icon {
     margin-right: 8px;
     width: 33px;
 }
-
-.logo {}
 
 .logo img {
     width: 120px;

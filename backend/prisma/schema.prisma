@@ -14,20 +14,38 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// -------------------------------- User -------------------------------- 
+
 /**
  * The model 'user' contains the basic information
  * about the User, It also contains a link to the account,
  * that contains all the extra info such as username, desription...
  */
 model User {
-  id            String         @id @unique @default(uuid())
-  email         String         @unique
-  password      String
-  refreshTokens RefreshToken[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  profile       Profile?       @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  profileId     String?        @unique
+  id                     String          @id @unique @default(uuid())
+  email                  String          @unique
+  role                   Role            @default(USER)
+  password               String
+  refreshTokens          RefreshToken[]
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+  posts                  Post[]
+  profile                Profile?
+
+  friends                Friendship[]    @relation("UserFriendships")
+  friendOf               Friendship[]    @relation("FriendUser")
+  sentFriendRequests     FriendRequest[] @relation("SentRequests")
+  receivedFriendRequests FriendRequest[] @relation("ReceivedRequests")
+}
+
+model Profile {
+  id          String   @id @unique @default(uuid())
+  username    String   @unique
+  dateOfBirth DateTime
+  fullName    String
+  bio         String   @default("unknown")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String   @unique
 }
 
 model RefreshToken {
@@ -41,10 +59,59 @@ model RefreshToken {
   expireAt    DateTime
 }
 
-model Profile {
-  id          String    @id @unique @default(uuid())
-  username    String?   @unique
-  dateOfBirth DateTime?
-  fullName    String?
-  User        User?
+enum Role {
+  USER
+  ADMIN
+}
+
+// -------------------------------- Friends -------------------------------- 
+
+model FriendRequest {
+  id         Int                 @id @default(autoincrement())
+  senderId   String
+  receiverId String
+  status     FriendRequestStatus @default(PENDING)
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+  sender     User                @relation("SentRequests", fields: [senderId], references: [id])
+  receiver   User                @relation("ReceivedRequests", fields: [receiverId], references: [id])
+
+  @@unique([senderId, receiverId])
+}
+
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model Friendship {
+  userId    String
+  friendId  String
+  createdAt DateTime @default(now())
+
+  user   User @relation("UserFriendships", fields: [userId], references: [id])
+  friend User @relation("FriendUser", fields: [friendId], references: [id])
+
+  @@id([userId, friendId])
+  @@unique([userId, friendId])
+}
+
+// -------------------------------- Posts -------------------------------- 
+
+model Post {
+  id         String     @id @unique @default(uuid())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  title      String
+  published  Boolean    @default(false)
+  author     User       @relation(fields: [authorId], references: [id])
+  authorId   String
+  categories Category[]
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String
+  posts Post[]
 }

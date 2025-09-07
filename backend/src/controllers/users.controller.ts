@@ -1,10 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import { TUserId, TUsername, TUserSchema, userIdSchema, usernameSchema } from "../types/zod";
-import { findProfileById, findUserAndProfileById, findUserById, updateProfileUsernameById } from "../services/users.service";
+import { TUserId, TUsername, userIdSchema, usernameSchema } from "../types/zod";
+import {
+    findUserAndProfileById,
+    updateProfileById,
+    getAllUsers as getAllUsersDB
+} from "../services/users.service";
 
 const validateUserId = (res: Response, userId: string) => {
     const validationResult = userIdSchema.safeParse(userId);
-
     if (!validationResult.success) {
         res.status(400).json({
             message: 'Invalid user ID',
@@ -12,20 +15,17 @@ const validateUserId = (res: Response, userId: string) => {
         });
         return;
     }
-
-    return validationResult;
+    return validationResult.data;
 }
 
+// -------------------- GET USER BY ID --------------------
 export const getUserById = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId: TUserId = req.params.id;
+        const parsedUserId = validateUserId(res, userId);
+        if (!parsedUserId) return;
 
-        const validatedId = validateUserId(res, userId);
-        if (!validatedId) return;
-
-        const parsedUserId = validatedId.data;
         const userAndProfile = await findUserAndProfileById(parsedUserId);
-
         if (!userAndProfile) {
             res.status(404).json({ message: 'User not found' });
             return;
@@ -38,29 +38,34 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
     }
 }
 
+// -------------------- MODIFY USERNAME --------------------
 export const modifyUsername = async (req: Request, res: Response, next: NextFunction) => {
     try {
-
         const userId: TUserId = req.params.id;
         const usernameData: TUsername = req.body.username;
 
         const parsedUsername = usernameSchema.parse(usernameData);
+        const parsedUserId = validateUserId(res, userId);
+        if (!parsedUserId) return;
 
-        const validatedId = validateUserId(res, userId);
-        if (!validatedId) return;
-
-        const parsedUserId = validatedId.data;
-        const user = await findUserById(parsedUserId);
-
-        if (!user?.profileId) {
-            res.status(404).json({ message: 'this user has no associated any profile' });
+        const user = await findUserAndProfileById(parsedUserId);
+        if (!user?.profile) {
+            res.status(404).json({ message: 'This user has no associated profile' });
             return;
         }
 
-        const profile = await findProfileById(user?.profileId);
-        await updateProfileUsernameById(profile?.id!, parsedUsername);
-        res.status(200).json({ message: 'ok' })
+        await updateProfileById(user.profile.id, { username: parsedUsername });
+        res.status(200).json({ message: 'Username updated successfully' });
+    } catch (err) {
+        next(err);
+    }
+}
 
+// -------------------- GET ALL USERS --------------------
+export const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const users = await getAllUsersDB();
+        res.status(200).json(users);
     } catch (err) {
         next(err);
     }

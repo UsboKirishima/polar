@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import api from './api';
+import api from './axiosApi';
 import { checkAuth } from './check-auth';
 import { useAuthStore } from './stores/auth';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const id = ref('');
 const email = ref('');
@@ -33,7 +36,7 @@ getUser();
 
 const logout = () => {
     auth.logout();
-    window.location.href = '#/login'
+    router.push('/login')
 }
 
 </script>
@@ -67,7 +70,7 @@ const logout = () => {
     <div v-else class="err">
         <img src="/logo_no_bg.png" alt="Polar">
         <h1>Error <b>401</b></h1>
-        <p>Sorry but you need to <a href="#/login">login</a> to view this page.</p>
+        <p>Sorry but you need to <router-link to="/login">login</router-link> to view this page.</p>
     </div>
 </template>
 

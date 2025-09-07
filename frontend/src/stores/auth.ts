@@ -1,17 +1,10 @@
 import { defineStore } from 'pinia';
-import api from '@/api';
+import api from '@/axiosApi';
+import { type User } from '@/types';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        user: null as null | {
-            id: string;
-            email: string;
-            profile: {
-                username: string,
-                dateOfBirth: Date,
-                fullName: string
-            }
-        },
+        user: null as null | User,
         isLoggedIn: false,
         loading: false,
     }),
