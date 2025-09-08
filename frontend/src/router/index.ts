@@ -9,6 +9,9 @@ import ExHome from '@/views/ExHome.vue';
 import UserDetails from '@/views/UserDetails.vue';
 import { useAuthStore } from '@/stores/auth';
 import Friends from '@/views/Friends.vue';
+import Post from '@/views/PostDetails.vue'
+import PostDetails from '@/views/PostDetails.vue';
+import Posts from '@/views/Posts.vue';
 
 const routes = [
     {
@@ -56,6 +59,18 @@ const routes = [
         name: 'user-details',
         component: UserDetails,
         props: true,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/posts',
+        name: 'posts',
+        component: Posts,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/posts/:id',
+        name: 'post',
+        component: PostDetails,
         meta: { requiresAuth: true }
     },
     {

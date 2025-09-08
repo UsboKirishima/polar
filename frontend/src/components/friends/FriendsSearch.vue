@@ -9,7 +9,7 @@ const friendStore = useFriendStore();
 const searchContent = ref('');
 
 const handleSearch = async () => {
-    await friendStore.sendRequest(searchContent.value);
+    await friendStore.sendRequestByUsername(searchContent.value);
 }
 
 const handleKeyPress = (event: KeyboardEvent) => {

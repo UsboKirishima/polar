@@ -1,0 +1,137 @@
+import { defineStore } from "pinia";
+import type { Post } from "@/types";
+import {
+    getAllPosts,
+    getPostById,
+    getAllPostsByUserId,
+    toggleLike,
+    createPost,
+    deletePost,
+    addComment,
+    removeComment
+} from "@/api/posts";
+
+export const usePostStore = defineStore("post", {
+    state: () => ({
+        posts: [] as Post[],
+        myPosts: [] as Post[],
+        loading: false,
+        error: null as string | null
+    }),
+    actions: {
+        async fetchAllPosts() {
+            this.loading = true;
+            this.error = null;
+            try {
+                const response = await getAllPosts();
+                this.posts = response.data;
+            } catch (err: any) {
+                this.error = err.response?.data?.message || "Failed to fetch all posts";
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async fetchPostById(postId: string) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const response = await getPostById(postId);
+                return response.data;
+            } catch (err: any) {
+                this.error = err.response?.data?.message || "Failed to fetch post";
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async fetchAllPostsByUser(userId: string) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const response = await getAllPostsByUserId(userId);
+                this.myPosts = response.data;
+            } catch (err: any) {
+                this.error = err.response?.data?.message || "Failed to fetch user's posts";
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async createNewPost(text: string, categories: { name: string }[]) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const response = await createPost(text, categories);
+                this.posts.unshift(response.data.post); // aggiungi il nuovo post in cima
+            } catch (err: any) {
+                this.error = err.response?.data?.message || "Failed to create post";
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async deletePost(postId: string) {
+            this.loading = true;
+            this.error = null;
+            try {
+                await deletePost(postId);
+                this.posts = this.posts.filter(p => p.id !== postId);
+                this.myPosts = this.myPosts.filter(p => p.id !== postId);
+            } catch (err: any) {
+                this.error = err.response?.data?.message || "Failed to delete post";
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async togglePostLike(postId: string) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const response = await toggleLike(postId);
+                // refresh likes
+                const index = this.posts.findIndex(p => p.id === postId);
+                if (index !== -1) {
+                    this.posts[index] = response.data;
+                }
+            } catch (err: any) {
+                this.error = err.response?.data?.message || "Failed to toggle like";
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async addPostComment(postId: string, text: string) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const response = await addComment(postId, text);
+                const index = this.posts.findIndex(p => p.id === postId);
+                if (index !== -1) {
+                    this.posts[index].comments.push(response.data.comment);
+                }
+            } catch (err: any) {
+                this.error = err.response?.data?.message || "Failed to add comment";
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async removePostComment(postId: string, commentId: string) {
+            this.loading = true;
+            this.error = null;
+            try {
+                await removeComment(commentId);
+                const postIndex = this.posts.findIndex(p => p.id === postId);
+                if (postIndex !== -1) {
+                    this.posts[postIndex].comments = this.posts[postIndex].comments.filter(c => c.id !== commentId);
+                }
+            } catch (err: any) {
+                this.error = err.response?.data?.message || "Failed to remove comment";
+            } finally {
+                this.loading = false;
+            }
+        }
+    }
+});

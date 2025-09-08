@@ -7,6 +7,8 @@ import {
     acceptFriendRequest,
     denyFriendRequest
 } from "@/api/friends";
+import { getUserByUsername } from "@/api/users";
+import type { User } from "@/types";
 
 export const useFriendStore = defineStore("friend", {
     state: () => ({
@@ -55,6 +57,30 @@ export const useFriendStore = defineStore("friend", {
             this.loading = true;
             this.error = null;
             try {
+                await sendFriendRequest(receiverId);
+                await this.fetchPendingRequests(); // refresh requests
+            } catch (err: any) {
+                this.error = err.response?.data?.message || "Failed to send friend request";
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        /**
+         * Send a new friend request with given username 
+         */
+        async sendRequestByUsername(username: string) {
+            this.loading = true;
+            this.error = null;
+            try {
+                /**
+                 * Retrive receiverId by scanning users
+                 * TODO: optimize this shit in future
+                 */
+                const response = await getUserByUsername(username);
+                console.log(response)
+                const receiverId = response.data.id;
+
                 await sendFriendRequest(receiverId);
                 await this.fetchPendingRequests(); // refresh requests
             } catch (err: any) {
