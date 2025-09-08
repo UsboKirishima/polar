@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import api from './axiosApi';
-import { checkAuth } from './check-auth';
-import { useAuthStore } from './stores/auth';
+import api from '../axiosApi';
+import { checkAuth } from '../check-auth';
+import { useAuthStore } from '../stores/auth';
 import { useRouter } from 'vue-router';
+import { useFriendStore } from '@/stores/friends';
 
 const router = useRouter();
 
@@ -14,6 +15,7 @@ const isLoading = ref(false);
 
 
 const auth = useAuthStore();
+const friendStore = useFriendStore();
 
 const getUser = async () => {
     isLoading.value = true;
@@ -48,7 +50,7 @@ const logout = () => {
                 <img src="/pfp_placeholder.png" alt="Profile pic">
                 <div class="stats">
                     <p>Posts: 22</p>
-                    <p>Friends: 122</p>
+                    <p>Friends: {{ friendStore.friends?.length || 0 }}</p>
                     <p>Likes: 13k</p>
                 </div>
             </div>

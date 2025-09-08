@@ -10,13 +10,13 @@ import NotFound from './components/NotFound.vue';
 
 import { useAuthStore } from './stores/auth';
 
-import Home from './Home.vue';
-import Feed from './Feed.vue';
-import Login from './Login.vue';
-import Profile from './Profile.vue';
-import Register from './Register.vue';
-import ExHome from './ExHome.vue';
-import Users from './Users.vue';
+import Home from './views/Home.vue';
+import Feed from './views/Feed.vue';
+import Login from './views/Login.vue';
+import Profile from './views/Profile.vue';
+import Register from './views/Register.vue';
+import ExHome from './views/ExHome.vue';
+import Users from './views/Users.vue';
 
 const routes = {
     '/': ExHome,

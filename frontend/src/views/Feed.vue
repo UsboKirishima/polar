@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, type Ref } from 'vue'
-import FeedHeader from './components/feed/FeedHeader.vue'
-import FeedContent from './components/feed/FeedContent.vue'
-import FeedSidebar from './components/feed/FeedSidebar.vue'
-import type { Friend, Suggestion } from './components/feed/ListItem.vue'
+import FeedHeader from '../components/feed/FeedHeader.vue'
+import FeedContent from '../components/feed/FeedContent.vue'
+import FeedSidebar from '../components/feed/FeedSidebar.vue'
+import type { Friend, Suggestion } from '../components/feed/ListItem.vue'
 
 const feedConfig = {
     page: ref<'explore' | 'friends'>('explore')

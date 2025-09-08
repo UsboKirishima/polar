@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import OnlineFriends from './components/OnlineFriends.vue';
-import UnreadMessages from './components/UnreadMessages.vue';
-import NearYou from './components/NearYou.vue';
-import TrendingCategories from './components/TrendingCategories.vue';
-import { useAuthStore } from './stores/auth';
+import OnlineFriends from '../components/OnlineFriends.vue';
+import UnreadMessages from '../components/UnreadMessages.vue';
+import NearYou from '../components/NearYou.vue';
+import TrendingCategories from '../components/TrendingCategories.vue';
+import { useAuthStore } from '../stores/auth';
 
 const auth = useAuthStore();
 </script>

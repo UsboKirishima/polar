@@ -15,7 +15,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import api from './axiosApi'
+import api from '../axiosApi'
 
 const route = useRoute()
 const user = ref(null)

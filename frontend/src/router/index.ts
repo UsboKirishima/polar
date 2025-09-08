@@ -1,14 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Feed from '@/Feed.vue';
-import Login from '@/Login.vue';
-import Profile from '@/Profile.vue';
-import Register from '@/Register.vue';
-import Users from '@/Users.vue';
+import Feed from '@/views/Feed.vue';
+import Login from '@/views/Login.vue';
+import Profile from '@/views/Profile.vue';
+import Register from '@/views/Register.vue';
+import Users from '@/views/Users.vue';
 import NotFound from '@/components/NotFound.vue';
-import ExHome from '@/ExHome.vue';
-import UserDetails from '@/UserDetails.vue';
+import ExHome from '@/views/ExHome.vue';
+import UserDetails from '@/views/UserDetails.vue';
 import { useAuthStore } from '@/stores/auth';
-import Friends from '@/Friends.vue';
+import Friends from '@/views/Friends.vue';
 
 const routes = [
     {

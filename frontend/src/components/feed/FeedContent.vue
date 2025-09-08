@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Post } from '@/Feed.vue';
+import type { Post } from '@/views/Feed.vue';
 import { ref } from 'vue';
 import FeedPosts from './FeedPosts.vue';
 

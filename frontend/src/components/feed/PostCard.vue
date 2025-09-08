@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Post } from '@/Feed.vue';
+import type { Post } from '@/views/Feed.vue';
 import { faCommentDots, faComments, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 

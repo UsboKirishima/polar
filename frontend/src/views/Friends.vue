@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import FriendsHeader from './components/friends/FriendsHeader.vue';
-import FriendsList from './components/friends/FriendsList.vue';
-import { useFriendStore } from './stores/friends';
+import FriendsHeader from '../components/friends/FriendsHeader.vue';
+import FriendsList from '../components/friends/FriendsList.vue';
+import { useFriendStore } from '../stores/friends';
+import { counter } from '@fortawesome/fontawesome-svg-core';
+import FriendsSearch from '@/components/friends/FriendsSearch.vue';
 
 
 const friendsConfig = {
@@ -24,7 +26,10 @@ onMounted(() => {
 <template>
     <div class="friends-container">
         <div class="friends-space">
-            <FriendsHeader :currentPage="friendsConfig.page.value" @change-page="setPage" />
+            <FriendsHeader :currentPage="friendsConfig.page.value" @change-page="setPage"
+                :friendsCount="friendStore.friends?.length || 0"
+                :requests-count="friendStore.pendingRequests?.length || 0" />
+            <FriendsSearch />
             <FriendsList :current-page="friendsConfig.page.value" />
         </div>
 
