@@ -81,6 +81,21 @@ export function findUserAndProfileById(userId: string) {
     });
 }
 
+export function findUserAndProfileByUsername(username: string) {
+    return db.user.findFirst({
+        where: {
+            profile: {
+                is: {
+                    username
+                }
+            }
+        },
+        include: {
+            profile: true
+        }
+    });
+}
+
 
 export function updateProfileById(profileId: string, updates: Partial<SimpleProfileSchema>) {
     return db.profile.update({

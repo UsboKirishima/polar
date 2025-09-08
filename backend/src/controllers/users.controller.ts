@@ -3,7 +3,8 @@ import { TUserId, TUsername, userIdSchema, usernameSchema } from "../types/zod";
 import {
     findUserAndProfileById,
     updateProfileById,
-    getAllUsers as getAllUsersDB
+    getAllUsers as getAllUsersDB,
+    findUserAndProfileByUsername
 } from "../services/users.service";
 
 const validateUserId = (res: Response, userId: string) => {
@@ -26,6 +27,29 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
         if (!parsedUserId) return;
 
         const userAndProfile = await findUserAndProfileById(parsedUserId);
+        if (!userAndProfile) {
+            res.status(404).json({ message: 'User not found' });
+            return;
+        }
+
+        const { password, ...userWithoutPassword } = userAndProfile;
+        res.json(userWithoutPassword);
+    } catch (err) {
+        next(err);
+    }
+}
+
+// -------------------- GET USER BY USERNAME --------------------
+export const getUserByUsername = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const username: TUsername = req.params.username;
+
+        if (!username) {
+            res.status(400).json({ error: "username is required" });
+            return;
+        }
+
+        const userAndProfile = await findUserAndProfileByUsername(username);
         if (!userAndProfile) {
             res.status(404).json({ message: 'User not found' });
             return;
