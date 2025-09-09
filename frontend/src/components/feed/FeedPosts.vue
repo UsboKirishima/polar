@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Post } from '@/views/Feed.vue';
+import type { Post } from '@/types';
 import PostCard from './PostCard.vue';
 const props = defineProps<{
     posts: Array<Post>;

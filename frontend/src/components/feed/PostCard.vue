@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import type { Post } from '@/views/Feed.vue';
-import { faCommentDots, faComments, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { useAuthStore } from '@/stores/auth';
+import { usePostStore } from '@/stores/posts';
+import type { Post } from '@/types';
+import { faCommentDots, faComments, faHeartBroken, faHeart as likedIcon } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
 
 const props = defineProps<{
     post: Post;
@@ -32,28 +37,54 @@ const randomColor = () => {
     // Convert alpha from 0-255 to 0-1
     return `background: rgba(${r}, ${g}, ${b}, ${a / 255});`
 }
+
+const router = useRouter();
+const postStore = usePostStore();
+
+const handlePostClick = () => {
+    router.push(`/posts/${props.post.id}`);
+}
+
+const fetchPost = async () => {
+    const data = await postStore.fetchPostById(props.post.id);
+    if (data) postMutable.value = data;
+};
+
+
+const postMutable = ref<Post>(props.post);
+
+const authRouter = useAuthStore();
+const hasLikesPost = computed(() => {
+    return postMutable.value.likes.some(like => like.userId === authRouter.user?.id);
+});
+
+const handlePostLike = async () => {
+    await postStore.togglePostLike(props.post.id);
+    await fetchPost()
+};
+
 </script>
 
 <template>
     <div class="post-container" :style="randomColor()">
         <div class="post-header">
-            <img :src="post.author.avatar" alt="">
+            <img src="/pfp_placeholder.png" alt="">
             <div class="h-info">
-                <p class="username">{{ post.author.username }}</p>
-                <p class="place">{{ post.author.place }}</p>
+                <p class="username">{{ postMutable.author.profile.fullName || 'Unknown' }}</p>
+                <p class="place">@{{ post.author.profile.username || 'Unknown' }}</p>
             </div>
         </div>
-        <div class="body">
-            <p class="content">{{ post.text }}</p>
+        <div class="body" @click="handlePostClick">
+            <p class="content">{{ postMutable.text || 'Unknown' }}</p>
         </div>
         <div class="controls">
-            <div>
-                <FontAwesomeIcon :icon="faHeart" />
-                <p class="count">{{ post.likes }}</p>
+            <div @click="handlePostLike">
+                <FontAwesomeIcon :icon="likedIcon" :style="hasLikesPost ? { color: '#ab5382' } : { color: '#fff' }" />
+                <p class="count">{{ postMutable.likes.length || 0 }}</p>
             </div>
             <div>
                 <FontAwesomeIcon :icon="faCommentDots" />
-                <p class="count">{{ post.comments.length }}</p>
+                <p class="count">{{ postMutable.comments.length || 0 }}</p>
             </div>
         </div>
     </div>
@@ -97,6 +128,7 @@ const randomColor = () => {
 
 .body {
     margin-top: 24px;
+    cursor: pointer;
 }
 
 .content {
@@ -113,6 +145,7 @@ const randomColor = () => {
     display: flex;
     margin-right: 10px;
     align-items: center;
+    cursor: pointer;
 }
 
 .controls div .count {

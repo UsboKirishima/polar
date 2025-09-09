@@ -27,6 +27,8 @@ export interface PostComment {
     text: string;
     post: Post;
     postId: string;
+    user: User;
+    userId: string;
 }
 
 export interface Post {

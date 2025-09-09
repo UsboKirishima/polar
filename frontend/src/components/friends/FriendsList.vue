@@ -110,11 +110,6 @@ const denyRequest = (senderId: string) => {
     font-weight: bold;
 }
 
-.loading {
-    color: #666;
-    text-align: center;
-}
-
 .error {
     color: red;
     text-align: center;

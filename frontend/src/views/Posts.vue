@@ -4,7 +4,6 @@ import { onMounted } from 'vue';
 
 const postStore = usePostStore();
 
-
 onMounted(async () => {
     await postStore.fetchAllPosts();
 })

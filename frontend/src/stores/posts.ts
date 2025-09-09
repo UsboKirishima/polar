@@ -90,10 +90,12 @@ export const usePostStore = defineStore("post", {
             this.error = null;
             try {
                 const response = await toggleLike(postId);
+
+                const refreshedPost = await this.fetchPostById(postId);
                 // refresh likes
                 const index = this.posts.findIndex(p => p.id === postId);
                 if (index !== -1) {
-                    this.posts[index] = response.data;
+                    this.posts[index] = refreshedPost;
                 }
             } catch (err: any) {
                 this.error = err.response?.data?.message || "Failed to toggle like";

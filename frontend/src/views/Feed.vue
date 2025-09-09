@@ -1,15 +1,23 @@
 <script setup lang="ts">
-import { ref, type Ref } from 'vue'
+import { onMounted, ref, type Ref } from 'vue'
 import FeedHeader from '../components/feed/FeedHeader.vue'
 import FeedContent from '../components/feed/FeedContent.vue'
 import FeedSidebar from '../components/feed/FeedSidebar.vue'
 import type { Friend, Suggestion } from '../components/feed/ListItem.vue'
+import { useFriendStore } from '@/stores/friends'
+import { usePostStore } from '@/stores/posts'
+import PageLoading from '@/components/PageLoading.vue'
+
+const friendStore = useFriendStore();
+const postStore = usePostStore();
 
 const feedConfig = {
     page: ref<'explore' | 'friends'>('explore')
 }
 
-const setPage = (page: 'explore' | 'friends') => {
+const setPage = async (page: 'explore' | 'friends') => {
+    await friendStore.fetchFriends();
+    await postStore.fetchAllPosts();
     feedConfig.page.value = page;
 }
 
@@ -68,13 +76,22 @@ export interface Post {
     comments: PostComment[];
     text: string;
 }
+
+onMounted(async () => {
+    friendStore.fetchFriends();
+    await postStore.fetchAllPosts();
+})
 </script>
 
 <template>
-    <div class="feed-container">
+
+    <div v-if="friendStore.loading || postStore.loading && !postStore.posts.length" class="loading">
+        <PageLoading />
+    </div>
+    <div v-else class="feed-container">
         <div class="feed-space">
             <FeedHeader :currentPage="feedConfig.page.value" @change-page="setPage" />
-            <FeedContent :currentPage="feedConfig.page.value" />
+            <FeedContent :currentPage="feedConfig.page.value" :posts="postStore.posts" />
         </div>
 
         <FeedSidebar :friends="[...friends.values()]" :suggestions="[...suggestions.values()]" />
