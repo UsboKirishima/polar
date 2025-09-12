@@ -29,6 +29,7 @@ router.get('/profile', isAuthenticated, async (req: AuthenticatedRequest, res: R
 // Gets
 router.get('/', isAuthenticated, UsersController.getAllUsers) // Returns all the users id, avatars and usernames
 router.get('/:id', isAuthenticated, UsersController.getUserById);
+router.get('/:id/friends', isAuthenticated, UsersController.getAllFriends);
 router.get('/u/:username', isAuthenticated, UsersController.getUserByUsername)
 
 // Profile settings

@@ -51,6 +51,7 @@ export const usePostStore = defineStore("post", {
             try {
                 const response = await getAllPostsByUserId(userId);
                 this.myPosts = response.data;
+                return response.data;
             } catch (err: any) {
                 this.error = err.response?.data?.message || "Failed to fetch user's posts";
             } finally {

@@ -1,10 +1,16 @@
+export type Role = 'USER' | 'ADMIN';
+
 export interface User {
     id: string;
     email: string;
+    role: Role;
+    likes: Like[];
+    createdAt: Date;
     profile: {
         username: string,
         dateOfBirth: Date,
-        fullName: string
+        fullName: string,
+        bio: string
     }
 }
 

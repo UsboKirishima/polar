@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { usePostStore } from "@/stores/posts";
 import { type Post } from "@/types";
 import { useAuthStore } from "@/stores/auth";
@@ -15,6 +15,7 @@ dayjs.extend(relativeTime);
 
 const route = useRoute();
 const postStore = usePostStore();
+const router = useRouter();
 const auth = useAuthStore()
 const postId = route.params.id as string;
 
@@ -50,15 +51,19 @@ const deleteComment = async (commentId: string) => {
     await fetchPost();
 };
 
+const goBack = () => {
+    router.go(-1);
+}
+
 onMounted(fetchPost);
 </script>
 
 <template>
     <div class="container" v-if="post">
         <div class="header">
-            <router-link to="/feed" class="back-ic">
+            <div @click="goBack" class="back-ic">
                 <FontAwesomeIcon :icon="faArrowLeft" />
-            </router-link>
+            </div>
             <h2>Post by <b>{{ post!.author.profile.fullName }}</b></h2>
         </div>
         <div class="post-detail">
@@ -79,12 +84,12 @@ onMounted(fetchPost);
                     <div class="profile">
                         <img src="/pfp_placeholder.png" alt="">
                         <div>
-                            <p id="name">Davide Usberti</p>
-                            <p id="tag">@usbo</p>
+                            <p id="name">{{ comment.user.profile?.fullName || 'unknown' }}</p>
+                            <p id="tag">@{{ comment.user.profile?.username || 'unknown' }}</p>
                         </div>
                     </div>
-                    <p class="content">{{ comment.text }}</p>
-                    <p class="date">{{ dayjs(comment.createdAt).fromNow() }}</p>
+                    <p class="content">{{ comment.text || 'unknown' }}</p>
+                    <p class="date">{{ dayjs(comment.createdAt).fromNow() || 'unknown' }}</p>
                 </div>
             </div>
         </div>

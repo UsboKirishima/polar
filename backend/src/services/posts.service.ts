@@ -105,6 +105,7 @@ export const createNewComment = async (
         },
         include: {
             post: true,
+            user: true
         },
     });
 };
@@ -123,7 +124,10 @@ export const deleteComment = async (commentId: string) => {
  */
 export const getCommentById = async (commentId: string) => {
     return await db.comment.findFirst({
-        where: { id: commentId }
+        where: { id: commentId },
+        include: {
+            user: true
+        }
     })
 }
 
@@ -138,6 +142,7 @@ export const getPostByid = async (postId: string) => {
                 select: {
                     id: true,
                     email: true,
+                    role: true,
                     profile: {
                         select: {
                             username: true,
@@ -147,7 +152,17 @@ export const getPostByid = async (postId: string) => {
                 },
             },
             categories: true,
-            comments: true,
+            comments: {
+                include: {
+                        user: {
+                                include: {
+                                        password: false,
+                                        profile: true
+                                }
+                        },
+                        
+                },
+            }, 
             likes: {
                 include: {
                     user: {
@@ -175,14 +190,18 @@ export const getPostsByUserId = async (userId: string) => {
         include: {
             categories: true,
             comments: true,
+            author: {
+                include: {
+                        password: false,
+                        profile: true
+                }
+            },
             likes: {
                 include: {
                     user: {
                         select: {
                             id: true,
-                            profile: {
-                                select: { username: true },
-                            },
+                            profile: true,
                         },
                     },
                 },
@@ -202,10 +221,12 @@ export const getAllPosts = async () => {
                 select: {
                     id: true,
                     email: true,
+                    role: true,
                     profile: {
                         select: {
                             username: true,
                             fullName: true,
+                            bio: true
                         },
                     },
                 },
@@ -217,6 +238,7 @@ export const getAllPosts = async () => {
                     user: {
                         select: {
                             id: true,
+                            role: true,
                             profile: {
                                 select: { username: true },
                             },

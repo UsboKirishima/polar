@@ -2,10 +2,12 @@
 import { useAuthStore } from '@/stores/auth';
 import { usePostStore } from '@/stores/posts';
 import type { Post } from '@/types';
-import { faCommentDots, faComments, faHeartBroken, faHeart as likedIcon } from '@fortawesome/free-solid-svg-icons';
+import { faCommentDots, faComments, faFileWord, faHeartBroken, faHeart as likedIcon } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import Username from '../Username.vue';
+import ProfileFloatCard from '../profile/ProfileFloatCard.vue';
 
 
 const props = defineProps<{
@@ -30,6 +32,15 @@ const palettes = [
     [120, 60, 120, 255],  // Dark rose
 ];
 
+// -------- Hover Card ---------
+const profileHover = ref(false);
+const mouseX = ref(0);
+const mouseY = ref(0);
+
+const handleMouseMove = (event: MouseEvent) => {
+    mouseX.value = event.clientX;
+    mouseY.value = event.clientY;
+};
 
 
 const randomColor = () => {
@@ -66,23 +77,37 @@ const handlePostLike = async () => {
 </script>
 
 <template>
-    <div class="post-container" :style="randomColor()">
-        <div class="post-header">
-            <img src="/pfp_placeholder.png" alt="">
-            <div class="h-info">
-                <p class="username">{{ postMutable.author.profile.fullName || 'Unknown' }}</p>
-                <p class="place">@{{ post.author.profile.username || 'Unknown' }}</p>
-            </div>
+    <div class="post-container" :style="{ background: '#7cb5ff13' }">
+        <div @mouseenter="profileHover = true" @mouseleave="profileHover = false" @mousemove="handleMouseMove">
+            <router-link :to="`/users/${post.author.id}`" class="post-header">
+                <Transition name="fade-slide">
+                    <ProfileFloatCard v-if="profileHover" :user="post.author" :mouse-x="mouseX" :mouse-y="mouseY" />
+                </Transition>
+                <img src="/pfp_placeholder.png" alt="">
+                <div class="h-info">
+                    <Username :username="postMutable.author.profile.fullName || 'Unknown'"
+                        :is-verified="postMutable.author.role === 'ADMIN'" />
+                    <p class="place">@{{ post.author.profile.username || 'Unknown' }}</p>
+                </div>
+            </router-link>
         </div>
         <div class="body" @click="handlePostClick">
-            <p class="content">{{ postMutable.text || 'Unknown' }}</p>
+            <p class="content">
+                <template v-for="(word, index) in post.text.split(' ')" :key="index">
+                    <a v-if="word.startsWith('#')" :href="`/categories/${word.slice(1)}`" class="hashtag">
+                        {{ word }}
+                    </a>
+                    <span v-else>{{ word }}</span>
+                    {{ index !== post.text.split(' ').length - 1 ? ' ' : '' }}
+                </template>
+            </p>
         </div>
         <div class="controls">
             <div @click="handlePostLike">
                 <FontAwesomeIcon :icon="likedIcon" :style="hasLikesPost ? { color: '#ab5382' } : { color: '#fff' }" />
                 <p class="count">{{ postMutable.likes.length || 0 }}</p>
             </div>
-            <div>
+            <div @click="handlePostClick">
                 <FontAwesomeIcon :icon="faCommentDots" />
                 <p class="count">{{ postMutable.comments.length || 0 }}</p>
             </div>
@@ -105,6 +130,9 @@ const handlePostLike = async () => {
     display: flex;
     flex-direction: row;
     align-items: center;
+    text-decoration: none;
+    position: relative;
+    z-index: 1;
 }
 
 .post-header img {
@@ -133,6 +161,17 @@ const handlePostLike = async () => {
 
 .content {
     color: white;
+    display: block;
+}
+
+.hashtag {
+    color: #cfa5ff;
+    text-decoration: none;
+    display: inline;
+}
+
+.hashtag:hover {
+    text-decoration: underline;
 }
 
 .controls {
@@ -152,5 +191,22 @@ const handlePostLike = async () => {
     margin-left: 5px;
     font-weight: 200;
     font-size: 0.8rem;
+}
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.fade-slide-enter-to,
+.fade-slide-leave-from {
+    opacity: 1;
+    transform: translateY(0);
 }
 </style>

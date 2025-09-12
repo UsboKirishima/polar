@@ -37,6 +37,7 @@ const props = defineProps<{
     display: flex;
     flex-direction: column;
     padding-top: 28px;
+    z-index: 90;
 }
 
 .sb-friends {

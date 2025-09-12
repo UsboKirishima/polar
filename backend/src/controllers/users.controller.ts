@@ -4,7 +4,8 @@ import {
     findUserAndProfileById,
     updateProfileById,
     getAllUsers as getAllUsersDB,
-    findUserAndProfileByUsername
+    findUserAndProfileByUsername,
+    findAllFriendsByUsedId
 } from "../services/users.service";
 
 const validateUserId = (res: Response, userId: string) => {
@@ -80,6 +81,24 @@ export const modifyUsername = async (req: Request, res: Response, next: NextFunc
 
         await updateProfileById(user.profile.id, { username: parsedUsername });
         res.status(200).json({ message: 'Username updated successfully' });
+    } catch (err) {
+        next(err);
+    }
+}
+
+// -------------------- GET ALL FRIENDS -------------------
+export const getAllFriends = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userId: TUserId = req.params.id;
+        const user = await findAllFriendsByUsedId(userId);
+
+        if (!user) {
+            res.status(404).json({ message: 'user not found' });
+            return;
+        }
+        
+        const friendsOnly = user.friends;
+        res.status(200).json(friendsOnly);
     } catch (err) {
         next(err);
     }

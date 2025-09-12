@@ -3,14 +3,13 @@ import type { Post } from '@/types';
 import PostCard from './PostCard.vue';
 const props = defineProps<{
     posts: Array<Post>;
-    type: 'explore' | 'friends';
 }>();
 
 </script>
 
 <template>
     <div v-for="post in posts">
-        <PostCard :post="post" />
+        <PostCard :post="post" class="post" />
     </div>
 </template>
 

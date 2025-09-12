@@ -1,8 +1,10 @@
-import bcrypt from 'bcrypt';
-import { db } from '../utils/db';
-import { profileSchema, TUserSchema } from '../types/zod';
-import { SimpleProfileSchema, SimpleUserSchema } from '../types/general';
-import { Profile, User } from '../generated/prisma';
+import bcrypt from "bcrypt";
+
+import type { SimpleProfileSchema, SimpleUserSchema } from "../types/general.js";
+
+import { Profile, User } from "../generated/prisma.js";
+import { profileSchema, TUserSchema } from "../types/zod.js";
+import { db } from "../utils/db.js";
 
 export function findUserByEmail(email: string) {
     return db.user.findUnique({
@@ -12,10 +14,10 @@ export function findUserByEmail(email: string) {
     });
 }
 
-interface UserMailNPassword {
+type UserMailNPassword = {
     email: string;
     password: string;
-}
+};
 
 export function createUserByEmailAndPassword(user: UserMailNPassword) {
     user.password = bcrypt.hashSync(user.password, 12);
@@ -24,8 +26,7 @@ export function createUserByEmailAndPassword(user: UserMailNPassword) {
     });
 }
 
-
-export function createUserWithProfile(user: Omit<SimpleUserSchema, 'profile.bio'> & { profile: Omit<SimpleProfileSchema, 'bio'> }) {
+export function createUserWithProfile(user: Omit<SimpleUserSchema, "profile.bio"> & { profile: Omit<SimpleProfileSchema, "bio"> }) {
     const hashedPassword = bcrypt.hashSync(user.password, 12);
     return db.user.create({
         data: {
@@ -43,7 +44,6 @@ export function createUserWithProfile(user: Omit<SimpleUserSchema, 'profile.bio'
     });
 }
 
-
 export function createProfile(profile: SimpleProfileSchema, userId: string) {
     return db.profile.create({
         data: {
@@ -51,11 +51,10 @@ export function createProfile(profile: SimpleProfileSchema, userId: string) {
             dateOfBirth: new Date(profile.dateOfBirth),
             fullName: profile.fullName,
             bio: profile.bio ?? "unknown",
-            userId: userId,
+            userId,
         },
     });
 }
-
 
 export function findUserById(id: string) {
     return db.user.findUnique({
@@ -73,11 +72,10 @@ export function findProfileById(profileId: string) {
     });
 }
 
-
 export function findUserAndProfileById(userId: string) {
     return db.user.findUnique({
         where: { id: userId },
-        include: { profile: true },
+        include: { likes: true, profile: true },
     });
 }
 
@@ -86,16 +84,41 @@ export function findUserAndProfileByUsername(username: string) {
         where: {
             profile: {
                 is: {
-                    username
-                }
-            }
+                    username,
+                },
+            },
         },
         include: {
-            profile: true
-        }
+            profile: true,
+        },
     });
 }
 
+export function findAllFriendsByUsedId(userId: string) {
+    return db.user.findUnique({
+        where: {
+            id: userId,
+        },
+        include: {
+            friends: {
+                include: {
+                    friend: {
+                        include: {
+                                password: false,
+                                profile: true
+                        }
+                    },
+                    user: {
+                        include: {
+                                password: false,
+                            profile: true
+                        }
+                    },
+                }
+            },
+        },
+    });
+}
 
 export function updateProfileById(profileId: string, updates: Partial<SimpleProfileSchema>) {
     return db.profile.update({
@@ -114,7 +137,8 @@ export function getAllUsers() {
     return db.user.findMany({
         select: {
             id: true,
-            profile: true
-        }
+            profile: true,
+        },
     });
 }
+

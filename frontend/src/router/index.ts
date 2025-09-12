@@ -12,6 +12,7 @@ import Friends from '@/views/Friends.vue';
 import Post from '@/views/PostDetails.vue'
 import PostDetails from '@/views/PostDetails.vue';
 import Posts from '@/views/Posts.vue';
+import NewPost from '@/views/NewPost.vue';
 
 const routes = [
     {
@@ -71,6 +72,12 @@ const routes = [
         path: '/posts/:id',
         name: 'post',
         component: PostDetails,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/posts/new',
+        name: 'newpost',
+        component: NewPost,
         meta: { requiresAuth: true }
     },
     {

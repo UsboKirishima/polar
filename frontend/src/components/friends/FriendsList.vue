@@ -3,18 +3,30 @@ import { onMounted, computed } from "vue";
 import { useFriendStore } from "@/stores/friends";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faCancel, faCheck, faCross, faCrosshairs } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "vue-router";
+import PageLoading from "../PageLoading.vue";
+import type { Friend } from "../feed/ListItem.vue";
+import type { Friendship } from "@/types/friends";
 
 // Props
 const props = defineProps<{
     currentPage: "friends" | "requests";
+    friends?: Friendship[];
 }>();
 
 // Store
 const friendStore = useFriendStore();
+const router = useRouter()
 
 // Fetch data on mount depending on currentPage
 onMounted(() => {
-    friendStore.fetchFriends();
+
+    if (props.friends) {
+        friendStore.friends = props.friends;
+    } else {
+        friendStore.fetchFriends();
+    }
+
     friendStore.fetchPendingRequests();
 });
 
@@ -37,11 +49,15 @@ const denyRequest = (senderId: string) => {
     friendStore.denyRequest(senderId);
     fetchAll();
 };
+
+const openFriend = (friendId: string) => {
+    window.location.href = `/users/${friendId}`;
+}
 </script>
 
 <template>
     <div class="friend-page">
-        <div v-if="friendStore.loading" class="loading">Loading...</div>
+        <PageLoading v-if="friendStore.loading" />
 
         <div v-else-if="friendStore.error" class="error">
             {{ friendStore.error }}
@@ -49,7 +65,8 @@ const denyRequest = (senderId: string) => {
 
         <div v-else-if="isFriendsPage">
             <ul v-if="friendStore.friends?.length" class="friend-list">
-                <li v-for="friend in friendStore.friends" :key="friend.id" class="friend-item">
+                <li v-for="friend in friendStore.friends" :key="friend.userId" @click="openFriend(friend.friend.id)"
+                    class="friend-item">
                     <span class="username">
                         <div class="indentifier">
                             <img src="/pfp_placeholder.png" alt="">
@@ -65,12 +82,13 @@ const denyRequest = (senderId: string) => {
                     </span>
                 </li>
             </ul>
-            <p v-else class="empty">You have no friends yet.</p>
+            <p v-else class="empty">No friends yet.</p>
         </div>
 
         <div v-else-if="isRequestsPage">
             <ul v-if="friendStore.pendingRequests?.length" class="request-list">
-                <li v-for="request in friendStore.pendingRequests" :key="request.id" class="request-item">
+                <li v-for="request in friendStore.pendingRequests" :key="request.id"
+                    @click="openFriend(request.senderId)" class="request-item">
                     <div class="indentifier">
                         <img src="/pfp_placeholder.png" alt="">
                         <div class="info">
@@ -131,7 +149,15 @@ const denyRequest = (senderId: string) => {
     padding: 0.75rem 1rem;
     border-radius: 8px;
     margin-bottom: 0.5rem;
-    background: #374151;
+    background: #7cb5ff3a;
+    cursor: pointer;
+    transition: 300ms;
+}
+
+.friend-item:hover,
+.request-item:hover {
+    opacity: 75%;
+    transition: 300ms;
 }
 
 .indentifier {

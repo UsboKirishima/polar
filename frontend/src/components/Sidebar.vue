@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faHouse, faBomb, faLocationDot, faComment, faUserGroup, faList, faBell, faUser, faBars } from '@fortawesome/free-solid-svg-icons';
+import { faHouse, faBomb, faLocationDot, faComment, faUserGroup, faList, faBell, faUser, faBars, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 const auth = useAuthStore();
 
@@ -14,7 +14,8 @@ const menuItems = computed(() => [
     { icon: faUserGroup, label: 'friends', path: '/friends' },
     { icon: faList, label: 'categories', path: '/categories' },
     { icon: faBell, label: 'requests', path: '/requests' },
-    { icon: faUser, label: auth.isLoggedIn ? 'my profile' : 'login', path: auth.isLoggedIn ? '/profile' : '/login' },
+    { icon: faPlusCircle, label: 'create post', path: '/posts/new' },
+    { icon: faUser, label: auth.isLoggedIn ? 'my profile' : 'login', path: auth.isLoggedIn ? `/users/${auth.user?.id}` : '/login' },
     { icon: faBars, label: 'other', path: '/users' }
 ]);
 
@@ -56,6 +57,7 @@ ul {
     flex-direction: column;
     justify-content: start;
     align-items: start;
+    position: relative;
 }
 
 li {
@@ -86,7 +88,6 @@ li .box:hover {
 .logo img {
     width: 120px;
 }
-
 
 .copyright {
     color: #ffffff3f;
