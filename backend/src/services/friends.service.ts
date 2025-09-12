@@ -78,6 +78,16 @@ export async function denyFriendRequest(senderId: string, receiverId: string) {
     });
 }
 
+export async function removeFriendship(userId: string, friendId: string) {
+    return db.friendship.delete({
+        where: {
+            userId_friendId: {
+                userId,
+                friendId
+            }
+        }
+    })
+}
 
 export async function getAllPendingFriendRequests(userId: string) {
     return await db.friendRequest.findMany({

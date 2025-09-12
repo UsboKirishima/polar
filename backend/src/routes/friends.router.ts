@@ -1,6 +1,7 @@
 import { Router } from "express";
+
 import * as friendController from "../controllers/friends.controller";
-import { isAuthenticated } from "../middlewares";
+import { isAuthenticated } from "../middlewares.js";
 
 const router = Router();
 
@@ -9,6 +10,9 @@ router.post("/request", isAuthenticated, friendController.createFriendRequest);
 
 // POST /friends/accept -> accept a friend request
 router.post("/accept", isAuthenticated, friendController.acceptFriendRequest);
+
+// POST /friends/remove -> Remove friend
+router.post("/remove", isAuthenticated, friendController.removeFriendship);
 
 // POST /friends/deny -> reject a friend request
 router.post("/deny", isAuthenticated, friendController.denyFriendRequest);
@@ -20,3 +24,4 @@ router.get("/requests", isAuthenticated, friendController.getAllPendingFriendReq
 router.get("/", isAuthenticated, friendController.getAllFriendsByUserId);
 
 export default router;
+

@@ -17,3 +17,7 @@ export const acceptFriendRequest = (senderId: string) =>
 // Deny a friend request
 export const denyFriendRequest = (senderId: string) =>
     api.post("/friends/deny", { senderId });
+
+// Remove a friend
+export const removeFriendship = (friendId: string) =>
+    api.post(`/friends/remove`, { friendId })

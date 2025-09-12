@@ -13,6 +13,7 @@ import Post from '@/views/PostDetails.vue'
 import PostDetails from '@/views/PostDetails.vue';
 import Posts from '@/views/Posts.vue';
 import NewPost from '@/views/NewPost.vue';
+import UserFromUsername from '@/views/UserFromUsername.vue';
 
 const routes = [
     {
@@ -60,6 +61,12 @@ const routes = [
         name: 'user-details',
         component: UserDetails,
         props: true,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/users/u/:username',
+        name: 'user-by-username',
+        component: UserFromUsername,
         meta: { requiresAuth: true }
     },
     {

@@ -5,7 +5,8 @@ import {
     getFriends,
     sendFriendRequest,
     acceptFriendRequest,
-    denyFriendRequest
+    denyFriendRequest,
+    removeFriendship
 } from "@/api/friends";
 import { getUserByUsername } from "@/api/users";
 import type { User } from "@/types";
@@ -118,6 +119,22 @@ export const useFriendStore = defineStore("friend", {
                 await this.fetchPendingRequests(); // refresh pending list
             } catch (err: any) {
                 this.error = err.response?.data?.message || "Failed to deny friend request";
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        /**
+         * Remove friend
+         */
+        async removeFriend(friendId: string) {
+            this.loading = true;
+            this.error = null;
+            try {
+                await removeFriendship(friendId);
+                await this.fetchFriends();
+            } catch (err: any) {
+                this.error = err.response?.data?.message || "Failed to remove friend";
             } finally {
                 this.loading = false;
             }

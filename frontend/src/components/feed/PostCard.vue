@@ -97,6 +97,7 @@ const handlePostLike = async () => {
                     <a v-if="word.startsWith('#')" :href="`/categories/${word.slice(1)}`" class="hashtag">
                         {{ word }}
                     </a>
+                    <a v-else-if="word.startsWith('@')" :href="`/users/u/${word.slice(1)}`" class="tags">{{ word }}</a>
                     <span v-else>{{ word }}</span>
                     {{ index !== post.text.split(' ').length - 1 ? ' ' : '' }}
                 </template>
@@ -164,12 +165,14 @@ const handlePostLike = async () => {
     display: block;
 }
 
+.tags,
 .hashtag {
     color: #cfa5ff;
     text-decoration: none;
     display: inline;
 }
 
+.tags:hover,
 .hashtag:hover {
     text-decoration: underline;
 }

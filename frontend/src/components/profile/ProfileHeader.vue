@@ -4,8 +4,9 @@ import Username from '../Username.vue';
 import { useFriendStore } from '@/stores/friends';
 import type { Friendship } from '@/types/friends';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faAdd, faArrowLeft, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faAdd, faArrowLeft, faEdit, faSignOut, faSquareArrowUpRight, faWindowClose } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
 
 const props = defineProps<{
     isProfilePage: boolean;
@@ -14,6 +15,13 @@ const props = defineProps<{
     friends: Friendship[];
 }>()
 
+
+const auth = useAuthStore();
+
+const logout = () => {
+    auth.logout()
+    window.location.href = '/login';
+}
 </script>
 
 <template>
@@ -52,6 +60,11 @@ const props = defineProps<{
                         </p>
                         <p v-else>
                             <FontAwesomeIcon id="add-friend" :icon="faEdit" />
+                        </p>
+                    </div>
+                    <div v-if="isProfilePage" @click="logout">
+                        <p id="add-friend">
+                            <FontAwesomeIcon :icon="faSignOut" />
                         </p>
                     </div>
                 </div>

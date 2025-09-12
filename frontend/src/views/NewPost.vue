@@ -44,6 +44,7 @@ const handleNewPost = async () => {
     await postStore.createNewPost(postContent.value, parsedCategories);
     postContent.value = '';
     await postStore.fetchAllPosts();
+    router.push('/feed');
 }
 
 const handleKeyPress = async (event: KeyboardEvent) => {

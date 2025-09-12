@@ -65,10 +65,9 @@ const openFriend = (friendId: string) => {
 
         <div v-else-if="isFriendsPage">
             <ul v-if="friendStore.friends?.length" class="friend-list">
-                <li v-for="friend in friendStore.friends" :key="friend.userId" @click="openFriend(friend.friend.id)"
-                    class="friend-item">
+                <li v-for="friend in friendStore.friends" :key="friend.userId" class="friend-item">
                     <span class="username">
-                        <div class="indentifier">
+                        <div class="indentifier" @click="openFriend(friend.friend.id)">
                             <img src="/pfp_placeholder.png" alt="">
                             <div class="info">
                                 <span class="username">
@@ -80,6 +79,12 @@ const openFriend = (friendId: string) => {
                             </div>
                         </div>
                     </span>
+                    <div class="controls">
+                        <button @click="friendStore.removeFriend(friend.friendId)" class="deny-btn">
+                            <FontAwesomeIcon :icon="faCancel" class="icon-btn" />
+                            Remove
+                        </button>
+                    </div>
                 </li>
             </ul>
             <p v-else class="empty">No friends yet.</p>
@@ -87,9 +92,8 @@ const openFriend = (friendId: string) => {
 
         <div v-else-if="isRequestsPage">
             <ul v-if="friendStore.pendingRequests?.length" class="request-list">
-                <li v-for="request in friendStore.pendingRequests" :key="request.id"
-                    @click="openFriend(request.senderId)" class="request-item">
-                    <div class="indentifier">
+                <li v-for="request in friendStore.pendingRequests" :key="request.id" class="request-item">
+                    <div class="indentifier" @click="openFriend(request.senderId)">
                         <img src="/pfp_placeholder.png" alt="">
                         <div class="info">
                             <span class="username">
@@ -150,7 +154,6 @@ const openFriend = (friendId: string) => {
     border-radius: 8px;
     margin-bottom: 0.5rem;
     background: #7cb5ff3a;
-    cursor: pointer;
     transition: 300ms;
 }
 
@@ -163,6 +166,7 @@ const openFriend = (friendId: string) => {
 .indentifier {
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 
 .info {
@@ -208,6 +212,7 @@ img {
     cursor: pointer;
     background: #1c2532;
     transition: 300ms;
+    z-index: 89;
 
 }
 
