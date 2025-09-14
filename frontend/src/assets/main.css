@@ -25,3 +25,7 @@ a {
     background: rgba(255, 255, 255, 0.267);
     border-radius: 4px;
 }
+
+b {
+    font-weight: 700;
+}

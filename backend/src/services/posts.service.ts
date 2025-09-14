@@ -154,15 +154,18 @@ export const getPostByid = async (postId: string) => {
             categories: true,
             comments: {
                 include: {
-                        user: {
-                                include: {
-                                        password: false,
-                                        profile: true
-                                }
-                        },
-                        
+                    user: {
+                        select: {
+                            id: true,
+                            role: true,
+                            createdAt: true,
+                            updatedAt: true,
+                            profile: true
+                        }
+                    },
+
                 },
-            }, 
+            },
             likes: {
                 include: {
                     user: {
@@ -191,9 +194,12 @@ export const getPostsByUserId = async (userId: string) => {
             categories: true,
             comments: true,
             author: {
-                include: {
-                        password: false,
-                        profile: true
+                select: {
+                    id: true,
+                    role: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    profile: true
                 }
             },
             likes: {
@@ -250,3 +256,101 @@ export const getAllPosts = async () => {
         orderBy: { createdAt: "desc" },
     });
 };
+
+export const getAllCategories = async () => {
+    return await db.category.findMany({
+        select: {
+            id: true,
+            name: true,
+            posts: {
+                select: {
+                    id: true
+                }
+            }
+        },
+    })
+}
+
+export const getCategoryById = async (categoryId: number) => {
+    return await db.category.findUnique({
+        where: {
+            id: categoryId
+        },
+        include: {
+            posts: {
+                include: {
+                    author: {
+                        select: {
+                            id: true,
+                            email: true,
+                            role: true,
+                            profile: {
+                                select: {
+                                    username: true,
+                                    fullName: true,
+                                    bio: true
+                                },
+                            },
+                        },
+                    },
+                    comments: true,
+                    likes: {
+                        include: {
+                            user: {
+                                select: {
+                                    id: true,
+                                    role: true,
+                                    profile: {
+                                        select: { username: true },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                }
+            }
+        }
+    })
+}
+
+export const getCategoryByName = async (categoryName: string) => {
+    return await db.category.findUnique({
+        where: {
+            name: categoryName
+        },
+        include: {
+            posts: {
+                include: {
+                    author: {
+                        select: {
+                            id: true,
+                            email: true,
+                            role: true,
+                            profile: {
+                                select: {
+                                    username: true,
+                                    fullName: true,
+                                    bio: true
+                                },
+                            },
+                        },
+                    },
+                    comments: true,
+                    likes: {
+                        include: {
+                            user: {
+                                select: {
+                                    id: true,
+                                    role: true,
+                                    profile: {
+                                        select: { username: true },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                }
+            }
+        }
+    })
+}

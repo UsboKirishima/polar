@@ -14,6 +14,8 @@ import PostDetails from '@/views/PostDetails.vue';
 import Posts from '@/views/Posts.vue';
 import NewPost from '@/views/NewPost.vue';
 import UserFromUsername from '@/views/UserFromUsername.vue';
+import Categories from '@/views/Categories.vue';
+import CategoryDetails from '@/views/CategoryDetails.vue';
 
 const routes = [
     {
@@ -85,6 +87,24 @@ const routes = [
         path: '/posts/new',
         name: 'newpost',
         component: NewPost,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/categories',
+        name: 'categories',
+        component: Categories,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/categories/:categoryId',
+        name: 'category details',
+        component: CategoryDetails,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/categories/n/:categoryName',
+        name: 'category details by name',
+        component: CategoryDetails,
         meta: { requiresAuth: true }
     },
     {

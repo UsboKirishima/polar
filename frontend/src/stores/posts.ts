@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { Post } from "@/types";
+import type { Category, Post } from "@/types";
 import {
     getAllPosts,
     getPostById,
@@ -10,11 +10,13 @@ import {
     addComment,
     removeComment
 } from "@/api/posts";
+import { getAllCategories, getCategoryById, getCategoryByName } from "@/api/categories";
 
 export const usePostStore = defineStore("post", {
     state: () => ({
         posts: [] as Post[],
         myPosts: [] as Post[],
+        categories: [] as Category[],
         loading: false,
         error: null as string | null
     }),
@@ -135,6 +137,49 @@ export const usePostStore = defineStore("post", {
             } finally {
                 this.loading = false;
             }
-        }
+        },
+
+        /**
+         * ================= Categories =================
+         */
+        async fetchAllCategories() {
+            this.loading = true;
+            this.error = null;
+            try {
+                const categories = await getAllCategories();
+                this.categories = categories.data;
+                return categories.data;
+            } catch (err: any) {
+                this.error = err.response?.data?.message || 'Failed to fetch categories';
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async getCategoryById(categoryId: number) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const categoryResponse = await getCategoryById(categoryId);
+                return categoryResponse.data as Category;
+            } catch (err: any) {
+                this.error = err.response?.data?.message || `Failed to fetch category ${categoryId}`;
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async getCategoryByName(categoryName: string) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const categoryResponse = await getCategoryByName(categoryName);
+                return categoryResponse.data as Category;
+            } catch (err: any) {
+                this.error = err.response?.data?.message || `Failed to fetch category ${categoryName}`;
+            } finally {
+                this.loading = false;
+            }
+        },
     }
 });

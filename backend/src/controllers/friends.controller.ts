@@ -7,26 +7,26 @@ import * as friendService from "../services/friends.service";
  * Body: { receiverId: string }
  */
 export async function createFriendRequest(req: Request, res: Response, next: NextFunction) {
-  try {
-    const senderId = req.payload?.userId;
-    const { receiverId } = req.body;
+    try {
+        const senderId = req.payload?.userId;
+        const { receiverId } = req.body;
 
-    if (!senderId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
+        if (!senderId) {
+            res.status(401).json({ error: "Unauthorized" });
+            return;
+        }
+
+        if (!receiverId) {
+            res.status(400).json({ error: "receiverId is required" });
+            return;
+        }
+
+        const request = await friendService.createFriendRequest(senderId, receiverId);
+        res.status(201).json({ message: "Friend request sent successfully", request });
     }
-
-    if (!receiverId) {
-      res.status(400).json({ error: "receiverId is required" });
-      return;
+    catch (err) {
+        next(err);
     }
-
-    const request = await friendService.createFriendRequest(senderId, receiverId);
-    res.status(201).json({ message: "Friend request sent successfully", request });
-  }
-  catch (err) {
-    next(err);
-  }
 }
 
 /**
@@ -34,26 +34,26 @@ export async function createFriendRequest(req: Request, res: Response, next: Nex
  * Body: { senderId: string }
  */
 export async function acceptFriendRequest(req: Request, res: Response, next: NextFunction) {
-  try {
-    const receiverId = req.payload?.userId;
-    const { senderId } = req.body;
+    try {
+        const receiverId = req.payload?.userId;
+        const { senderId } = req.body;
 
-    if (!receiverId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
+        if (!receiverId) {
+            res.status(401).json({ error: "Unauthorized" });
+            return;
+        }
+
+        if (!senderId) {
+            res.status(400).json({ error: "senderId is required" });
+            return;
+        }
+
+        await friendService.acceptFriendRequest(senderId, receiverId);
+        res.status(200).json({ message: "Friend request accepted and friendship created" });
     }
-
-    if (!senderId) {
-      res.status(400).json({ error: "senderId is required" });
-      return;
+    catch (err) {
+        next(err);
     }
-
-    await friendService.acceptFriendRequest(senderId, receiverId);
-    res.status(200).json({ message: "Friend request accepted and friendship created" });
-  }
-  catch (err) {
-    next(err);
-  }
 }
 
 /**
@@ -61,85 +61,85 @@ export async function acceptFriendRequest(req: Request, res: Response, next: Nex
  * Body: { senderId: string }
  */
 export async function denyFriendRequest(req: Request, res: Response, next: NextFunction) {
-  try {
-    const receiverId = req.payload?.userId;
-    const { senderId } = req.body;
+    try {
+        const receiverId = req.payload?.userId;
+        const { senderId } = req.body;
 
-    if (!receiverId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
+        if (!receiverId) {
+            res.status(401).json({ error: "Unauthorized" });
+            return;
+        }
+
+        if (!senderId) {
+            res.status(400).json({ error: "senderId is required" });
+            return;
+        }
+
+        await friendService.denyFriendRequest(senderId, receiverId);
+        res.status(200).json({ message: "Friend request rejected" });
     }
-
-    if (!senderId) {
-      res.status(400).json({ error: "senderId is required" });
-      return;
+    catch (err) {
+        next(err);
     }
-
-    await friendService.denyFriendRequest(senderId, receiverId);
-    res.status(200).json({ message: "Friend request rejected" });
-  }
-  catch (err) {
-    next(err);
-  }
 }
 
 /**
  * Remove friend
  */
 export async function removeFriendship(req: Request, res: Response, next: NextFunction) {
-  try {
-    const userId = req.payload?.userId;
-    const friendId = req.body.friendId;
+    try {
+        const userId = req.payload?.userId;
+        const friendId = req.body.friendId;
 
-    if (!userId || !friendId) {
-      res.status(400).json({ message: "Failed to find user or friend id" });
-      return;
+        if (!userId || !friendId) {
+            res.status(400).json({ message: "Failed to find user or friend id" });
+            return;
+        }
+
+        await friendService.removeFriendship(userId, friendId);
+        res.status(200).json({ message: "Friend has been removed." });
     }
-
-    await friendService.removeFriendship(userId, friendId);
-    res.status(200).json({ message: "Friend has been removed." });
-  }
-  catch (err) {
-    next(err);
-  }
+    catch (err) {
+        next(err);
+    }
 }
 
 /**
  * Get all pending friend requests received by the logged-in user
  */
 export async function getAllPendingFriendRequests(req: Request, res: Response, next: NextFunction) {
-  try {
-    const userId = req.payload?.userId;
+    try {
+        const userId = req.payload?.userId;
 
-    if (!userId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
+        if (!userId) {
+            res.status(401).json({ error: "Unauthorized" });
+            return;
+        }
+
+        const requests = await friendService.getAllPendingFriendRequests(userId);
+        res.status(200).json({ requests });
     }
-
-    const requests = await friendService.getAllPendingFriendRequests(userId);
-    res.status(200).json({ requests });
-  }
-  catch (err) {
-    next(err);
-  }
+    catch (err) {
+        next(err);
+    }
 }
 
 /**
  * Get all friends of the logged-in user
  */
 export async function getAllFriendsByUserId(req: Request, res: Response, next: NextFunction) {
-  try {
-    const userId = req.payload?.userId;
+    try {
+        const userId = req.payload?.userId;
 
-    if (!userId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
+        if (!userId) {
+            res.status(401).json({ error: "Unauthorized" });
+            return;
+        }
+
+        const friends = await friendService.getAllFriendsByUserId(userId);
+        res.status(200).json({ friends });
     }
-
-    const friends = await friendService.getAllFriendsByUserId(userId);
-    res.status(200).json({ friends });
-  }
-  catch (err) {
-    next(err);
-  }
+    catch (err) {
+        next(err);
+    }
 }

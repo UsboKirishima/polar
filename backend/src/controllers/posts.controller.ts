@@ -177,3 +177,59 @@ export async function getAllPosts(_req: Request, res: Response, next: NextFuncti
         next(err);
     }
 }
+
+/**
+ * Get all categories
+ */
+export async function getAllCategories(req: Request, res: Response, next: NextFunction) {
+    try {
+        const categories = await postService.getAllCategories();
+        res.status(200).json(categories);
+    } catch (err) {
+        next(err);
+    }
+}
+
+export async function getCategoryById(req: Request, res: Response, next: NextFunction) {
+    try {
+        const categoryId = Number(req.params.categoryId);
+
+        if (isNaN(categoryId) || categoryId <= 0) {
+            res.status(400).json({ message: 'Invalid category ID' });
+            return;
+        }
+
+        const category = await postService.getCategoryById(categoryId);
+
+        if (!category) {
+            res.status(404).json({ message: 'Category not found' });
+            return;
+        }
+
+        res.status(200).json(category);
+    } catch (err) {
+        next(err);
+    }
+}
+
+export async function getCategoryByName(req: Request, res: Response, next: NextFunction) {
+    try {
+        const categoryName = req.params.categoryName?.trim();
+
+        if (!categoryName) {
+            res.status(400).json({ message: 'Category name is required' });
+            return;
+        }
+
+        const category = await postService.getCategoryByName(categoryName);
+
+        if (!category) {
+            res.status(404).json({ message: 'Category not found' });
+            return;
+        }
+
+        res.status(200).json(category);
+    } catch (err) {
+        next(err);
+    }
+}
