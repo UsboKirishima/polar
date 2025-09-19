@@ -83,7 +83,7 @@ const handlePostLike = async () => {
                 <Transition name="fade-slide">
                     <ProfileFloatCard v-if="profileHover" :user="post.author" :mouse-x="mouseX" :mouse-y="mouseY" />
                 </Transition>
-                <img src="/pfp_placeholder.png" alt="">
+                <img :src="post.author.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="">
                 <div class="h-info">
                     <Username :username="postMutable.author.profile.fullName || 'Unknown'"
                         :is-verified="postMutable.author.role === 'ADMIN'" />

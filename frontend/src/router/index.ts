@@ -16,6 +16,7 @@ import NewPost from '@/views/NewPost.vue';
 import UserFromUsername from '@/views/UserFromUsername.vue';
 import Categories from '@/views/Categories.vue';
 import CategoryDetails from '@/views/CategoryDetails.vue';
+import ProfileSettings from '@/views/ProfileSettings.vue';
 
 const routes = [
     {
@@ -45,6 +46,12 @@ const routes = [
         path: '/profile',
         name: 'profile',
         component: Profile,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/profile/settings',
+        name: 'profile settings',
+        component: ProfileSettings,
         meta: { requiresAuth: true }
     },
     {

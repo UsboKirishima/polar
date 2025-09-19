@@ -7,6 +7,8 @@ import users from './users.router.js'
 import friends from './friends.router.js'
 import posts from './posts.router.js'
 import categories from './categories.router.js'
+import avatar from './avatar.router.js'
+import banner from './banner.router.js'
 
 const router = express.Router();
 
@@ -21,5 +23,7 @@ router.use('/users', users);
 router.use('/friends', friends);
 router.use('/posts', posts);
 router.use('/categories', categories);
+router.use('/avatar', avatar);
+router.use('/banner', banner);
 
 export default router;

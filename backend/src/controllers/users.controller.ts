@@ -1,19 +1,22 @@
-import { NextFunction, Request, Response } from "express";
-import { TUserId, TUsername, userIdSchema, usernameSchema } from "../types/zod";
-import {
-    findUserAndProfileById,
-    updateProfileById,
-    getAllUsers as getAllUsersDB,
-    findUserAndProfileByUsername,
-    findAllFriendsByUsedId
-} from "../services/users.service";
+import type { NextFunction, Request, Response } from "express";
 
-const validateUserId = (res: Response, userId: string) => {
+import type { TUserId, TUsername } from "../types/zod.js";
+
+import {
+    findAllFriendsByUserId,
+    findUserAndProfileById,
+    findUserAndProfileByUsername,
+    getAllUsers as getAllUsersDB,
+    updateProfileById,
+} from "../services/users.service";
+import { userIdSchema, usernameSchema } from "../types/zod.js";
+
+function validateUserId(res: Response, userId: string) {
     const validationResult = userIdSchema.safeParse(userId);
     if (!validationResult.success) {
         res.status(400).json({
-            message: 'Invalid user ID',
-            errors: validationResult.error.errors
+            message: "Invalid user ID",
+            errors: validationResult.error.errors,
         });
         return;
     }
@@ -21,27 +24,29 @@ const validateUserId = (res: Response, userId: string) => {
 }
 
 // -------------------- GET USER BY ID --------------------
-export const getUserById = async (req: Request, res: Response, next: NextFunction) => {
+export async function getUserById(req: Request, res: Response, next: NextFunction) {
     try {
         const userId: TUserId = req.params.id;
         const parsedUserId = validateUserId(res, userId);
-        if (!parsedUserId) return;
+        if (!parsedUserId)
+            return;
 
         const userAndProfile = await findUserAndProfileById(parsedUserId);
         if (!userAndProfile) {
-            res.status(404).json({ message: 'User not found' });
+            res.status(404).json({ message: "User not found" });
             return;
         }
 
         const { password, ...userWithoutPassword } = userAndProfile;
         res.json(userWithoutPassword);
-    } catch (err) {
+    }
+    catch (err) {
         next(err);
     }
 }
 
 // -------------------- GET USER BY USERNAME --------------------
-export const getUserByUsername = async (req: Request, res: Response, next: NextFunction) => {
+export async function getUserByUsername(req: Request, res: Response, next: NextFunction) {
     try {
         const username: TUsername = req.params.username;
 
@@ -52,64 +57,69 @@ export const getUserByUsername = async (req: Request, res: Response, next: NextF
 
         const userAndProfile = await findUserAndProfileByUsername(username);
         if (!userAndProfile) {
-            res.status(404).json({ message: 'User not found' });
+            res.status(404).json({ message: "User not found" });
             return;
         }
 
         const { password, ...userWithoutPassword } = userAndProfile;
         res.json(userWithoutPassword);
-    } catch (err) {
+    }
+    catch (err) {
         next(err);
     }
 }
 
 // -------------------- MODIFY USERNAME --------------------
-export const modifyUsername = async (req: Request, res: Response, next: NextFunction) => {
+export async function modifyUsername(req: Request, res: Response, next: NextFunction) {
     try {
         const userId: TUserId = req.params.id;
         const usernameData: TUsername = req.body.username;
 
         const parsedUsername = usernameSchema.parse(usernameData);
         const parsedUserId = validateUserId(res, userId);
-        if (!parsedUserId) return;
+        if (!parsedUserId)
+            return;
 
         const user = await findUserAndProfileById(parsedUserId);
         if (!user?.profile) {
-            res.status(404).json({ message: 'This user has no associated profile' });
+            res.status(404).json({ message: "This user has no associated profile" });
             return;
         }
 
         await updateProfileById(user.profile.id, { username: parsedUsername });
-        res.status(200).json({ message: 'Username updated successfully' });
-    } catch (err) {
+        res.status(200).json({ message: "Username updated successfully" });
+    }
+    catch (err) {
         next(err);
     }
 }
 
 // -------------------- GET ALL FRIENDS -------------------
-export const getAllFriends = async (req: Request, res: Response, next: NextFunction) => {
+export async function getAllFriends(req: Request, res: Response, next: NextFunction) {
     try {
         const userId: TUserId = req.params.id;
-        const user = await findAllFriendsByUsedId(userId);
+        const user = await findAllFriendsByUserId(userId);
 
         if (!user) {
-            res.status(404).json({ message: 'user not found' });
+            res.status(404).json({ message: "user not found" });
             return;
         }
-        
+
         const friendsOnly = user.friends;
         res.status(200).json(friendsOnly);
-    } catch (err) {
+    }
+    catch (err) {
         next(err);
     }
 }
 
 // -------------------- GET ALL USERS --------------------
-export const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+export async function getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
         const users = await getAllUsersDB();
         res.status(200).json(users);
-    } catch (err) {
+    }
+    catch (err) {
         next(err);
     }
 }

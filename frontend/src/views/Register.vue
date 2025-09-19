@@ -22,7 +22,7 @@ const handleRegister = async () => {
     const success = await auth.register(email.value, password.value, username.value, dayOfBirth.value, fullname.value);
 
     if (success) {
-        router.push('/profile')
+        router.push(`/users/${auth.user?.id}`)
     } else {
         error.value = 'Failed to register account.'
     }
@@ -36,7 +36,7 @@ const handleKeyPress = (event: KeyboardEvent) => {
 
 onMounted(() => {
     if (auth.isLoggedIn) {
-        router.push('/profile')
+        router.push(`/feed`)
     }
 })
 </script>

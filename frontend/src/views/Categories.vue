@@ -16,7 +16,7 @@ const handleCategoryOpen = (catId: number) => {
 
 onMounted(async () => {
     await postStore.fetchAllCategories();
-    categories.value = [...postStore.categories, ...postStore.categories, ...postStore.categories].sort((a, b) => b.posts.length - a.posts.length);
+    categories.value = [...postStore.categories].sort((a, b) => b.posts.length - a.posts.length);
 })
 </script>
 

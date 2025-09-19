@@ -1,15 +1,39 @@
 export type Role = 'USER' | 'ADMIN';
 
+export interface Avatar {
+    id: string;
+    url: string
+    createdAt: string;
+    updatedAt: string;
+    userId: string | undefined;
+    user: User | undefined;
+}
+
+export interface Banner {
+    id: string;
+    url: string
+    createdAt: string;
+    updatedAt: string;
+    userId: string | undefined;
+    user: User | undefined;
+}
+
 export interface User {
     id: string;
     email: string;
     role: Role;
     likes: Like[];
     createdAt: Date;
+    updatedAt: Date;
     profile: {
+        createdAt: Date;
+        avatarId: string;
+        avatar: Avatar;
         username: string,
         dateOfBirth: Date,
         fullName: string,
+        banner: Banner,
+        bannerId: string,
         bio: string
     }
 }

@@ -72,9 +72,9 @@ onMounted(fetchPost);
                 <h3>{{ post.comments.length }} comments</h3>
                 <div class="comment create">
                     <div class="profile">
-                        <img src="/pfp_placeholder.png" alt="">
+                        <img :src="auth.user?.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="">
                     </div>
-                    <input type="text" v-model="newComment" @keypress="handleKeyPress" placeholder="Write your reply">
+                    <input type="text" v-model="newComment" @keypress="handleKeyPress" placeholder="Post a comment">
                     <div class="send-btn" @click="submitComment">
                         <FontAwesomeIcon :icon="faArrowRight" />
                     </div>
@@ -82,7 +82,7 @@ onMounted(fetchPost);
                 <div v-for="comment in post!.comments.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())"
                     class="comment">
                     <div class="profile">
-                        <img src="/pfp_placeholder.png" alt="">
+                        <img :src="comment.user?.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="">
                         <div>
                             <p id="name">{{ comment.user.profile?.fullName || 'unknown' }}</p>
                             <p id="tag">@{{ comment.user.profile?.username || 'unknown' }}</p>
@@ -200,6 +200,10 @@ b {
     font-weight: 500;
     line-height: 2rem;
     font-size: 1rem;
+}
+
+.create input::placeholder {
+    color: #ffffffcc;
 }
 
 .send-btn,

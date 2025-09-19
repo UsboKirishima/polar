@@ -18,7 +18,7 @@ const handleLogin = async () => {
     const success = await auth.login(email.value, password.value);
 
     if (success) {
-        router.push(`/profile`)
+        router.push(`/users/${auth.user?.id}`)
     } else {
         error.value = 'Invalid email or password.'
     }
@@ -31,7 +31,7 @@ const handleKeyPress = (event: KeyboardEvent) => {
 
 onMounted(() => {
     if (auth.isLoggedIn) {
-        router.push(`/profile`)
+        router.push(`/users/${auth.user?.id}`)
     }
 })
 </script>

@@ -13,7 +13,7 @@ const props = defineProps<{
 <template>
     <div class="hover-card" :style="{ top: mouseY + 15 + 'px', left: mouseX + 15 + 'px' }">
         <div class="header">
-            <img src="/pfp_placeholder.png" alt="Profile" />
+            <img :src="user.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="Profile" />
             <div class="profile">
                 <Username :username="user.profile.fullName" :is-verified="user.role === 'ADMIN'" />
                 <p class="tag">@{{ user.profile.username }}</p>

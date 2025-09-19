@@ -4,9 +4,10 @@ import Username from '../Username.vue';
 import { useFriendStore } from '@/stores/friends';
 import type { Friendship } from '@/types/friends';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faAdd, faArrowLeft, faEdit, faSignOut, faSquareArrowUpRight, faWindowClose } from '@fortawesome/free-solid-svg-icons';
+import { faAdd, faArrowLeft, faCheck, faEdit, faSignOut, faSquareArrowUpRight, faWindowClose } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { onMounted, ref } from 'vue';
 
 const props = defineProps<{
     isProfilePage: boolean;
@@ -15,22 +16,46 @@ const props = defineProps<{
     friends: Friendship[];
 }>()
 
+const isFriendRequested = ref<boolean>(false);
 
 const auth = useAuthStore();
+const router = useRouter();
+const friendStore = useFriendStore();
+
+const handleOpenSettings = () => {
+    router.push(`/profile/settings`);
+}
+
+const handleAddFriend = async () => {
+    if (props.user) await friendStore.sendRequest(props.user?.id);
+    await friendStore.fetchPendingRequests();
+    await friendStore.fetchFriends();
+    await refreshFriends();
+}
+
+const refreshFriends = async () => {
+    if (friendStore.pendingRequests?.some(f => f.receiverId === props.user?.id)
+        || friendStore.friends?.some(f => f.friendId === props.user?.id))
+        isFriendRequested.value = true;
+}
 
 const logout = () => {
     auth.logout()
     window.location.href = '/login';
 }
+
+onMounted(async () => {
+    await refreshFriends();
+})
 </script>
 
 <template>
     <div class="container">
         <div class="photos">
             <div class="bg-container">
-                <img class="bg" src="/pretty_bg.jpg" alt="">
+                <img class="bg" :src="user?.profile.banner?.url ?? '/bg_placeholder.jpg'" alt="">
             </div>
-            <img class="pfp" src="/usbo_logo.png" alt="">
+            <img class="pfp" :src="user?.profile.avatar?.url ?? '/pfp_placeholder.png'" alt="">
         </div>
         <div class="main">
             <div class="info">
@@ -55,10 +80,10 @@ const logout = () => {
                         <p class="desc">Likes</p>
                     </div>
                     <div>
-                        <p v-if="!isProfilePage" id="add-friend">
-                            <FontAwesomeIcon :icon="faAdd" />
+                        <p v-if="!isProfilePage" @click="handleAddFriend" id="add-friend">
+                            <FontAwesomeIcon :icon="isFriendRequested ? faCheck : faAdd" />
                         </p>
-                        <p v-else>
+                        <p v-else @click="handleOpenSettings">
                             <FontAwesomeIcon id="add-friend" :icon="faEdit" />
                         </p>
                     </div>

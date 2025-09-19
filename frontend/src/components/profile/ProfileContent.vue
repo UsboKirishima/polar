@@ -29,7 +29,7 @@ const view = ref<'posts' | 'friends'>('posts');
             <FeedPosts :posts="[...posts.values()]" />
         </div>
         <div v-else-if="view === 'friends'" class="view">
-            <FriendsList :current-page="'friends'" :friends="friends" />
+            <FriendsList :current-page="'friends'" :friends="friends" :hide-remove-btn="!isProfilePage" />
         </div>
     </div>
 </template>

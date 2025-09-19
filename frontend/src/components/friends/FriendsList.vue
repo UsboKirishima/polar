@@ -12,6 +12,7 @@ import type { Friendship } from "@/types/friends";
 const props = defineProps<{
     currentPage: "friends" | "requests";
     friends?: Friendship[];
+    hideRemoveBtn?: boolean;
 }>();
 
 // Store
@@ -79,7 +80,7 @@ const openFriend = (friendId: string) => {
                             </div>
                         </div>
                     </span>
-                    <div class="controls">
+                    <div v-if="!hideRemoveBtn" class="controls">
                         <button @click="friendStore.removeFriend(friend.friendId)" class="deny-btn">
                             <FontAwesomeIcon :icon="faCancel" class="icon-btn" />
                             Remove

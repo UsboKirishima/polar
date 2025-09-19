@@ -147,6 +147,7 @@ export const getPostByid = async (postId: string) => {
                         select: {
                             username: true,
                             fullName: true,
+                            avatar: true,
                         },
                     },
                 },
@@ -160,7 +161,11 @@ export const getPostByid = async (postId: string) => {
                             role: true,
                             createdAt: true,
                             updatedAt: true,
-                            profile: true
+                            profile: {
+                                include: {
+                                    avatar: true
+                                }
+                            }
                         }
                     },
 
@@ -199,7 +204,11 @@ export const getPostsByUserId = async (userId: string) => {
                     role: true,
                     createdAt: true,
                     updatedAt: true,
-                    profile: true
+                    profile: {
+                        include: {
+                            avatar: true,
+                        }
+                    }
                 }
             },
             likes: {
@@ -232,6 +241,7 @@ export const getAllPosts = async () => {
                         select: {
                             username: true,
                             fullName: true,
+                            avatar: true,
                             bio: true
                         },
                     },
