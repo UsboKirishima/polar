@@ -51,6 +51,12 @@ const menuItems = computed(() => [
     width: 13%;
 }
 
+@media (max-width: 768px) {
+    .desktop_nav {
+        display: none;
+    }
+}
+
 ul {
     display: flex;
     width: 100%;

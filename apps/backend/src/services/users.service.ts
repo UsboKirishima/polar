@@ -1,9 +1,6 @@
 import bcrypt from "bcrypt";
 
 import type { SimpleProfileSchema, SimpleUserSchema } from "../types/general.js";
-
-import { Profile, User } from "../generated/prisma.js";
-import { profileSchema, TUserSchema } from "../types/zod.js";
 import { db } from "../utils/db.js";
 
 export function findUserByEmail(email: string) {

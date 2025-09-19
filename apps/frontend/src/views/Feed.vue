@@ -94,7 +94,7 @@ onMounted(async () => {
             <FeedContent :currentPage="feedConfig.page.value" :posts="postStore.posts" />
         </div>
 
-        <FeedSidebar :friends="[...friends.values()]" :suggestions="[...suggestions.values()]" />
+        <FeedSidebar class="bar" :friends="[...friends.values()]" :suggestions="[...suggestions.values()]" />
     </div>
 </template>
 
@@ -109,5 +109,11 @@ onMounted(async () => {
 .feed-space {
     padding: 0 3%;
     z-index: 70;
+}
+
+@media (max-width: 768px) {
+    .bar {
+        display: none;
+    }
 }
 </style>

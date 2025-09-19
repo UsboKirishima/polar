@@ -1,13 +1,9 @@
 {
-  "name": "express-api-starter-ts",
-  "version": "2.0.0",
-  "description": "A basic starter for an express.js v5 API with Typescript",
-  "author": "CJ R. <cj@null.computer> (https://w3cj.now.sh)",
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "The backend side of Polar",
+  "author": "Davide Usberti <usbertibox@gmail.com> (https://usbo.tech)",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/w3cj/express-api-starter-ts.git"
-  },
   "keywords": [],
   "main": "src/index.ts",
   "scripts": {
