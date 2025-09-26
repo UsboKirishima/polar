@@ -100,7 +100,12 @@ export async function getAllPendingFriendRequests(userId: string) {
                 select: {
                     id: true,
                     email: true,
-                    profile: true,
+                    profile: {
+                        include: {
+                            avatar: true,
+                            banner: true
+                        }
+                    },
                 },
             },
         },
@@ -115,7 +120,12 @@ export async function getAllFriendsByUserId(userId: string) {
                 select: {
                     id: true,
                     email: true,
-                    profile: true,
+                    profile: {
+                        include: {
+                            avatar: true,
+                            banner: true
+                        }
+                    },
                 },
             },
         },

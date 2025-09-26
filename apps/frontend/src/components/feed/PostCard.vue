@@ -138,6 +138,7 @@ const handlePostLike = async () => {
 
 .post-header img {
     width: 50px;
+    aspect-ratio: 1/1;
     border-radius: 100%;
 }
 

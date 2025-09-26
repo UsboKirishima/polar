@@ -10,6 +10,7 @@ import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
 import PageLoading from "@/components/PageLoading.vue";
+import Userinfo from "@/components/Userinfo.vue";
 
 dayjs.extend(relativeTime);
 
@@ -82,11 +83,7 @@ onMounted(fetchPost);
                 <div v-for="comment in post!.comments.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())"
                     class="comment">
                     <div class="profile">
-                        <img :src="comment.user?.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="">
-                        <div>
-                            <p id="name">{{ comment.user.profile?.fullName || 'unknown' }}</p>
-                            <p id="tag">@{{ comment.user.profile?.username || 'unknown' }}</p>
-                        </div>
+                        <Userinfo :user="comment.user" />
                     </div>
                     <p class="content">{{ comment.text || 'unknown' }}</p>
                     <p class="date">{{ dayjs(comment.createdAt).fromNow() || 'unknown' }}</p>
@@ -156,7 +153,7 @@ b {
 }
 
 .profile img {
-    width: 40px;
+    width: 50px;
     border-radius: 100%;
     margin-right: 7px;
 }
@@ -217,19 +214,6 @@ b {
 .back-ic:hover {
     opacity: 70%;
     transition: 300ms;
-}
-
-
-#name {
-    font-weight: 700;
-    color: #fff;
-    font-size: 0.9rem;
-}
-
-#tag {
-    font-weight: 400;
-    color: #ffffff69;
-    font-size: 0.8rem;
 }
 
 .content {

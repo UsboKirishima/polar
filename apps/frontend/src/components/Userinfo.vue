@@ -2,9 +2,11 @@
 import type { User } from '@/types';
 import { ref } from 'vue';
 import Username from './Username.vue';
+import ProfileFloatCard from './profile/ProfileFloatCard.vue';
 
 const props = defineProps<{
     user: User | null;
+    disableOver?: boolean;
 }>()
 
 const profileHover = ref(false);
@@ -21,8 +23,8 @@ const handleMouseMove = (event: MouseEvent) => {
 <template>
     <div @mouseenter="profileHover = true" @mouseleave="profileHover = false" @mousemove="handleMouseMove">
         <router-link :to="`/users/${user?.id}`" class="post-header">
-            <Transition name="fade-slide">
-                <ProfileFloatCard v-if="profileHover" :user="user" :mouse-x="mouseX" :mouse-y="mouseY" />
+            <Transition name="fade-slide" v-if="!disableOver">
+                <ProfileFloatCard v-if="profileHover" :user="user!" :mouse-x="mouseX" :mouse-y="mouseY" />
             </Transition>
             <img :src="user?.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="">
             <div class="h-info">
@@ -49,6 +51,7 @@ const handleMouseMove = (event: MouseEvent) => {
 .post-header img {
     width: 50px;
     border-radius: 100%;
+    aspect-ratio: 1/1;
 }
 
 .h-info {

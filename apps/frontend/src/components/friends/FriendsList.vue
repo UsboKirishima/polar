@@ -7,6 +7,8 @@ import { useRouter } from "vue-router";
 import PageLoading from "../PageLoading.vue";
 import type { Friend } from "../feed/ListItem.vue";
 import type { Friendship } from "@/types/friends";
+import type { User } from "@/types";
+import Userinfo from "../Userinfo.vue";
 
 // Props
 const props = defineProps<{
@@ -69,15 +71,7 @@ const openFriend = (friendId: string) => {
                 <li v-for="friend in friendStore.friends" :key="friend.userId" class="friend-item">
                     <span class="username">
                         <div class="indentifier" @click="openFriend(friend.friend.id)">
-                            <img src="/pfp_placeholder.png" alt="">
-                            <div class="info">
-                                <span class="username">
-                                    {{ friend.friend.profile?.fullName }}
-                                </span>
-                                <span class="tag">
-                                    @{{ friend.friend.profile?.username }}
-                                </span>
-                            </div>
+                            <Userinfo :user="(friend.friend as User)" disable-over />
                         </div>
                     </span>
                     <div v-if="!hideRemoveBtn" class="controls">
@@ -156,11 +150,12 @@ const openFriend = (friendId: string) => {
     margin-bottom: 0.5rem;
     background: #7cb5ff3a;
     transition: 300ms;
+    z-index: 10;
 }
 
 .friend-item:hover,
 .request-item:hover {
-    opacity: 75%;
+    background: #1c2532;
     transition: 300ms;
 }
 
@@ -168,29 +163,9 @@ const openFriend = (friendId: string) => {
     display: flex;
     align-items: center;
     cursor: pointer;
+    z-index: 100;
 }
 
-.info {
-    display: flex;
-    flex-direction: column;
-    color: #fff;
-    margin-left: 10px;
-}
-
-.tag {
-    font-size: 0.9rem;
-    font-weight: 400;
-    color: #ffffff8c;
-}
-
-img {
-    width: 50px;
-    border-radius: 100%;
-}
-
-.username {
-    font-weight: 700;
-}
 
 .actions {
     display: flex;
