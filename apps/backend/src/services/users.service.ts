@@ -4,156 +4,199 @@ import type { SimpleProfileSchema, SimpleUserSchema } from "../types/general.js"
 import { db } from "../utils/db.js";
 
 export function findUserByEmail(email: string) {
-  return db.user.findUnique({
-    where: {
-      email,
-    },
-  });
+    return db.user.findUnique({
+        where: {
+            email,
+        },
+    });
 }
 
 type UserMailNPassword = {
-  email: string;
-  password: string;
+    email: string;
+    password: string;
 };
 
 export function createUserByEmailAndPassword(user: UserMailNPassword) {
-  user.password = bcrypt.hashSync(user.password, 12);
-  return db.user.create({
-    data: user,
-  });
+    user.password = bcrypt.hashSync(user.password, 12);
+    return db.user.create({
+        data: user,
+    });
 }
 
 export function createUserWithProfile(user: Omit<SimpleUserSchema, "profile.bio"> & { profile: Omit<SimpleProfileSchema, "bio"> }) {
-  const hashedPassword = bcrypt.hashSync(user.password, 12);
-  return db.user.create({
-    data: {
-      email: user.email,
-      password: hashedPassword,
-      profile: {
-        create: {
-          username: user.profile.username,
-          dateOfBirth: new Date(user.profile.dateOfBirth),
-          fullName: user.profile.fullName,
-          // bio not included, prisma will use default param
+    const hashedPassword = bcrypt.hashSync(user.password, 12);
+    return db.user.create({
+        data: {
+            email: user.email,
+            password: hashedPassword,
+            profile: {
+                create: {
+                    username: user.profile.username,
+                    dateOfBirth: new Date(user.profile.dateOfBirth),
+                    fullName: user.profile.fullName,
+                    // bio not included, prisma will use default param
+                },
+            },
         },
-      },
-    },
-  });
+    });
 }
 
 export function createProfile(profile: SimpleProfileSchema, userId: string) {
-  return db.profile.create({
-    data: {
-      username: profile.username,
-      dateOfBirth: new Date(profile.dateOfBirth),
-      fullName: profile.fullName,
-      bio: profile.bio ?? "unknown",
-      userId,
-    },
-  });
+    return db.profile.create({
+        data: {
+            username: profile.username,
+            dateOfBirth: new Date(profile.dateOfBirth),
+            fullName: profile.fullName,
+            bio: profile.bio ?? "unknown",
+            userId,
+        },
+    });
 }
 
 export function findUserById(id: string) {
-  return db.user.findUnique({
-    where: {
-      id,
-    },
-  });
+    return db.user.findUnique({
+        where: {
+            id,
+        },
+    });
 }
 
 export function findProfileById(profileId: string) {
-  return db.profile.findUnique({
-    where: {
-      id: profileId,
-    },
-  });
+    return db.profile.findUnique({
+        where: {
+            id: profileId,
+        },
+    });
 }
 
 export function findUserAndProfileById(userId: string) {
-  return db.user.findUnique({
-    where: { id: userId },
-    include: {
-      likes: true,
-      profile: {
+    return db.user.findUnique({
+        where: { id: userId },
         include: {
-          avatar: true,
-          banner: true,
+            likes: {
+                include: {
+                    post: {
+                        include: {
+                            author: {
+                                select: {
+                                    id: true,
+                                    profile: {
+                                        include: {
+                                            avatar: true,
+                                            banner: true,
+                                        }
+                                    },
+                                    password: false,
+                                },
+                            },
+                            likes: true,
+                            comments: true
+                        }
+                    },
+                }
+            },
+            comments: {
+                include: {
+                    post: {
+                        include: {
+                            author: {
+                                select: {
+                                    id: true,
+                                    profile: {
+                                        include: {
+                                            avatar: true,
+                                            banner: true,
+                                        },
+                                    },
+                                    password: false,
+                                },
+                            },
+                            likes: true,
+                            comments: true
+                        }
+                    },
+                }
+            },
+            profile: {
+                include: {
+                    avatar: true,
+                    banner: true,
+                },
+            },
         },
-      },
-    },
-  });
+    });
 }
 
 export function findUserAndProfileByUsername(username: string) {
-  return db.user.findFirst({
-    where: {
-      profile: {
-        is: {
-          username,
+    return db.user.findFirst({
+        where: {
+            profile: {
+                is: {
+                    username,
+                },
+            },
         },
-      },
-    },
-    include: {
-      profile: {
         include: {
-          avatar: true,
-          banner: true,
+            profile: {
+                include: {
+                    avatar: true,
+                    banner: true,
+                },
+            },
         },
-      },
-    },
-  });
+    });
 }
 
 export function findAllFriendsByUserId(userId: string) {
-  return db.user.findUnique({
-    where: { id: userId },
-    include: {
-      friends: {
+    return db.user.findUnique({
+        where: { id: userId },
         include: {
-          friend: {
-            select: {
-              id: true,
-              email: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              profile: {
+            friends: {
                 include: {
-                  avatar: true,
-                  banner: true,
+                    friend: {
+                        select: {
+                            id: true,
+                            email: true,
+                            role: true,
+                            createdAt: true,
+                            updatedAt: true,
+                            profile: {
+                                include: {
+                                    avatar: true,
+                                    banner: true,
+                                },
+                            },
+                        },
+                    },
                 },
-              },
             },
-          },
         },
-      },
-    },
-  });
+    });
 }
 
 export function updateProfileById(profileId: string, updates: Partial<SimpleProfileSchema>) {
-  return db.profile.update({
-    where: { id: profileId },
-    data: {
-      ...updates,
-      dateOfBirth: updates.dateOfBirth ? new Date(updates.dateOfBirth) : undefined,
-    },
-  });
+    return db.profile.update({
+        where: { id: profileId },
+        data: {
+            ...updates,
+            dateOfBirth: updates.dateOfBirth ? new Date(updates.dateOfBirth) : undefined,
+        },
+    });
 }
 
 /**
  * Returns all the users (id, profile)
  */
 export function getAllUsers() {
-  return db.user.findMany({
-    select: {
-      id: true,
-      profile: {
-        include: {
-          avatar: true,
-          banner: true,
+    return db.user.findMany({
+        select: {
+            id: true,
+            profile: {
+                include: {
+                    avatar: true,
+                    banner: true,
+                },
+            },
         },
-      },
-    },
-  });
+    });
 }

@@ -19,7 +19,7 @@ export async function uploadBanner(req: Request, res: Response, next: NextFuncti
 
         const uploadResult = await imageKit.upload({
             file: file.buffer,
-            fileName: `user-${userId}-${Date.now()}.png`,
+            fileName: `user-${userId}.png`,
             folder: '/banners'
         });
 

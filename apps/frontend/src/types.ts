@@ -23,6 +23,7 @@ export interface User {
     email: string;
     role: Role;
     likes: Like[];
+    comments: PostComment[];
     createdAt: Date;
     updatedAt: Date;
     profile: {

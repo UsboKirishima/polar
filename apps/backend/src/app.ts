@@ -13,8 +13,8 @@ const app = express();
 
 /* Rate limiter setup */
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    limit: 100,
+    windowMs: 24 * 60 * 60 * 1000, // 24 Hours
+    limit: 1000,
     message: {
         status: 429,
         error: "Too many attempts. Try again later."

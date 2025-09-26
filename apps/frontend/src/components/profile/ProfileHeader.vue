@@ -31,6 +31,7 @@ const handleAddFriend = async () => {
     await friendStore.fetchPendingRequests();
     await friendStore.fetchFriends();
     await refreshFriends();
+    isFriendRequested.value = true;
 }
 
 const refreshFriends = async () => {

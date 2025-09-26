@@ -74,7 +74,12 @@ onMounted(async () => {
         </div>
         <div class="container">
             <ProfileHeader :is-profile-page="isProfilePage" :user="user" :posts="[...posts]" :friends="friends" />
-            <ProfileContent :is-profile-page="isProfilePage" :user="user" :posts="[...posts]" :friends="friends" />
+            <ProfileContent :is-profile-page="isProfilePage" 
+            :user="user" 
+            :posts="[...posts]" 
+            :friends="friends"
+            :comments="user?.comments || []"
+            :likes="user?.likes || []"/>
         </div>
     </div>
 </template>
