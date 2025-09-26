@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.get<object, MessageResponse>("/", (req, res) => {
     res.json({
-        message: "API - 👋🌎🌍🌏",
+        message: "Polar API v1.0.0",
     });
 });
 

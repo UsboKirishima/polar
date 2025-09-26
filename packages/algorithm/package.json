@@ -1,7 +1,7 @@
 {
-  "name": "@polar/types",
+  "name": "@polar/algorithm",
   "version": "1.0.0",
-  "description": "",
+  "description": "The polar scoring algorithm",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,8 +9,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.12.4",
-  "dependencies": {
-    "zod": "^3.25.76"
-  }
+  "packageManager": "pnpm@10.12.4"
 }
