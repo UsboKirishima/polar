@@ -3,6 +3,7 @@ import app from "./app.js";
 import { env } from "./env.js";
 import server from "./server.js";
 import "./wss.js";
+import chalk from "@polar/chalk";
 
 export const imageKit = new ImageKit({
     publicKey: env.IMAGEKIT_PUBLIC_KEY,
@@ -23,7 +24,7 @@ const port = env.PORT;
 const serverListen = server.listen(port, () => {
     /* eslint-disable no-console */
     console.log(asciiArt)
-    console.log(`Listening: http://localhost:${port}`);
+    console.log(chalk.bgGreen.black(`Listening: http://localhost:${port}`));
     /* eslint-enable no-console */
 });
 
