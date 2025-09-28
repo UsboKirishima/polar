@@ -18,7 +18,7 @@ __________      .__
  |    |  (  <_> )  |__/ __ \|  | \/
  |____|   \____/|____(____  /__|   
                           \/                         
-`
+`;
 
 const port = env.PORT;
 const serverListen = server.listen(port, () => {
