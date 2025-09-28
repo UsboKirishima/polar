@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@polar/types": "workspace:*",
-    "@polar/chalk": "workspace:*",
+    "@polar/colors": "workspace:*",
     "@prisma/client": "^6.15.0",
     "@types/ws": "^8.18.1",
     "bcrypt": "^6.0.0",

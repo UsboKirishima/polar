@@ -17,9 +17,9 @@ importers:
 
   apps/backend:
     dependencies:
-      '@polar/chalk':
+      '@polar/colors':
         specifier: workspace:*
-        version: link:../../packages/chalk
+        version: link:../../packages/colors
       '@polar/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -199,7 +199,7 @@ importers:
 
   packages/algorithm: {}
 
-  packages/chalk:
+  packages/colors:
     devDependencies:
       '@types/node':
         specifier: ^16.11.10
@@ -6275,7 +6275,7 @@ snapshots:
 
   '@types/keyv@3.1.4':
     dependencies:
-      '@types/node': 16.18.126
+      '@types/node': 24.5.2
 
   '@types/mdast@4.0.4':
     dependencies:
@@ -6315,7 +6315,7 @@ snapshots:
 
   '@types/responselike@1.0.3':
     dependencies:
-      '@types/node': 16.18.126
+      '@types/node': 24.5.2
 
   '@types/semver@7.7.1': {}
 
