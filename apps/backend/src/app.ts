@@ -2,12 +2,16 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
+import * as trpcExpress from '@trpc/server/adapters/express';
 
 import type MessageResponse from "./interfaces/message-response.js";
 
 import api from "./routes/index.js";
 import * as middlewares from "./middlewares.js";
 import rateLimit from "express-rate-limit";
+import { initTRPC } from "@trpc/server";
+import { createContext, Context } from "./trpc/context.js";
+import { appRouter } from "./trpc/router.js";
 
 const app = express();
 
@@ -36,6 +40,12 @@ app.get<object, MessageResponse>("/", (req, res) => {
 });
 
 app.use("/api/v1", api);
+
+/* tRPC api route */
+app.use('/trpc', trpcExpress.createExpressMiddleware({
+    router: appRouter,
+    createContext,
+}),)
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);

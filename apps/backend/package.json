@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "@polar/backend",
   "version": "1.0.0",
   "description": "The backend side of Polar",
   "author": "Davide Usberti <usbertibox@gmail.com> (https://usbo.tech)",
@@ -15,9 +15,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@polar/types": "workspace:*",
     "@polar/colors": "workspace:*",
+    "@polar/types": "workspace:*",
     "@prisma/client": "^6.15.0",
+    "@trpc/server": "^11.6.0",
     "@types/ws": "^8.18.1",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
