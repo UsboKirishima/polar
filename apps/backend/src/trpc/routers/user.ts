@@ -1,7 +1,7 @@
 import { protectedProcedure, publicProcedure, t } from "../trpc";
 import { z } from 'zod/v4';
 import { userIdSchema, usernameSchema } from "../../types/zod";
-import { findUserAndProfileById, findUserAndProfileByUsername } from "../../services/users.service";
+import { findAllFriendsByUserId, findUserAndProfileById, findUserAndProfileByUsername, getAllUsers } from "../../services/users.service";
 import { resultErr } from "../../utils/response";
 
 function removePassword<T extends Record<string, any>>(obj: T): Omit<T, 'password'> {
@@ -35,9 +35,22 @@ export const userRouter = t.router({
 
             return removePassword(user);
         }),
-    modifyUsername: protectedProcedure
-        .input(usernameSchema)
-        .query(({ input }) => {
+    getAllFriendsById: protectedProcedure
+        .input(userIdSchema)
+        .query(async ({ input, ctx }) => {
+            const friends = await findAllFriendsByUserId(input);
 
+            if (!friends)
+                return resultErr(`Failed to retrieve friends for user ID: ${input}`);
+
+            const safeFriends = friends.friends.map(friend => removePassword(friend));
+
+            return safeFriends;
+        }),
+    getAllUsers: protectedProcedure
+        .query(async ({ ctx }) => {
+            const users = await getAllUsers();
+
+            return users;
         })
 })
