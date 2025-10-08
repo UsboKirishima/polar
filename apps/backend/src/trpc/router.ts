@@ -1,18 +1,13 @@
-import { initTRPC } from '@trpc/server';
+import { initTRPC, TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { findUserAndProfileByUsername } from '../services/users.service';
 import { Context } from './context';
+import { userRouter } from './routers/user';
 
-export const t = initTRPC.context<Context>().create();
+import { t } from './trpc'
 
 export const appRouter = t.router({
-    hello: t.procedure
-    .input(z.string())
-    .query(({ input }) => {
-        return {
-            message: input
-        }
-    })
+    user: userRouter
 })
 
 export type AppRouter = typeof appRouter;

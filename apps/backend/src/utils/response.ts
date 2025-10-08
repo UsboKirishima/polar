@@ -12,3 +12,6 @@ export const responseSuccess =
                 ? { message: content }
                 : content);
     }
+
+/* error result for tRPC procedures */
+export const resultErr = (text: string, status?: number) => { message: text }; 
