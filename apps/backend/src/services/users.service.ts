@@ -184,6 +184,46 @@ export function updateProfileById(profileId: string, updates: Partial<SimpleProf
     });
 }
 
+export async function getProfileByUserId(userId: string) {
+    return db.user.findUnique({
+        where: {
+            id: userId
+        }, select: {
+            profile: {
+                include: {
+                    avatar: true,
+                    banner: true,
+                },
+            },
+        }
+    });
+}
+
+export async function searchUsers(query: string, limit = 20) {
+    return db.user.findMany({
+        where: {
+            OR: [
+                {
+                    profile: {
+                        username: { contains: query }
+                    }
+                },
+                {
+                    profile: {
+                        fullName: { contains: query }
+                    }
+                },
+            ],
+        },
+        take: limit,
+        orderBy: {
+            profile: {
+                username: "asc"
+            }
+        },
+    });
+}
+
 /**
  * Returns all the users (id, profile)
  */

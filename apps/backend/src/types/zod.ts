@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { Express } from "express";
 
 // ------------------- Profile Schema -------------------
 const profileBaseSchema = {
@@ -56,6 +57,11 @@ export type TUsername = z.infer<typeof usernameSchema>;
 
 export const postContentSchema = postBaseSchema.text;
 export type TPostContent = z.infer<typeof postSchema>;
+
+export const fileSchema = z.custom<Express.Multer.File>(
+  (val) => val && typeof val === "object" && "buffer" in val && "mimetype" in val,
+  { message: "Invalid file upload" }
+);
 
 // ------------------- Export types -------------------
 

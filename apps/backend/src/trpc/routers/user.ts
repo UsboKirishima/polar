@@ -1,8 +1,13 @@
 import { protectedProcedure, publicProcedure, t } from "../trpc";
 import { z } from 'zod/v4';
-import { userIdSchema, usernameSchema } from "../../types/zod";
-import { findAllFriendsByUserId, findUserAndProfileById, findUserAndProfileByUsername, getAllUsers } from "../../services/users.service";
-import { resultErr } from "../../utils/response";
+import { fileSchema, profileSchema, userIdSchema, usernameSchema } from "../../types/zod";
+import { resultErr, resultOk } from "../../utils/response";
+import { uploadMedia } from "../../utils/media";
+
+import * as userService from "../../services/users.service";
+import * as postService from "../../services/posts.service";
+import * as bannerService from "../../services/banner.service";
+import * as avatarService from "../../services/avatar.service";
 
 function removePassword<T extends Record<string, any>>(obj: T): Omit<T, 'password'> {
     const newObj = { ...obj };
@@ -15,10 +20,34 @@ function removePassword<T extends Record<string, any>>(obj: T): Omit<T, 'passwor
 }
 
 export const userRouter = t.router({
+    getMe: protectedProcedure
+        .query(async ({ ctx }) => {
+            const user = await userService.findUserAndProfileById(ctx.user.userId);
+
+            if (!user)
+                return resultErr(`User not found: ${ctx.user.userId}`);
+
+            return removePassword(user);
+        }),
+    search: protectedProcedure
+        .input(z.string())
+        .query(async ({ input, ctx }) => {
+            const usersMatch = await userService.searchUsers(input);
+
+            if (!usersMatch.length) return resultOk('No users found');
+
+            return usersMatch.map(u => removePassword(u));
+        }),
+    getAll: protectedProcedure
+        .query(async ({ ctx }) => {
+            const users = await userService.getAllUsers();
+
+            return users;
+        }),
     getById: protectedProcedure
         .input(userIdSchema)
         .query(async ({ input }) => {
-            const user = await findUserAndProfileById(input);
+            const user = await userService.findUserAndProfileById(input);
 
             if (!user)
                 return resultErr(`User not found: ${input}`);
@@ -28,17 +57,17 @@ export const userRouter = t.router({
     getByUsername: protectedProcedure
         .input(usernameSchema)
         .query(async ({ input }) => {
-            const user = await findUserAndProfileByUsername(input);
+            const user = await userService.findUserAndProfileByUsername(input);
 
             if (!user)
                 return resultErr(`User not found: ${input}`);
 
             return removePassword(user);
         }),
-    getAllFriendsById: protectedProcedure
+    getFriends: protectedProcedure
         .input(userIdSchema)
         .query(async ({ input, ctx }) => {
-            const friends = await findAllFriendsByUserId(input);
+            const friends = await userService.findAllFriendsByUserId(input);
 
             if (!friends)
                 return resultErr(`Failed to retrieve friends for user ID: ${input}`);
@@ -47,10 +76,57 @@ export const userRouter = t.router({
 
             return safeFriends;
         }),
-    getAllUsers: protectedProcedure
-        .query(async ({ ctx }) => {
-            const users = await getAllUsers();
+    getPosts: protectedProcedure
+        .input(userIdSchema)
+        .query(async ({ input, ctx }) => {
+            const posts = await postService.getPostsByUserId(input);
 
-            return users;
+            return posts;
+        }),
+    setAvatar: protectedProcedure
+        .input(fileSchema.nullable())
+        .mutation(async ({ input, ctx }) => {
+
+            if (input === null) {
+                avatarService.deleteAvatar(ctx.user.userId);
+                return resultOk('Successfully remove avatar.')
+            }
+
+            const data = await uploadMedia('avatars', input, ctx.user.userId);
+
+            if ('avatar' in data) {
+                return data;
+            }
+
+            return resultErr('Failed to upload avatar');
+        }),
+    setBanner: protectedProcedure
+        .input(fileSchema.nullable())
+        .mutation(async ({ input, ctx }) => {
+            if (input === null) {
+                bannerService.deleteBanner(ctx.user.userId);
+                return resultOk('Successfully remove banner.')
+            }
+
+            const data = await uploadMedia('banners', input, ctx.user.userId);
+
+            if ('banner' in data) {
+                return data;
+            }
+
+            return resultErr('Failed to upload banner');
+        }),
+    edit: protectedProcedure
+        .input(profileSchema.partial())
+        .mutation(async ({ input, ctx }) => {
+
+            const profile = await userService.getProfileByUserId(ctx.user.userId);
+
+            if (!profile || !profile.profile) {
+                return resultErr(`Failed to modify information for user ${ctx.user.userId}`)
+            }
+
+            await userService.updateProfileById(profile.profile.id, input);
+            return resultOk(`Successfully update information for ${ctx.user.userId}`);
         })
 })
