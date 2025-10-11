@@ -17,6 +17,7 @@ import Profile from './views/Profile.vue';
 import Register from './views/Register.vue';
 import ExHome from './views/ExHome.vue';
 import Users from './views/Users.vue';
+import { useDeviceType } from './composables/useDeviceType';
 
 const routes = {
     '/': ExHome,
@@ -29,6 +30,9 @@ const routes = {
 
 const auth = useAuthStore();
 
+
+const { deviceType, isMobile } = useDeviceType();
+
 </script>
 
 <template>
@@ -36,7 +40,8 @@ const auth = useAuthStore();
         <Sidebar />
         <div class="view">
             <div class="padding"></div>
-            <router-view class="page" />
+            <h1 v-if="isMobile">Mobile Website on development</h1>
+            <router-view v-else class="page" />
         </div>
     </div>
 </template>

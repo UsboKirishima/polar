@@ -72,7 +72,7 @@ const auth = useAuthStore();
         <div class="body">
             <div class="create" :style="{ background: `rgba(${postColor.join(',')})` }">
                 <div class="profile">
-                    <img src="/pfp_placeholder.png" alt="">
+                    <img :src="auth.user?.profile.avatar.url ?? '/pfp_placeholder.png'" alt="">
                     <div>
                         <p id="fullname">{{ auth.user?.profile.fullName }}</p>
                         <p>@{{ auth.user?.profile.username }}</p>
