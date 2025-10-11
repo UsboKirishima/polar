@@ -2,8 +2,7 @@ import type { Express } from "express";
 import { imageKit } from "..";
 import * as bannerService from "../services/banner.service";
 import * as avatarService from "../services/avatar.service";
-
-type MediaType = "avatars" | "banners";
+import { MediaType } from "../types/general";
 
 export const uploadMedia = async (
     type: MediaType,

@@ -6,7 +6,8 @@ const envSchema = z.object({
   DATABASE_URL: z.string(),
   IMAGEKIT_PUBLIC_KEY: z.string(),
   IMAGEKIT_PRIVATE_KEY: z.string(),
-  IMAGEKIT_URL_ENDPOINT: z.url()
+  IMAGEKIT_URL_ENDPOINT: z.url(),
+  REDIS_URL: z.string()
 });
 
 try {

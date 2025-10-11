@@ -364,3 +364,17 @@ export const getCategoryByName = async (categoryName: string) => {
         }
     })
 }
+
+export const updatePost = async (postId: string, newPostInformation: TPostSchema) => {
+    return await db.post.update({
+        where: {
+            id: postId
+        },
+        data: {
+            text: newPostInformation.text,
+            categories: {
+                set: newPostInformation.categories.map((cat) => ({ name: cat.name }))
+            }
+        }
+    })
+}
