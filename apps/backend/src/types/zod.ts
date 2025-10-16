@@ -32,15 +32,17 @@ export const categorySchema = z.object({
     name: z.string().max(50, { message: "category name cannot be longer than 50 characters" }),
 });
 
+export const commentTextSchema = z.string()
+    .min(10, { message: "comment must be at least 10 characters long" })
+    .max(255, { message: "comment text cannot be longer than 255 characters" });
+
 export const commentSchema = z.object({
-    text: z.string()
-        .min(10, { message: "comment must be at least 10 characters long" })
-        .max(255, { message: "comment text cannot be longer than 255 characters" }),
+    text: commentTextSchema
 });
 
 const postBaseSchema = {
     text: z.string()
-        .min(10, { message: "comment must be at least 10 characters long" })
+        .min(10, { message: "post content must be at least 10 characters long" })
         .max(512, { message: "content cannot be longer than 30 characters" }),
     categories: categorySchema.array().default([]),
 };
@@ -55,9 +57,21 @@ export const updatePostSchema = z.object({
     post: postSchema,
 });
 
+export const postIdSchema = z.string().uuid({ message: 'postId does not respect the UUID regex.' })
+
+export const commentRequestSchema = z.object({
+    postId: postIdSchema,
+    text: commentTextSchema 
+})
+
+export const commentIdSchema = z.string().uuid({ message: 'commentId does not respect the UUID regex.' });
+export const commentEditSchema = z.object({
+    commentId: commentIdSchema,
+    newText: commentTextSchema
+})
+
 // ------------------- Some useful types -------------------
 
-export const postIdSchema = z.string().uuid({ message: 'postId does not respect the UUID regex.' })
 
 export const usernameSchema = profileBaseSchema.username;
 export type TUsername = z.infer<typeof usernameSchema>;

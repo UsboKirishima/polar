@@ -4,6 +4,7 @@ import PageLoading from '@/components/PageLoading.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useSettingsStore } from '@/stores/settings';
 import { useUserStore } from '@/stores/users';
+import { trpc } from '@/trpc';
 import type { User } from '@/types';
 import { onMounted, ref, watch } from 'vue';
 

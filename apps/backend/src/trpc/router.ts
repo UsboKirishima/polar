@@ -5,9 +5,11 @@ import { Context } from './context';
 import { userRouter } from './routers/user';
 
 import { t } from './trpc'
+import { postRouter } from './routers/post';
 
 export const appRouter = t.router({
-    user: userRouter
+    user: userRouter,
+    post: postRouter
 })
 
 export type AppRouter = typeof appRouter;
