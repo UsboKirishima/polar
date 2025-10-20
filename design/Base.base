@@ -1,0 +1,4 @@
+views:
+  - type: cards
+    name: Table
+    imageFit: ""
