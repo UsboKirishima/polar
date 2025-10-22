@@ -16,7 +16,7 @@ export const categoryRouter = t.router({
                 return internalErr();
             }
         }),
-    /* Get the 10 most significant result */
+    /* Get the most significant results */
     search: protectedProcedure
         .input(z.string())
         .query(async ({ input, ctx }) => {

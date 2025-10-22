@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { Express } from "express";
+import { PostBgColor } from "../generated/prisma";
 
 // ------------------- Profile Schema -------------------
 const profileBaseSchema = {
@@ -47,6 +48,10 @@ const postBaseSchema = {
         .min(10, { message: "post content must be at least 10 characters long" })
         .max(512, { message: "content cannot be longer than 30 characters" }),
     categories: categorySchema.array().default([]),
+    /* Check color provided */
+    color: z.string().refine((val) => val in PostBgColor, {
+        message: `Invalid color, try (${Object.keys(PostBgColor).join(", ")}) `,
+    }).optional()
 };
 
 export const postSchema = z.object(postBaseSchema);
@@ -63,7 +68,7 @@ export const postIdSchema = z.string().uuid({ message: 'postId does not respect 
 
 export const commentRequestSchema = z.object({
     postId: postIdSchema,
-    text: commentTextSchema 
+    text: commentTextSchema
 })
 
 export const commentIdSchema = z.string().uuid({ message: 'commentId does not respect the UUID regex.' });

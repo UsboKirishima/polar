@@ -1,3 +1,4 @@
+import { PostBgColor } from "../generated/prisma";
 import { TPostCategory, TPostCommentSchema, TPostSchema } from "../types/zod";
 import { db } from "../utils/db";
 
@@ -13,6 +14,7 @@ export const createNewPost = async (
         data: {
             text: post.text,
             authorId: userId,
+            color: post.color as PostBgColor,
             categories: {
                 connectOrCreate: categories.map((cat) => ({
                     where: { name: cat.name },

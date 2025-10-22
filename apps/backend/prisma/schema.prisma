@@ -142,14 +142,34 @@ model Like {
   userId String
 }
 
+enum PostBgColor {
+  Deep_blue    @map("45, 75, 130, 255")
+  Dark_magenta @map("130, 45, 75, 255")
+  Dark_olive   @map("75, 130, 45, 255")
+  Brownish     @map("130, 100, 45, 255")
+  Deep_purple  @map("75, 45, 130, 255")
+  Teal_ish     @map("45, 130, 100, 255")
+  Indigo       @map("100, 45, 130, 255")
+  Rust         @map("130, 75, 45, 255")
+  Muted_blue   @map("60, 90, 150, 255")
+  Muted_pink   @map("150, 60, 90, 255")
+  Muted_green  @map("60, 150, 90, 255")
+  Burnt_orange @map("150, 90, 60, 255")
+  Dark_violet  @map("90, 60, 150, 255")
+  Dark_lime    @map("90, 150, 60, 255")
+  Dark_rose    @map("120, 60, 120, 255")
+  Normal       @map("124, 181, 255, 0.0745")
+}
+
 model Post {
-  id         String     @id @unique @default(uuid())
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  id         String      @id @unique @default(uuid())
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
   text       String
-  published  Boolean    @default(true)
-  author     User       @relation(fields: [authorId], references: [id])
+  published  Boolean     @default(true)
+  author     User        @relation(fields: [authorId], references: [id])
   authorId   String
+  color      PostBgColor @default(Normal)
   categories Category[]
   comments   Comment[]
   likes      Like[]
