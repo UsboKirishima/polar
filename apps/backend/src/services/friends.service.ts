@@ -1,4 +1,4 @@
-import { db } from "../utils/db";
+import { db } from "@polar/db";
 
 /**
  * Creates a new friend requests

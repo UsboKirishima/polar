@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { Express } from "express";
-import { PostBgColor } from "../generated/prisma";
+import { PostBgColor } from "@polar/db";
 
 // ------------------- Profile Schema -------------------
 const profileBaseSchema = {

@@ -1,6 +1,6 @@
-import { PostBgColor } from "../generated/prisma";
+import { PostBgColor } from "@polar/db";
 import { TPostCategory, TPostCommentSchema, TPostSchema } from "../types/zod";
-import { db } from "../utils/db";
+import { db } from "@polar/db";
 
 /**
  * Create new post by given post and user id

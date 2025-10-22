@@ -1,7 +1,6 @@
 import { Router, Response, NextFunction } from 'express';
 import { isAuthenticated, AuthenticatedRequest } from '../middlewares';
 import { findProfileById, findUserAndProfileById, findUserById } from '../services/users.service';
-import { Profile, User } from '../generated/prisma';
 import * as UsersController from '../controllers/users.controller';
 import { SimpleUserSchema } from '../types/general';
 

@@ -1,4 +1,4 @@
-import { db } from '../utils/db';
+import { db } from '@polar/db';
 import { hashToken } from '../utils/hash';
 
 // used when we create a refresh token.

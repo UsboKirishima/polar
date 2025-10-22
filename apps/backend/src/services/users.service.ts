@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 
 import type { SimpleProfileSchema, SimpleUserSchema } from "../types/general.js";
-import { db } from "../utils/db.js";
+import { db } from "@polar/db";
 
 export function findUserByEmail(email: string) {
     return db.user.findUnique({

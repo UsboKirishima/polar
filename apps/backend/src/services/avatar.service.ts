@@ -1,4 +1,4 @@
-import { db } from "../utils/db";
+import { db } from "@polar/db";
 
 export const getAvatarByUserId = async (userId: string) => {
     return await db.avatar.findFirst({

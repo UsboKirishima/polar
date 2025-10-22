@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import 'dotenv/config'
-import { User } from '../generated/prisma';
+import { User } from '@polar/db';
 
 // Usually I keep the token between 5 minutes - 15 minutes
 export function generateAccessToken(user: User) {
