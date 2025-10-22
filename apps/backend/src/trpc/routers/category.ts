@@ -1,0 +1,53 @@
+import { internalErr } from "../../utils/response";
+import { protectedProcedure, publicProcedure, t } from "../trpc";
+
+import * as postService from '../../services/posts.service'
+import { z } from "zod/v4";
+import { categoryIdSchema, categoryNameSchema } from "../../types/zod";
+
+export const categoryRouter = t.router({
+    getAll: publicProcedure
+        .query(async ({ ctx }) => {
+            try {
+                const cats = await postService.getAllCategories();
+
+                return cats;
+            } catch (error) {
+                return internalErr();
+            }
+        }),
+    /* Get the 10 most significant result */
+    search: protectedProcedure
+        .input(z.string())
+        .query(async ({ input, ctx }) => {
+            try {
+                const results = await postService.searchCategory(input);
+
+                return results;
+            } catch (error) {
+                return internalErr();
+            }
+        }),
+    getById: protectedProcedure
+        .input(categoryIdSchema)
+        .query(async ({ input, ctx }) => {
+            try {
+                const cat = await postService.getCategoryById(input);
+
+                return cat;
+            } catch (error) {
+                return internalErr();
+            }
+        }),
+    getByName: protectedProcedure
+        .input(categoryNameSchema)
+        .query(async ({ input, ctx }) => {
+            try {
+                const cat = await postService.getCategoryByName(input);
+
+                return cat;
+            } catch (error) {
+                return internalErr();
+            }
+        })
+})

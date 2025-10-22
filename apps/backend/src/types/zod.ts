@@ -28,8 +28,10 @@ const userBaseSchema = {
 export const userSchema = z.object(userBaseSchema);
 
 // ------------------- Post schema -------------------
+
+export const categoryNameSchema = z.string().max(50, { message: "category name cannot be longer than 50 characters" });
 export const categorySchema = z.object({
-    name: z.string().max(50, { message: "category name cannot be longer than 50 characters" }),
+    name: categoryNameSchema
 });
 
 export const commentTextSchema = z.string()
@@ -69,6 +71,8 @@ export const commentEditSchema = z.object({
     commentId: commentIdSchema,
     newText: commentTextSchema
 })
+
+export const categoryIdSchema = z.number({ message: 'categoryId does not respect the numerical id.' });
 
 // ------------------- Some useful types -------------------
 

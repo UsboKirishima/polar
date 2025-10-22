@@ -378,3 +378,14 @@ export const updatePost = async (postId: string, newPostInformation: TPostSchema
         }
     })
 }
+
+export const searchCategory = async (query: string, limit: number = 20) => {
+    return await db.category.findMany({
+        where: {
+            name: {
+                contains: query
+            }
+        },
+        take: limit
+    })
+}
