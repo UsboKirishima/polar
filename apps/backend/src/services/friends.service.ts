@@ -131,3 +131,14 @@ export async function getAllFriendsByUserId(userId: string) {
         },
     });
 }
+
+export async function getAllSentRequests(userId: string) {
+    return await db.user.findUnique({
+        where: {
+            id: userId
+        },
+        select: {
+            sentFriendRequests: true
+        }
+    })
+}

@@ -89,15 +89,7 @@ const openFriend = (friendId: string) => {
             <ul v-if="friendStore.pendingRequests?.length" class="request-list">
                 <li v-for="request in friendStore.pendingRequests" :key="request.id" class="request-item">
                     <div class="indentifier" @click="openFriend(request.senderId)">
-                        <img src="/pfp_placeholder.png" alt="">
-                        <div class="info">
-                            <span class="username">
-                                {{ request.sender.profile?.fullName }}
-                            </span>
-                            <span class="tag">
-                                @{{ request.sender.profile?.username }}
-                            </span>
-                        </div>
+                        <Userinfo :user="(request.sender as User)" disable-over />
                     </div>
                     <div class="actions">
                         <button @click="acceptRequest(request.senderId)" class="accept-btn">
@@ -164,6 +156,10 @@ const openFriend = (friendId: string) => {
     align-items: center;
     cursor: pointer;
     z-index: 100;
+}
+
+.indentifier img {
+    width: 40px;
 }
 
 
