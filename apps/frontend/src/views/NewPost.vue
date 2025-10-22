@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Userinfo from '@/components/Userinfo.vue';
 import { useAuthStore } from '@/stores/auth';
 import { usePostStore } from '@/stores/posts';
 import type { Category } from '@/types';
@@ -72,11 +73,7 @@ const auth = useAuthStore();
         <div class="body">
             <div class="create" :style="{ background: `rgba(${postColor.join(',')})` }">
                 <div class="profile">
-                    <img :src="auth.user?.profile.avatar.url ?? '/pfp_placeholder.png'" alt="">
-                    <div>
-                        <p id="fullname">{{ auth.user?.profile.fullName }}</p>
-                        <p>@{{ auth.user?.profile.username }}</p>
-                    </div>
+                    <Userinfo :user="auth.user" disable-over />
                 </div>
                 <div class="send">
                     <input type="text" placeholder="Write a post..." v-model="postContent" @keypress="handleKeyPress">
