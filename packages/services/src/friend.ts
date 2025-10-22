@@ -32,7 +32,7 @@ export async function createFriendRequest(senderId: string, receiverId: string) 
 }
 
 export async function acceptFriendRequest(senderId: string, receiverId: string) {
-    return await db.$transaction(async (tx) => {
+    return await db.$transaction(async (tx: any) => {
         const request = await tx.friendRequest.findUnique({
             where: {
                 senderId_receiverId: {

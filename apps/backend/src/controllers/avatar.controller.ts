@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import * as avatarService from '../services/avatar.service';
+import { avatarService } from '@polar/services';
 import { imageKit } from '..';
 
 export async function uploadAvatar(req: Request, res: Response, next: NextFunction) {

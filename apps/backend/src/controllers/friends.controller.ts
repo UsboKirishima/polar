@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 
-import * as friendService from "../services/friends.service";
+import { friendService } from "@polar/services";
 
 /**
  * Create a new friend request

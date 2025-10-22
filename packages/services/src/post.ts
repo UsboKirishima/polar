@@ -1,5 +1,5 @@
 import { PostBgColor } from "@polar/db";
-import { TPostCategory, TPostCommentSchema, TPostSchema } from "../types/zod";
+import { TPostCategory, TPostCommentSchema, TPostSchema } from "@polar/types/zod";
 import { db } from "@polar/db";
 
 /**

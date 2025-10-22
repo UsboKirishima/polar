@@ -1,18 +1,9 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import { generateTokens } from '../utils/jwt';
-import {
-    addRefreshTokenToWhitelist,
-    findRefreshToken,
-    deleteRefreshTokenById,
-    revokeTokens,
-} from '../services/auth.service';
-import {
-    findUserByEmail,
-    findUserById,
-    createUserWithProfile,
-} from '../services/users.service';
-import { TUserSchema } from '../types/zod';
+import { authService } from '@polar/services';
+import { userService } from '@polar/services';
+import { TUserSchema } from '@polar/types/zod';
 
 const router = express.Router();
 
@@ -27,14 +18,14 @@ router.post('/register', async (req, res, next) => {
         }
 
         // Check if use already exists
-        const existingUser = await findUserByEmail(userRequest.email);
+        const existingUser = await userService.findUserByEmail(userRequest.email);
         if (existingUser) {
             res.status(400);
             throw new Error('Email already in use.');
         }
 
         // User creation with nested profile
-        const user = await createUserWithProfile({
+        const user = await userService.createUserWithProfile({
             email: userRequest.email,
             password: userRequest.password,
             profile: {
@@ -46,7 +37,7 @@ router.post('/register', async (req, res, next) => {
 
         // Token generation
         const { accessToken, refreshToken } = generateTokens(user);
-        await addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
+        await authService.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
 
         res.json({ accessToken, refreshToken });
     } catch (err) {
@@ -63,7 +54,7 @@ router.post('/login', async (req, res, next) => {
             throw new Error('You must provide an email and a password.');
         }
 
-        const existingUser = await findUserByEmail(email);
+        const existingUser = await userService.findUserByEmail(email);
         if (!existingUser) {
             res.status(403);
             throw new Error('Invalid login credentials.');
@@ -76,7 +67,7 @@ router.post('/login', async (req, res, next) => {
         }
 
         const { accessToken, refreshToken } = generateTokens(existingUser);
-        await addRefreshTokenToWhitelist({ refreshToken, userId: existingUser.id });
+        await authService.addRefreshTokenToWhitelist({ refreshToken, userId: existingUser.id });
 
         res.json({ accessToken, refreshToken });
     } catch (err) {
@@ -93,7 +84,7 @@ router.post('/refreshToken', async (req, res, next) => {
             throw new Error('Missing refresh token.');
         }
 
-        const savedRefreshToken = await findRefreshToken(refreshToken);
+        const savedRefreshToken = await authService.findRefreshToken(refreshToken);
         if (
             !savedRefreshToken ||
             savedRefreshToken.revoked === true ||
@@ -103,15 +94,15 @@ router.post('/refreshToken', async (req, res, next) => {
             throw new Error('Unauthorized');
         }
 
-        const user = await findUserById(savedRefreshToken.userId);
+        const user = await userService.findUserById(savedRefreshToken.userId);
         if (!user) {
             res.status(401);
             throw new Error('Unauthorized');
         }
 
-        await deleteRefreshTokenById(savedRefreshToken.id);
+        await authService.deleteRefreshTokenById(savedRefreshToken.id);
         const { accessToken, refreshToken: newRefreshToken } = generateTokens(user);
-        await addRefreshTokenToWhitelist({ refreshToken: newRefreshToken, userId: user.id });
+        await authService.addRefreshTokenToWhitelist({ refreshToken: newRefreshToken, userId: user.id });
 
         res.json({ accessToken, refreshToken: newRefreshToken });
     } catch (err) {
@@ -123,7 +114,7 @@ router.post('/refreshToken', async (req, res, next) => {
 router.post('/revokeRefreshTokens', async (req, res, next) => {
     try {
         const { userId } = req.body;
-        await revokeTokens(userId);
+        await authService.revokeTokens(userId);
         res.json({ message: `Tokens revoked for user with id #${userId}` });
     } catch (err) {
         next(err);

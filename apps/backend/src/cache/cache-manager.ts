@@ -1,5 +1,5 @@
 import { env } from "../env";
-import { ServiceType } from "../types/general";
+import { ServiceType } from "@polar/types/general";
 import { createClient, RedisClientType } from "redis";
 
 interface ConnectionOpts {

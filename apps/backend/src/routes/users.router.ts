@@ -1,8 +1,7 @@
 import { Router, Response, NextFunction } from 'express';
 import { isAuthenticated, AuthenticatedRequest } from '../middlewares';
-import { findProfileById, findUserAndProfileById, findUserById } from '../services/users.service';
+import { userService } from '@polar/services';
 import * as UsersController from '../controllers/users.controller';
-import { SimpleUserSchema } from '../types/general';
 
 const router = Router();
 
@@ -10,7 +9,7 @@ const router = Router();
 router.get('/profile', isAuthenticated, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
         const { userId } = req.payload!;
-        const user = await findUserAndProfileById(userId);
+        const user = await userService.findUserAndProfileById(userId);
 
         if (!user) {
             res.status(404).json({ message: 'User not found' });

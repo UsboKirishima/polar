@@ -1,15 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
 
-import type { TUserId, TUsername } from "../types/zod.js";
+import type { TUserId, TUsername } from "@polar/types/zod.js";
 
-import {
-    findAllFriendsByUserId,
-    findUserAndProfileById,
-    findUserAndProfileByUsername,
-    getAllUsers as getAllUsersDB,
-    updateProfileById,
-} from "../services/users.service";
-import { userIdSchema, usernameSchema } from "../types/zod.js";
+import { userService } from "@polar/services";
+import { userIdSchema, usernameSchema } from "@polar/types/zod.js";
 
 function validateUserId(res: Response, userId: string) {
     const validationResult = userIdSchema.safeParse(userId);
@@ -31,7 +25,7 @@ export async function getUserById(req: Request, res: Response, next: NextFunctio
         if (!parsedUserId)
             return;
 
-        const userAndProfile = await findUserAndProfileById(parsedUserId);
+        const userAndProfile = await userService.findUserAndProfileById(parsedUserId);
         if (!userAndProfile) {
             res.status(404).json({ message: "User not found" });
             return;
@@ -55,7 +49,7 @@ export async function getUserByUsername(req: Request, res: Response, next: NextF
             return;
         }
 
-        const userAndProfile = await findUserAndProfileByUsername(username);
+        const userAndProfile = await userService.findUserAndProfileByUsername(username);
         if (!userAndProfile) {
             res.status(404).json({ message: "User not found" });
             return;
@@ -80,13 +74,13 @@ export async function modifyUsername(req: Request, res: Response, next: NextFunc
         if (!parsedUserId)
             return;
 
-        const user = await findUserAndProfileById(parsedUserId);
+        const user = await userService.findUserAndProfileById(parsedUserId);
         if (!user?.profile) {
             res.status(404).json({ message: "This user has no associated profile" });
             return;
         }
 
-        await updateProfileById(user.profile.id, { username: parsedUsername });
+        await userService.updateProfileById(user.profile.id, { username: parsedUsername });
         res.status(200).json({ message: "Username updated successfully" });
     }
     catch (err) {
@@ -98,7 +92,7 @@ export async function modifyUsername(req: Request, res: Response, next: NextFunc
 export async function getAllFriends(req: Request, res: Response, next: NextFunction) {
     try {
         const userId: TUserId = req.params.id;
-        const user = await findAllFriendsByUserId(userId);
+        const user = await userService.findAllFriendsByUserId(userId);
 
         if (!user) {
             res.status(404).json({ message: "user not found" });
@@ -116,7 +110,7 @@ export async function getAllFriends(req: Request, res: Response, next: NextFunct
 // -------------------- GET ALL USERS --------------------
 export async function getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
-        const users = await getAllUsersDB();
+        const users = await userService.getAllUsers();
         res.status(200).json(users);
     }
     catch (err) {

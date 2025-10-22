@@ -1,7 +1,7 @@
 {
-  "name": "@polar/utils",
+  "name": "@polar/services",
   "version": "1.0.0",
-  "description": "The common functions package.",
+  "description": "The Polar's business logic package.",
   "main": "./src/index.ts",
   "exports": "./src/index.ts",
   "scripts": {
@@ -12,6 +12,10 @@
   "license": "ISC",
   "packageManager": "pnpm@10.12.4",
   "dependencies": {
-    "@types/node": "^24.9.1"
+    "@polar/db": "workspace:*",
+    "@polar/types": "workspace:*",
+    "@polar/utils": "workspace:*",
+    "@types/bcrypt": "^6.0.0",
+    "bcrypt": "^6.0.0"
   }
 }

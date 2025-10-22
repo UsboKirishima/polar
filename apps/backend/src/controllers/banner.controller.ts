@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import * as bannerService from '../services/banner.service';
+import { bannerService } from '@polar/services';
 import { imageKit } from '..';
 
 export async function uploadBanner(req: Request, res: Response, next: NextFunction) {

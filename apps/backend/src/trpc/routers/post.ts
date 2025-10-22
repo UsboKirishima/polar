@@ -1,9 +1,18 @@
-import * as userService from "../../services/users.service";
-import * as postService from "../../services/posts.service";
-import * as bannerService from "../../services/banner.service";
-import * as avatarService from "../../services/avatar.service";
+import { userService } from "@polar/services";
+import { postService } from "@polar/services";
+import { bannerService } from "@polar/services";
+import { avatarService } from "@polar/services";
+
 import { protectedProcedure, t } from "../trpc";
-import { commentEditSchema, commentIdSchema, commentRequestSchema, commentSchema, postIdSchema, postSchema, updatePostSchema } from "../../types/zod";
+import {
+    commentEditSchema,
+    commentIdSchema,
+    commentRequestSchema,
+    commentSchema,
+    postIdSchema,
+    postSchema,
+    updatePostSchema
+} from "@polar/types/zod";
 import { internalErr, resultErr, resultOk } from "../../utils/response";
 import { userRouter } from "./user";
 

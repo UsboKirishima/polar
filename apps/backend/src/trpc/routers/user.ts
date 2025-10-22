@@ -1,13 +1,14 @@
 import { protectedProcedure, publicProcedure, t } from "../trpc";
 import { z } from 'zod/v4';
-import { fileSchema, profileSchema, userIdSchema, usernameSchema } from "../../types/zod";
+import { profileSchema, userIdSchema, usernameSchema } from "@polar/types/zod";
+import { fileSchema } from "../../types";
 import { resultErr, resultOk } from "../../utils/response";
 import { uploadMedia } from "../../utils/media";
 
-import * as userService from "../../services/users.service";
-import * as postService from "../../services/posts.service";
-import * as bannerService from "../../services/banner.service";
-import * as avatarService from "../../services/avatar.service";
+import { userService } from "@polar/services";
+import { postService } from "@polar/services";
+import { bannerService } from "@polar/services";
+import { avatarService } from "@polar/services";
 
 import { TRPCRouterRecord } from "@trpc/server";
 

@@ -1,9 +1,9 @@
 import { internalErr } from "../../utils/response";
 import { protectedProcedure, publicProcedure, t } from "../trpc";
 
-import * as postService from '../../services/posts.service'
+import { postService } from '@polar/services'
 import { z } from "zod/v4";
-import { categoryIdSchema, categoryNameSchema } from "../../types/zod";
+import { categoryIdSchema, categoryNameSchema } from "@polar/types/zod";
 
 export const categoryRouter = t.router({
     getAll: publicProcedure

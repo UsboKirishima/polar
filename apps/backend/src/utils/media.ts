@@ -1,8 +1,8 @@
 import type { Express } from "express";
 import { imageKit } from "..";
-import * as bannerService from "../services/banner.service";
-import * as avatarService from "../services/avatar.service";
-import { MediaType } from "../types/general";
+import { bannerService } from "@polar/services";
+import { avatarService } from "@polar/services";
+import { MediaType } from "@polar/types/general";
 
 export const uploadMedia = async (
     type: MediaType,

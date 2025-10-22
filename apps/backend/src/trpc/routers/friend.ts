@@ -1,8 +1,8 @@
 import { protectedProcedure, t } from "../trpc";
 
-import * as friendService from '../../services/friends.service';
+import { friendService } from '@polar/services';
 import { internalErr, resultErr, resultOk } from "../../utils/response";
-import { userIdSchema } from "../../types/zod";
+import { userIdSchema } from "@polar/types/zod";
 import { z } from "zod/v4";
 
 export const friendRouter = t.router({

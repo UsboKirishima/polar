@@ -1,0 +1,6 @@
+export * as authService from './auth'
+export * as avatarService from './avatar'
+export * as bannerService from './banner'
+export * as friendService from './friend'
+export * as postService from './post'
+export * as userService from './user'

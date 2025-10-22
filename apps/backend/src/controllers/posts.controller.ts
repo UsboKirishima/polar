@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
-import * as postService from "../services/posts.service";
-import { commentSchema, postSchema, userIdSchema } from "../types/zod.js";
+import { postService } from "@polar/services";
+import { commentSchema, postSchema, userIdSchema } from "@polar/types/zod.js";
 
 /**
  * Create a new post
