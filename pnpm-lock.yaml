@@ -26,6 +26,9 @@ importers:
       '@polar/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@polar/media':
+        specifier: workspace:*
+        version: link:../../packages/media
       '@polar/services':
         specifier: workspace:*
         version: link:../../packages/services

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { bannerService } from '@polar/services';
-import { imageKit } from '..';
+import { imageKit } from '@polar/media';
 
 export async function uploadBanner(req: Request, res: Response, next: NextFunction) {
     try {
