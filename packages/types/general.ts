@@ -11,3 +11,9 @@ export type ServiceType = 'auth'
     | 'friends'
     | 'posts'
     | 'users';
+
+export interface JwtPayload {
+    userId: string;
+    iat: number;
+    exp: number;
+}

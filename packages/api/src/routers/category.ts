@@ -1,4 +1,4 @@
-import { internalErr } from "../../utils/response";
+import { internalErr } from "@polar/utils";
 import { protectedProcedure, publicProcedure, t } from "../trpc";
 
 import { postService } from '@polar/services'

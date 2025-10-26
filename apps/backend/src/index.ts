@@ -1,18 +1,7 @@
-import ImageKit from "imagekit";
-import app from "./app.js";
 import { env } from "./env.js";
 import server from "./server.js";
 import "./wss.js";
 import chalk from "../../../packages/colors/source/index.js";
-
-export * from './trpc/router.js';
-
-/* ImageKit CDN */
-export const imageKit = new ImageKit({
-    publicKey: env.IMAGEKIT_PUBLIC_KEY,
-    privateKey: env.IMAGEKIT_PRIVATE_KEY,
-    urlEndpoint: env.IMAGEKIT_URL_ENDPOINT
-});
 
 const asciiArt = String.raw`                                     
 __________      .__                

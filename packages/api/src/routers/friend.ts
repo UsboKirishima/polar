@@ -1,7 +1,7 @@
 import { protectedProcedure, t } from "../trpc";
 
 import { friendService } from '@polar/services';
-import { internalErr, resultErr, resultOk } from "../../utils/response";
+import { internalErr, resultErr, resultOk } from "@polar/utils";
 import { userIdSchema } from "@polar/types/zod";
 import { z } from "zod/v4";
 

@@ -1,19 +1,15 @@
-import { userService } from "@polar/services";
 import { postService } from "@polar/services";
-import { bannerService } from "@polar/services";
-import { avatarService } from "@polar/services";
 
 import { protectedProcedure, t } from "../trpc";
 import {
     commentEditSchema,
     commentIdSchema,
     commentRequestSchema,
-    commentSchema,
     postIdSchema,
     postSchema,
     updatePostSchema
 } from "@polar/types/zod";
-import { internalErr, resultErr, resultOk } from "../../utils/response";
+import { internalErr, resultErr, resultOk } from "@polar/utils";
 import { userRouter } from "./user";
 
 async function isUserThePostAuthor(userId: string, postId: string): Promise<boolean> {

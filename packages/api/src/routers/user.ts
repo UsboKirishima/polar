@@ -1,16 +1,20 @@
-import { protectedProcedure, publicProcedure, t } from "../trpc";
+import { protectedProcedure, t } from "../trpc";
 import { z } from 'zod/v4';
 import { profileSchema, userIdSchema, usernameSchema } from "@polar/types/zod";
-import { fileSchema } from "../../types";
-import { resultErr, resultOk } from "../../utils/response";
-import { uploadMedia } from "../../utils/media";
+import { resultErr, resultOk } from "@polar/utils";
+import { uploadMedia } from "@polar/media";
 
 import { userService } from "@polar/services";
 import { postService } from "@polar/services";
 import { bannerService } from "@polar/services";
 import { avatarService } from "@polar/services";
 
-import { TRPCRouterRecord } from "@trpc/server";
+import type { Express } from "express";
+
+export const fileSchema = z.custom<Express.Multer.File>(
+    (val) => val && typeof val === "object" && "buffer" in val && "mimetype" in val,
+    { message: "Invalid file upload" }
+);
 
 function removePassword<T extends Record<string, any>>(obj: T): Omit<T, 'password'> {
     const newObj = { ...obj };

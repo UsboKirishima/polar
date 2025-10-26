@@ -9,9 +9,8 @@ import type MessageResponse from "./interfaces/message-response.js";
 import api from "./routes/index.js";
 import * as middlewares from "./middlewares.js";
 import rateLimit from "express-rate-limit";
-import { initTRPC } from "@trpc/server";
-import { createContext, Context } from "./trpc/context.js";
-import { appRouter } from "./trpc/router.js";
+import { createContext, Context } from "@polar/api";
+import { appRouter } from "@polar/api";
 
 const app = express();
 

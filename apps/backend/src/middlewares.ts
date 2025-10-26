@@ -5,6 +5,7 @@ import type ErrorResponse from "./interfaces/error-response.js";
 import { env } from "./env.js";
 import * as jwt from 'jsonwebtoken';
 import 'dotenv/config.js';
+import { JwtPayload } from "@polar/types/general.js";
 
 export function notFound(req: Request, res: Response, next: NextFunction) {
     res.status(404);
@@ -21,11 +22,6 @@ export function errorHandler(err: Error, req: Request, res: Response<ErrorRespon
     });
 }
 
-export interface JwtPayload {
-    userId: string;
-    iat: number;
-    exp: number;
-}
 
 export interface AuthenticatedRequest extends Request {
     payload?: JwtPayload;

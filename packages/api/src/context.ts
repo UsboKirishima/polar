@@ -1,8 +1,6 @@
 import * as trpcExpress from '@trpc/server/adapters/express';
-import * as trpc from '@trpc/server';
-import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
-import { JwtPayload } from '../middlewares';
+import { JwtPayload } from '@polar/types/general';
 
 export const createContext = async (opts: trpcExpress.CreateExpressContextOptions) => {
     let user: JwtPayload | null = null;
@@ -15,7 +13,7 @@ export const createContext = async (opts: trpcExpress.CreateExpressContextOption
             const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
             user = payload;
         } catch (err) {
-            console.error('Token non valido:', (err as Error).message);
+            console.error('Token not valid:', (err as Error).message);
         }
     }
     return {
