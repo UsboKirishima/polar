@@ -29,6 +29,9 @@ importers:
       '@polar/media':
         specifier: workspace:*
         version: link:../../packages/media
+      '@polar/redis-manager':
+        specifier: workspace:*
+        version: link:../../packages/redis-manager
       '@polar/services':
         specifier: workspace:*
         version: link:../../packages/services
@@ -347,6 +350,15 @@ importers:
       multer:
         specifier: ^2.0.2
         version: 2.0.2
+
+  packages/redis-manager:
+    dependencies:
+      dotenv:
+        specifier: ^17.2.2
+        version: 17.2.2
+      redis:
+        specifier: ^5.8.3
+        version: 5.8.3
 
   packages/services:
     dependencies:

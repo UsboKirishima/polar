@@ -2,6 +2,8 @@ import { env } from "./env.js";
 import server from "./server.js";
 import "./wss.js";
 import chalk from "../../../packages/colors/source/index.js";
+import CacheManager from "@polar/redis-manager";
+import * as redis from 'redis';
 
 const asciiArt = String.raw`                                     
 __________      .__                
@@ -12,11 +14,21 @@ __________      .__
                           \/                         
 `;
 
+/* Cache system intialization */
+const redisClient = redis.createClient({
+    url: env.REDIS_URL ?? "redis://localhost:6379"
+});
+export const cacheManager = new CacheManager(redisClient, {
+    max_retries: 5,
+    retry_delay: 500
+});
+
 const port = env.PORT;
 const serverListen = server.listen(port, () => {
     /* eslint-disable no-console */
     console.log(asciiArt)
     console.log(chalk.bgGreen.black(`Listening: http://localhost:${port}`));
+    cacheManager.connect();
     /* eslint-enable no-console */
 });
 
