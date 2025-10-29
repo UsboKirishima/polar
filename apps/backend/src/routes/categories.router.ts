@@ -1,6 +1,7 @@
-import { Router } from "express";
-import { isAuthenticated } from "../middlewares";
+import { Router } from 'express';
+
 import * as PostController from '../controllers/posts.controller';
+import { isAuthenticated } from '../middlewares.js';
 
 const router = Router();
 

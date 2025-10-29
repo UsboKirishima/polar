@@ -1,5 +1,6 @@
-import { WebSocketServer } from "ws";
-import server from "./server";
+import { WebSocketServer } from 'ws';
+
+import server from './server.js';
 
 const wss = new WebSocketServer({ server, path: '/ws' });
 /**
@@ -11,15 +12,15 @@ wss.on('connection', (ws) => {
 
     ws.on('message', (message) => {
         console.log(`Message received: ${message.toString()}`);
-        wss.clients.forEach(client => {
+        wss.clients.forEach((client) => {
             if (client.readyState === ws.OPEN) {
                 client.send(message.toString());
             }
-        })
-    })
+        });
+    });
 
-    ws.on("close", () => {
-        console.log("Client disconnected");
+    ws.on('close', () => {
+        console.log('Client disconnected');
     });
 });
 

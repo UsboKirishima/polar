@@ -1,9 +1,10 @@
-import express from 'express';
+import type { TUserSchema } from '@polar/types/zod';
+
+import { authService, userService } from '@polar/services';
 import bcrypt from 'bcrypt';
-import { generateTokens } from '../utils/jwt';
-import { authService } from '@polar/services';
-import { userService } from '@polar/services';
-import { TUserSchema } from '@polar/types/zod';
+import express from 'express';
+
+import { generateTokens } from '../utils/jwt.js';
 
 const router = express.Router();
 
@@ -31,7 +32,7 @@ router.post('/register', async (req, res, next) => {
             profile: {
                 username: userRequest.profile.username,
                 dateOfBirth: userRequest.profile.dateOfBirth,
-                fullName: userRequest.profile.fullName
+                fullName: userRequest.profile.fullName,
             },
         });
 
@@ -40,7 +41,8 @@ router.post('/register', async (req, res, next) => {
         await authService.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
 
         res.json({ accessToken, refreshToken });
-    } catch (err) {
+    }
+    catch (err) {
         next(err);
     }
 });
@@ -70,7 +72,8 @@ router.post('/login', async (req, res, next) => {
         await authService.addRefreshTokenToWhitelist({ refreshToken, userId: existingUser.id });
 
         res.json({ accessToken, refreshToken });
-    } catch (err) {
+    }
+    catch (err) {
         next(err);
     }
 });
@@ -86,9 +89,9 @@ router.post('/refreshToken', async (req, res, next) => {
 
         const savedRefreshToken = await authService.findRefreshToken(refreshToken);
         if (
-            !savedRefreshToken ||
-            savedRefreshToken.revoked === true ||
-            Date.now() >= savedRefreshToken.expireAt.getTime()
+            !savedRefreshToken
+            || savedRefreshToken.revoked === true
+            || Date.now() >= savedRefreshToken.expireAt.getTime()
         ) {
             res.status(401);
             throw new Error('Unauthorized');
@@ -105,7 +108,8 @@ router.post('/refreshToken', async (req, res, next) => {
         await authService.addRefreshTokenToWhitelist({ refreshToken: newRefreshToken, userId: user.id });
 
         res.json({ accessToken, refreshToken: newRefreshToken });
-    } catch (err) {
+    }
+    catch (err) {
         next(err);
     }
 });
@@ -116,7 +120,8 @@ router.post('/revokeRefreshTokens', async (req, res, next) => {
         const { userId } = req.body;
         await authService.revokeTokens(userId);
         res.json({ message: `Tokens revoked for user with id #${userId}` });
-    } catch (err) {
+    }
+    catch (err) {
         next(err);
     }
 });

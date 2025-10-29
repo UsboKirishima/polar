@@ -1,7 +1,7 @@
-import type { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from 'express';
 
-import { postService } from "@polar/services";
-import { commentSchema, postSchema, userIdSchema } from "@polar/types/zod.js";
+import { postService } from '@polar/services';
+import { commentSchema, postSchema } from '@polar/types/zod.js';
 
 /**
  * Create a new post
@@ -10,14 +10,14 @@ export async function createPost(req: Request, res: Response, next: NextFunction
     try {
         const authorId = req.payload?.userId;
         if (!authorId) {
-            res.status(401).json({ error: "Unauthorized" });
+            res.status(401).json({ error: 'Unauthorized' });
             return;
         }
 
         const { text, categories } = postSchema.parse(req.body);
         const post = await postService.createNewPost(authorId, { text, categories }, categories);
 
-        res.status(201).json({ message: "Post created successfully", post });
+        res.status(201).json({ message: 'Post created successfully', post });
     }
     catch (err) {
         next(err);
@@ -33,23 +33,23 @@ export async function deletePost(req: Request, res: Response, next: NextFunction
         const { postId } = req.params;
 
         if (!userId) {
-            res.status(401).json({ error: "Unauthorized" });
+            res.status(401).json({ error: 'Unauthorized' });
             return;
         }
 
         const post = await postService.getPostByid(postId);
         if (!post) {
-            res.status(404).json({ error: "Post not found" });
+            res.status(404).json({ error: 'Post not found' });
             return;
         }
 
         if (post.authorId !== userId) {
-            res.status(403).json({ error: "You are not allowed to delete this post" });
+            res.status(403).json({ error: 'You are not allowed to delete this post' });
             return;
         }
 
         await postService.deletePost(postId);
-        res.status(200).json({ message: "Post deleted successfully" });
+        res.status(200).json({ message: 'Post deleted successfully' });
     }
     catch (err) {
         next(err);
@@ -65,12 +65,12 @@ export async function likePost(req: Request, res: Response, next: NextFunction) 
         const { postId } = req.params;
 
         if (!userId) {
-            res.status(401).json({ error: "Unauthorized" });
+            res.status(401).json({ error: 'Unauthorized' });
             return;
         }
 
         const like = await postService.likePost(postId, userId);
-        res.status(200).json({ message: "Post like toggled successfully", like });
+        res.status(200).json({ message: 'Post like toggled successfully', like });
     }
     catch (err) {
         next(err);
@@ -87,12 +87,12 @@ export async function addComment(req: Request, res: Response, next: NextFunction
         const userId = req.payload?.userId;
 
         if (!userId) {
-            res.status(401).json({ error: "Unauthorized" });
+            res.status(401).json({ error: 'Unauthorized' });
             return;
         }
 
         const comment = await postService.createNewComment(userId, { text }, postId);
-        res.status(201).json({ message: "Comment added successfully", comment });
+        res.status(201).json({ message: 'Comment added successfully', comment });
     }
     catch (err) {
         next(err);
@@ -108,23 +108,23 @@ export async function deleteComment(req: Request, res: Response, next: NextFunct
         const { commentId } = req.params;
 
         if (!userId) {
-            res.status(401).json({ error: "Unauthorized" });
+            res.status(401).json({ error: 'Unauthorized' });
             return;
         }
 
         const comment = await postService.getCommentById(commentId);
         if (!comment) {
-            res.status(404).json({ error: "Comment not found" });
+            res.status(404).json({ error: 'Comment not found' });
             return;
         }
 
         if (comment.userId !== userId) {
-            res.status(403).json({ error: "You are not allowed to delete this comment" });
+            res.status(403).json({ error: 'You are not allowed to delete this comment' });
             return;
         }
 
         await postService.deleteComment(commentId);
-        res.status(200).json({ message: "Comment deleted successfully" });
+        res.status(200).json({ message: 'Comment deleted successfully' });
     }
     catch (err) {
         next(err);
@@ -140,7 +140,7 @@ export async function getPostById(req: Request, res: Response, next: NextFunctio
         const post = await postService.getPostByid(postId);
 
         if (!post) {
-            res.status(404).json({ error: "Post not found" });
+            res.status(404).json({ error: 'Post not found' });
             return;
         }
 
@@ -185,7 +185,8 @@ export async function getAllCategories(req: Request, res: Response, next: NextFu
     try {
         const categories = await postService.getAllCategories();
         res.status(200).json(categories);
-    } catch (err) {
+    }
+    catch (err) {
         next(err);
     }
 }
@@ -194,7 +195,7 @@ export async function getCategoryById(req: Request, res: Response, next: NextFun
     try {
         const categoryId = Number(req.params.categoryId);
 
-        if (isNaN(categoryId) || categoryId <= 0) {
+        if (Number.isNaN(categoryId) || categoryId <= 0) {
             res.status(400).json({ message: 'Invalid category ID' });
             return;
         }
@@ -207,7 +208,8 @@ export async function getCategoryById(req: Request, res: Response, next: NextFun
         }
 
         res.status(200).json(category);
-    } catch (err) {
+    }
+    catch (err) {
         next(err);
     }
 }
@@ -229,7 +231,8 @@ export async function getCategoryByName(req: Request, res: Response, next: NextF
         }
 
         res.status(200).json(category);
-    } catch (err) {
+    }
+    catch (err) {
         next(err);
     }
 }

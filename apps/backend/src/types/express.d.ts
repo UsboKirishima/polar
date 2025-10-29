@@ -1,8 +1,10 @@
-import * as jwt from 'jsonwebtoken';
-import { JwtPayload } from '@polar/types/general';
+/* eslint-disable ts/consistent-type-definitions */
+import type { JwtPayload } from '@polar/types/general';
 
-declare module 'express' {
-  interface Request {
-    payload?: JwtPayload;
-  }
+declare global {
+    namespace Express {
+        interface Request {
+            payload?: JwtPayload;
+        }
+    }
 }

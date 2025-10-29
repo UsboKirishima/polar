@@ -1,15 +1,14 @@
-import type { NextFunction, Request, Response } from "express";
+import type { TUserId, TUsername } from '@polar/types/zod.js';
+import type { NextFunction, Request, Response } from 'express';
 
-import type { TUserId, TUsername } from "@polar/types/zod.js";
-
-import { userService } from "@polar/services";
-import { userIdSchema, usernameSchema } from "@polar/types/zod.js";
+import { userService } from '@polar/services';
+import { userIdSchema, usernameSchema } from '@polar/types/zod.js';
 
 function validateUserId(res: Response, userId: string) {
     const validationResult = userIdSchema.safeParse(userId);
     if (!validationResult.success) {
         res.status(400).json({
-            message: "Invalid user ID",
+            message: 'Invalid user ID',
             errors: validationResult.error.errors,
         });
         return;
@@ -27,7 +26,7 @@ export async function getUserById(req: Request, res: Response, next: NextFunctio
 
         const userAndProfile = await userService.findUserAndProfileById(parsedUserId);
         if (!userAndProfile) {
-            res.status(404).json({ message: "User not found" });
+            res.status(404).json({ message: 'User not found' });
             return;
         }
 
@@ -45,13 +44,13 @@ export async function getUserByUsername(req: Request, res: Response, next: NextF
         const username: TUsername = req.params.username;
 
         if (!username) {
-            res.status(400).json({ error: "username is required" });
+            res.status(400).json({ error: 'username is required' });
             return;
         }
 
         const userAndProfile = await userService.findUserAndProfileByUsername(username);
         if (!userAndProfile) {
-            res.status(404).json({ message: "User not found" });
+            res.status(404).json({ message: 'User not found' });
             return;
         }
 
@@ -76,12 +75,12 @@ export async function modifyUsername(req: Request, res: Response, next: NextFunc
 
         const user = await userService.findUserAndProfileById(parsedUserId);
         if (!user?.profile) {
-            res.status(404).json({ message: "This user has no associated profile" });
+            res.status(404).json({ message: 'This user has no associated profile' });
             return;
         }
 
         await userService.updateProfileById(user.profile.id, { username: parsedUsername });
-        res.status(200).json({ message: "Username updated successfully" });
+        res.status(200).json({ message: 'Username updated successfully' });
     }
     catch (err) {
         next(err);
@@ -95,7 +94,7 @@ export async function getAllFriends(req: Request, res: Response, next: NextFunct
         const user = await userService.findAllFriendsByUserId(userId);
 
         if (!user) {
-            res.status(404).json({ message: "user not found" });
+            res.status(404).json({ message: 'user not found' });
             return;
         }
 

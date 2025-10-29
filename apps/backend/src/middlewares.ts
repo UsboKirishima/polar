@@ -1,11 +1,12 @@
-import { NextFunction, Request, Response } from "express";
+import type { JwtPayload } from '@polar/types/general.js';
+import type { NextFunction, Request, Response } from 'express';
 
-import type ErrorResponse from "./interfaces/error-response.js";
-
-import { env } from "./env.js";
 import * as jwt from 'jsonwebtoken';
+
+import type ErrorResponse from './interfaces/error-response.js';
 import 'dotenv/config.js';
-import { JwtPayload } from "@polar/types/general.js";
+
+import { env } from './env.js';
 
 export function notFound(req: Request, res: Response, next: NextFunction) {
     res.status(404);
@@ -18,14 +19,13 @@ export function errorHandler(err: Error, req: Request, res: Response<ErrorRespon
     res.status(statusCode);
     res.json({
         message: err.message,
-        stack: env.NODE_ENV === "production" ? "🥞" : err.stack,
+        stack: env.NODE_ENV === 'production' ? '🥞' : err.stack,
     });
 }
 
-
-export interface AuthenticatedRequest extends Request {
+export type AuthenticatedRequest = {
     payload?: JwtPayload;
-}
+} & Request;
 
 export function isAuthenticated(req: Request, res: Response, next: NextFunction): void {
     const { authorization } = req.headers;
@@ -37,9 +37,10 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
 
     try {
         const token = authorization.split(' ')[1];
-        const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
+        const payload = jwt.verify(token, env.JWT_ACCESS_SECRET as string) as JwtPayload;
         req.payload = payload;
-    } catch (err: any) {
+    }
+    catch (err: any) {
         res.status(401);
         if (err.name === 'TokenExpiredError') {
             throw new Error(err.name);

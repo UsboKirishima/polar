@@ -1,6 +1,6 @@
-import type { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from 'express';
 
-import { friendService } from "@polar/services";
+import { friendService } from '@polar/services';
 
 /**
  * Create a new friend request
@@ -12,17 +12,17 @@ export async function createFriendRequest(req: Request, res: Response, next: Nex
         const { receiverId } = req.body;
 
         if (!senderId) {
-            res.status(401).json({ error: "Unauthorized" });
+            res.status(401).json({ error: 'Unauthorized' });
             return;
         }
 
         if (!receiverId) {
-            res.status(400).json({ error: "receiverId is required" });
+            res.status(400).json({ error: 'receiverId is required' });
             return;
         }
 
         const request = await friendService.createFriendRequest(senderId, receiverId);
-        res.status(201).json({ message: "Friend request sent successfully", request });
+        res.status(201).json({ message: 'Friend request sent successfully', request });
     }
     catch (err) {
         next(err);
@@ -39,17 +39,17 @@ export async function acceptFriendRequest(req: Request, res: Response, next: Nex
         const { senderId } = req.body;
 
         if (!receiverId) {
-            res.status(401).json({ error: "Unauthorized" });
+            res.status(401).json({ error: 'Unauthorized' });
             return;
         }
 
         if (!senderId) {
-            res.status(400).json({ error: "senderId is required" });
+            res.status(400).json({ error: 'senderId is required' });
             return;
         }
 
         await friendService.acceptFriendRequest(senderId, receiverId);
-        res.status(200).json({ message: "Friend request accepted and friendship created" });
+        res.status(200).json({ message: 'Friend request accepted and friendship created' });
     }
     catch (err) {
         next(err);
@@ -66,17 +66,17 @@ export async function denyFriendRequest(req: Request, res: Response, next: NextF
         const { senderId } = req.body;
 
         if (!receiverId) {
-            res.status(401).json({ error: "Unauthorized" });
+            res.status(401).json({ error: 'Unauthorized' });
             return;
         }
 
         if (!senderId) {
-            res.status(400).json({ error: "senderId is required" });
+            res.status(400).json({ error: 'senderId is required' });
             return;
         }
 
         await friendService.denyFriendRequest(senderId, receiverId);
-        res.status(200).json({ message: "Friend request rejected" });
+        res.status(200).json({ message: 'Friend request rejected' });
     }
     catch (err) {
         next(err);
@@ -92,12 +92,12 @@ export async function removeFriendship(req: Request, res: Response, next: NextFu
         const friendId = req.body.friendId;
 
         if (!userId || !friendId) {
-            res.status(400).json({ message: "Failed to find user or friend id" });
+            res.status(400).json({ message: 'Failed to find user or friend id' });
             return;
         }
 
         await friendService.removeFriendship(userId, friendId);
-        res.status(200).json({ message: "Friend has been removed." });
+        res.status(200).json({ message: 'Friend has been removed.' });
     }
     catch (err) {
         next(err);
@@ -112,7 +112,7 @@ export async function getAllPendingFriendRequests(req: Request, res: Response, n
         const userId = req.payload?.userId;
 
         if (!userId) {
-            res.status(401).json({ error: "Unauthorized" });
+            res.status(401).json({ error: 'Unauthorized' });
             return;
         }
 
@@ -132,7 +132,7 @@ export async function getAllFriendsByUserId(req: Request, res: Response, next: N
         const userId = req.payload?.userId;
 
         if (!userId) {
-            res.status(401).json({ error: "Unauthorized" });
+            res.status(401).json({ error: 'Unauthorized' });
             return;
         }
 

@@ -1,12 +1,14 @@
-import { userSchema } from "@polar/types/zod";
-import { Request, Response, NextFunction } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
-export const validateLoginData = (request: Request, response: Response, next: NextFunction) => {
+import { userSchema } from '@polar/types/zod';
+
+export function validateLoginData(request: Request, response: Response, next: NextFunction) {
     try {
         const data = request.body;
         userSchema.parse(data);
         next();
-    } catch (error) {
+    }
+    catch (error) {
         next(error);
     }
-};
+}

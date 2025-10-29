@@ -1,6 +1,7 @@
-import { NextFunction, Request, Response } from 'express';
-import { avatarService } from '@polar/services';
+import type { NextFunction, Request, Response } from 'express';
+
 import { imageKit } from '@polar/media';
+import { avatarService } from '@polar/services';
 
 export async function uploadAvatar(req: Request, res: Response, next: NextFunction) {
     try {
@@ -8,7 +9,7 @@ export async function uploadAvatar(req: Request, res: Response, next: NextFuncti
         const userId = req.payload?.userId;
 
         if (!userId) {
-            res.status(401).json({ error: "Unauthorized" });
+            res.status(401).json({ error: 'Unauthorized' });
             return;
         }
 
@@ -20,12 +21,13 @@ export async function uploadAvatar(req: Request, res: Response, next: NextFuncti
         const uploadResult = await imageKit.upload({
             file: file.buffer,
             fileName: `user-${userId}.png`,
-            folder: '/avatars'
+            folder: '/avatars',
         });
 
         const data = await avatarService.uploadAvatar(userId, uploadResult.url);
         res.status(200).json({ message: 'Avatar successfully uploaded', data });
-    } catch (err) {
+    }
+    catch (err) {
         next(err);
     }
 }
@@ -35,13 +37,14 @@ export async function getAvatarByUserId(req: Request, res: Response, next: NextF
         const userId: string = req.params.userId;
 
         if (!userId) {
-            res.status(401).json({ error: "Unauthorized" });
+            res.status(401).json({ error: 'Unauthorized' });
             return;
         }
 
         const data = await avatarService.getAvatarByUserId(userId);
         res.status(200).json(data);
-    } catch (err) {
+    }
+    catch (err) {
         next(err);
     }
 }
@@ -51,13 +54,14 @@ export async function getUserAvatar(req: Request, res: Response, next: NextFunct
         const userId: string = req.params.userId;
 
         if (!userId) {
-            res.status(401).json({ error: "Unauthorized" });
+            res.status(401).json({ error: 'Unauthorized' });
             return;
         }
 
         const data = await avatarService.getAvatarByUserId(userId);
         res.status(200).json(data);
-    } catch (err) {
+    }
+    catch (err) {
         next(err);
     }
 }
@@ -67,13 +71,14 @@ export async function deleteUserAvatar(req: Request, res: Response, next: NextFu
         const userId: string = req.params.userId;
 
         if (!userId) {
-            res.status(401).json({ error: "Unauthorized" });
+            res.status(401).json({ error: 'Unauthorized' });
             return;
         }
 
         await avatarService.deleteAvatar(userId);
-        res.status(200).json({ message: 'Avatar removed from user ' + userId });
-    } catch (err) {
+        res.status(200).json({ message: `Avatar removed from user ${userId}` });
+    }
+    catch (err) {
         next(err);
     }
 }

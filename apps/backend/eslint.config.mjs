@@ -5,9 +5,9 @@ export default antfu({
   typescript: true,
   formatters: true,
   stylistic: {
-    indent: 2,
+    indent: 4,
     semi: true,
-    quotes: "double",
+    quotes: "single",
   },
 }, {
   rules: {
