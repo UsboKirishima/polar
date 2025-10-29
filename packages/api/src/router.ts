@@ -7,7 +7,7 @@ import {
 } from './routers';
 import { t } from './trpc'
 
-export const appRouter = t.router({
+export const appRouter: ReturnType<typeof t.router> = t.router({
     user: userRouter,
     post: postRouter,
     friend: friendRouter,

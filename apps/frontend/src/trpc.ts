@@ -1,5 +1,5 @@
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
-import type { AppRouter } from '@polar/backend';
+import type { AppRouter } from '@polar/api';
 
 const token = localStorage.getItem("token");
 

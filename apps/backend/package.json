@@ -5,11 +5,20 @@
   "author": "Davide Usberti <usbertibox@gmail.com> (https://usbo.tech)",
   "license": "MIT",
   "keywords": [],
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
-    "start": "node --env-file=.env dist/src/index.js",
-    "dev": "tsx watch --env-file=.env src/index.ts",
-    "build": "tsc",
+    "start": "node --env-file=.env dist/index.js",
+    "dev": "tsdown src/index.ts --watch --format esm,cjs --dts",
+    "build": "tsdown src/index.ts --format esm,cjs --dts",
     "lint": "eslint --fix src test",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"

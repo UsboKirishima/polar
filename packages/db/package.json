@@ -2,12 +2,19 @@
   "name": "@polar/db",
   "version": "1.0.0",
   "description": "The database instance package for Polar",
-  "main": "./src/index.js",
-	"exports": "./src/index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
-    "build": "tsc",
-    "generate": "prisma generate",
-    "migrate": "prisma migrate dev"
+    "dev": "tsdown src/index.ts --watch --format esm,cjs --dts",
+    "build": "tsdown src/index.ts --format esm,cjs --dts"
   },
   "keywords": [],
   "author": "",

@@ -2,10 +2,19 @@
   "name": "@polar/redis-manager",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/index.ts",
-  "exports": "./src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsdown src/index.ts --watch --format esm,cjs --dts",
+    "build": "tsdown src/index.ts --format esm,cjs --dts"
   },
   "keywords": [],
   "author": "",

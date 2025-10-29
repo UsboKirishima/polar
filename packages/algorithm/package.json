@@ -2,9 +2,19 @@
   "name": "@polar/algorithm",
   "version": "1.0.0",
   "description": "The polar scoring algorithm",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsdown index.ts --watch --format esm,cjs --dts",
+    "build": "tsdown index.ts --format esm,cjs --dts"
   },
   "keywords": [],
   "author": "",
