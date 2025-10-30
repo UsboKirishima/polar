@@ -106,5 +106,5 @@ cd apps/backend pnpm start
 Then, in another terminal, start the frontend:
 
 ```bash
-
+cd apps/frontend pnpm preview
 ```
