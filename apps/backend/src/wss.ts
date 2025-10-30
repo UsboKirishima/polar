@@ -1,7 +1,7 @@
 import { WebSocketServer } from 'ws';
 
-import server from './server.js';
 import logger from './logger.js';
+import server from './server.js';
 
 const wss = new WebSocketServer({ server, path: '/ws' });
 /**

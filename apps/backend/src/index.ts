@@ -5,8 +5,8 @@ import * as redis from 'redis';
 import './wss.js';
 import chalk from '../../../packages/colors/source/index.js';
 import { env } from './env.js';
-import server from './server.js';
 import logger from './logger.js';
+import server from './server.js';
 
 const asciiArt = String.raw`                                     
 __________      .__                
@@ -40,7 +40,7 @@ serverListen.on('error', (err) => {
         logger.error(`Port ${env.PORT} is already in use. Please choose another port or stop the process using it.`);
     }
     else {
-        logger.error('Failed to start server: ' + err);
+        logger.error(`Failed to start server: ${err}`);
     }
     process.exit(1);
 });
