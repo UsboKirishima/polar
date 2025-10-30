@@ -1,48 +1,110 @@
 # @polar/backend
 
-## Configuration
+## Overview
 
-The **Polar's backend tech stack** contains some tools that improves the api development, performance and security.
+The **Polar backend** is built with a modern Node.js and TypeScript stack designed for high performance, scalability, and security.  
+It relies on **MySQL (or MariaDB)** as the main database and **Redis** for in-memory caching and fast data access.
 
-First of all there is the main **MySQL (or MariaDB)** database, and the in-memory cache provided by **Redis** we can easily configure it out with:
+---
 
-- Installing **MariaDB**:
-  
-  - ```bash
-    sudo apt install mariadb-server # Ubuntu/Debian
-    sudo pacman -S mariadb # Arch Linux
-    ```
+## Prerequisites
 
-- Enabling and starting the daemon:
-  
-  - ```bash
-    sudo systemctl enable mariadb.service # Enable the service
-    sudo systemctl start mariadb.service # Start the service
-    
-    systemctl status mariadb.service # Check the status
-    ```
+Before starting, make sure the required services are installed and running.
 
-- Installing **Redis:**
-  
-  - ```bash
-    sudo apt install redis # Ubuntu/Debian
-    sudo pacman -S redis # Arch Linux
-    ```
-
-- Enabling and starting the daemon:
-  
-  - ```bash
-    sudo systemctl enable redis.service # Enable the service
-    sudo systemctl start redis.service # Start the service
-    
-    systemctl status redis.service # Check the status (active)
-    ```
-
-Once have configured all the data stores we can install dependencies:
+### MariaDB Installation
 
 ```bash
-# You need to use pnpm
-npm i -g pnpm
+# Ubuntu / Debian 
+sudo apt install mariadb-server 
+# Arch Linux 
+sudo pacman -S mariadb
+```
 
-pnpm install # Install all packages' dependency
+Enable and start the MariaDB service:
+
+```bash
+sudo systemctl enable mariadb.service # Enable at boot 
+sudo systemctl start mariadb.service # Start the service 
+
+systemctl status mariadb.service # Check service status
+```
+
+---
+
+### Redis Installation
+
+```bash
+# Ubuntu / Debian 
+sudo apt install redis 
+# Arch Linux 
+sudo pacman -S redis
+```
+
+Enable and start the Redis service:
+
+```bash
+sudo systemctl enable redis.service # Enable at boot 
+sudo systemctl start redis.service # Start the service 
+
+systemctl status redis.service # Verify it's active
+```
+
+---
+
+## Setup
+
+Once the databases are configured, you can proceed to install project dependencies.
+
+### Install Dependencies
+
+```bash
+# Install pnpm globally if you don’t have it yet 
+npm i -g pnpm 
+# Install all project dependencies 
+pnpm install
+```
+
+### Build the Packages
+
+To build all **Polar** packages:
+
+```bash
+pnpm build
+```
+
+---
+
+## Environment Configuration
+
+You’ll need to configure environment variables for both the backend and frontend.  
+Start by copying the example file:
+
+```bash
+cp .env.example .env
+```
+
+Then edit `.env` to include your settings:
+
+```bash
+NODE_ENV=development 
+JWT_ACCESS_SECRET="your-secret" 
+DATABASE_URL="mysql://user:password@localhost:3306/polar" 
+REDIS_URL="redis://localhost:6379"
+#...
+```
+
+---
+
+## Running the Applications
+
+Start the backend server:
+
+```bash
+cd apps/backend pnpm start
+```
+
+Then, in another terminal, start the frontend:
+
+```bash
+
 ```
