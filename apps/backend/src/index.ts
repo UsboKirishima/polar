@@ -6,6 +6,7 @@ import './wss.js';
 import chalk from '../../../packages/colors/source/index.js';
 import { env } from './env.js';
 import server from './server.js';
+import logger from './logger.js';
 
 const asciiArt = String.raw`                                     
 __________      .__                
@@ -29,17 +30,17 @@ const port = env.PORT;
 const serverListen = server.listen(port, () => {
     /* eslint-disable no-console */
     console.log(asciiArt);
-    console.log(chalk.bgGreen.black(`Listening: http://localhost:${port}`));
+    logger.info(chalk.bgGreen.black(`Listening: http://localhost:${port}`));
     cacheManager.connect();
     /* eslint-enable no-console */
 });
 
 serverListen.on('error', (err) => {
     if ('code' in err && err.code === 'EADDRINUSE') {
-        console.error(`Port ${env.PORT} is already in use. Please choose another port or stop the process using it.`);
+        logger.error(`Port ${env.PORT} is already in use. Please choose another port or stop the process using it.`);
     }
     else {
-        console.error('Failed to start server:', err);
+        logger.error('Failed to start server: ' + err);
     }
     process.exit(1);
 });
