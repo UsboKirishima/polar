@@ -17,6 +17,13 @@ export const profileSchema = z.object(profileBaseSchema);
 
 // ------------------- User Schema Login -------------------
 
+export const loginInfoSchema = z.object({
+    email: z.string().email({ message: "invalid email address" }),
+    password: z.string().min(8, { message: "password must be at least 8 characters long" }).max(50, {
+        message: "password cannot be longer than 50 characters",
+    }),
+})
+
 const userBaseSchema = {
     email: z.string().email({ message: "invalid email address" }),
     password: z.string().min(8, { message: "password must be at least 8 characters long" }).max(50, {

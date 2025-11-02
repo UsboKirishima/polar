@@ -227,8 +227,8 @@ export async function searchUsers(query: string, limit = 20) {
 /**
  * Returns all the users (id, profile)
  */
-export function getAllUsers() {
-    return db.user.findMany({
+export async function getAllUsers() {
+    return await db.user.findMany({
         select: {
             id: true,
             profile: {

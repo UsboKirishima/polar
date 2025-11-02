@@ -14,18 +14,20 @@
   },
   "scripts": {
     "dev": "tsdown src/index.ts --watch --format esm,cjs --dts",
-    "build": "tsdown src/index.ts --format esm,cjs --dts"
+    "build": "tsdown src/index.ts --format esm,cjs --dts",
+    "postinstall": "prisma generate --schema src/schema.prisma",
+    "generate": "prisma generate --schema src/schema.prisma"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.12.4",
   "devDependencies": {
+    "@types/node": "^24.9.2",
     "prisma": "^6.16.2"
   },
   "dependencies": {
     "@prisma/client": "^6.16.2",
-    "@types/node": "^24.9.1",
     "typescript": "^5.9.3"
   }
 }

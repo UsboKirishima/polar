@@ -7,7 +7,9 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     },
     "./zod": {
       "types": "./dist/zod.d.ts",
@@ -23,8 +25,8 @@
     "./general.js": "./dist/general.js"
   },
   "scripts": {
-    "dev": "tsdown ./general.ts ./zod.ts --watch --format esm,cjs --dts",
-    "build": "tsdown ./general.ts ./zod.ts --format esm,cjs --dts"
+    "dev": "tsdown ./general.ts ./zod.ts ./index.ts --watch --format esm,cjs --dts",
+    "build": "tsdown ./general.ts ./zod.ts ./index.ts --format esm,cjs --dts"
   },
   "license": "ISC",
   "packageManager": "pnpm@10.12.4",

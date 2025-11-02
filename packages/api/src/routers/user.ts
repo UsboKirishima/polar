@@ -43,7 +43,7 @@ export const userRouter = t.router({
 
             if (!usersMatch.length) return resultOk('No users found');
 
-            return usersMatch.map(u => removePassword(u));
+            return usersMatch.map((u: any) => removePassword(u));
         }),
     getAll: protectedProcedure
         .query(async ({ ctx }) => {
@@ -79,7 +79,7 @@ export const userRouter = t.router({
             if (!friends)
                 return resultErr(`Failed to retrieve friends for user ID: ${input}`);
 
-            const safeFriends = friends.friends.map(friend => removePassword(friend));
+            const safeFriends = friends.friends.map((friend: any) => removePassword(friend));
 
             return safeFriends;
         }),
