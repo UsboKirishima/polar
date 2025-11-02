@@ -1,26 +1,46 @@
 {
   "name": "@polar/utils",
   "version": "1.0.0",
-  "description": "The common functions package.",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "description": "Common utility functions for the Polar monorepo",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
-    }
+      "import": "./src/index.ts",
+      "require": "./src/index.ts",
+      "types": "./src/index.ts"
+    },
+    "./package.json": "./package.json"
   },
+  "files": [
+    "src",
+    "package.json",
+    "README.md"
+  ],
   "scripts": {
-    "dev": "tsdown src/index.ts --watch --format esm,cjs --dts",
-    "build": "tsdown src/index.ts --format esm,cjs --dts"
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --fix",
+    "clean": "rm -rf dist .turbo"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.12.4",
   "dependencies": {
-    "@types/node": "^24.9.1"
+    "@types/node": "^22.16.5"
+  },
+  "devDependencies": {
+    "@polar/typescript-config": "workspace:*",
+    "eslint": "^9.31.0",
+    "typescript": "^5.9.2"
+  },
+  "keywords": [
+    "utilities",
+    "helpers",
+    "common",
+    "polar"
+  ],
+  "author": "Davide Usberti <usbertibox@gmail.com>",
+  "license": "MIT",
+  "packageManager": "pnpm@10.20.0",
+  "publishConfig": {
+    "access": "restricted"
   }
 }

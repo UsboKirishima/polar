@@ -1,27 +1,49 @@
 {
   "name": "@polar/redis-manager",
   "version": "1.0.0",
-  "description": "",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "description": "Redis connection and management utilities for Polar",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
-    }
+      "import": "./src/index.ts",
+      "require": "./src/index.ts",
+      "types": "./src/index.ts"
+    },
+    "./package.json": "./package.json"
   },
+  "files": [
+    "src",
+    "package.json",
+    "README.md"
+  ],
   "scripts": {
-    "dev": "tsdown src/index.ts --watch --format esm,cjs --dts",
-    "build": "tsdown src/index.ts --format esm,cjs --dts"
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --fix",
+    "clean": "rm -rf dist .turbo"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.12.4",
   "dependencies": {
     "dotenv": "^17.2.2",
     "redis": "^5.8.3"
+  },
+  "devDependencies": {
+    "@polar/typescript-config": "workspace:*",
+    "@types/node": "^22.16.5",
+    "eslint": "^9.31.0",
+    "typescript": "^5.9.2"
+  },
+  "keywords": [
+    "redis",
+    "cache",
+    "database",
+    "manager",
+    "polar"
+  ],
+  "author": "Davide Usberti <usbertibox@gmail.com>",
+  "license": "MIT",
+  "packageManager": "pnpm@10.20.0",
+  "publishConfig": {
+    "access": "restricted"
   }
 }

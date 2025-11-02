@@ -1,13 +1,16 @@
-import { db } from "@polar/db";
+import { db } from '@polar/db'
 
 /**
  * Creates a new friend requests
  * - Check if the request has been sent to itself.
  * - Check if there are no requests already pending.
  */
-export async function createFriendRequest(senderId: string, receiverId: string) {
+export async function createFriendRequest(
+    senderId: string,
+    receiverId: string
+) {
     if (senderId === receiverId) {
-        throw new Error("You cannot send a request to yourself.");
+        throw new Error('You cannot send a request to yourself.')
     }
 
     const existingRequest = await db.friendRequest.findUnique({
@@ -17,10 +20,10 @@ export async function createFriendRequest(senderId: string, receiverId: string) 
                 receiverId,
             },
         },
-    });
+    })
 
     if (existingRequest) {
-        throw new Error("Request already sent to this user");
+        throw new Error('Request already sent to this user')
     }
 
     return await db.friendRequest.create({
@@ -28,10 +31,13 @@ export async function createFriendRequest(senderId: string, receiverId: string) 
             senderId,
             receiverId,
         },
-    });
+    })
 }
 
-export async function acceptFriendRequest(senderId: string, receiverId: string) {
+export async function acceptFriendRequest(
+    senderId: string,
+    receiverId: string
+) {
     return await db.$transaction(async (tx: any) => {
         const request = await tx.friendRequest.findUnique({
             where: {
@@ -40,10 +46,10 @@ export async function acceptFriendRequest(senderId: string, receiverId: string) 
                     receiverId,
                 },
             },
-        });
+        })
 
-        if (!request || request.status !== "PENDING") {
-            throw new Error("Request not found or already managed.");
+        if (!request || request.status !== 'PENDING') {
+            throw new Error('Request not found or already managed.')
         }
 
         await tx.friendRequest.update({
@@ -53,18 +59,17 @@ export async function acceptFriendRequest(senderId: string, receiverId: string) 
                     receiverId,
                 },
             },
-            data: { status: "ACCEPTED" },
-        });
+            data: { status: 'ACCEPTED' },
+        })
 
         await tx.friendship.createMany({
             data: [
                 { userId: senderId, friendId: receiverId },
                 { userId: receiverId, friendId: senderId },
             ],
-        });
-    });
+        })
+    })
 }
-
 
 export async function denyFriendRequest(senderId: string, receiverId: string) {
     return await db.friendRequest.update({
@@ -74,8 +79,8 @@ export async function denyFriendRequest(senderId: string, receiverId: string) {
                 receiverId,
             },
         },
-        data: { status: "REJECTED" },
-    });
+        data: { status: 'REJECTED' },
+    })
 }
 
 export async function removeFriendship(userId: string, friendId: string) {
@@ -83,9 +88,9 @@ export async function removeFriendship(userId: string, friendId: string) {
         where: {
             userId_friendId: {
                 userId,
-                friendId
-            }
-        }
+                friendId,
+            },
+        },
     })
 }
 
@@ -93,7 +98,7 @@ export async function getAllPendingFriendRequests(userId: string) {
     return await db.friendRequest.findMany({
         where: {
             receiverId: userId,
-            status: "PENDING",
+            status: 'PENDING',
         },
         include: {
             sender: {
@@ -103,13 +108,13 @@ export async function getAllPendingFriendRequests(userId: string) {
                     profile: {
                         include: {
                             avatar: true,
-                            banner: true
-                        }
+                            banner: true,
+                        },
                     },
                 },
             },
         },
-    });
+    })
 }
 
 export async function getAllFriendsByUserId(userId: string) {
@@ -123,22 +128,22 @@ export async function getAllFriendsByUserId(userId: string) {
                     profile: {
                         include: {
                             avatar: true,
-                            banner: true
-                        }
+                            banner: true,
+                        },
                     },
                 },
             },
         },
-    });
+    })
 }
 
 export async function getAllSentRequests(userId: string) {
     return await db.user.findUnique({
         where: {
-            id: userId
+            id: userId,
         },
         select: {
-            sentFriendRequests: true
-        }
+            sentFriendRequests: true,
+        },
     })
 }

@@ -1,19 +1,20 @@
-import { TProfileSchema, TUserSchema } from "./zod";
+import { TProfileSchema, TUserSchema } from './zod'
 
-export type SimpleUserSchema = TUserSchema;
-export type SimpleProfileSchema = TProfileSchema;
+export type SimpleUserSchema = TUserSchema
+export type SimpleProfileSchema = TProfileSchema
 
-export type MediaType = "avatars" | "banners";
+export type MediaType = 'avatars' | 'banners'
 
-export type ServiceType = 'auth'
+export type ServiceType =
+    | 'auth'
     | 'avatar'
     | 'banner'
     | 'friends'
     | 'posts'
-    | 'users';
+    | 'users'
 
 export interface JwtPayload {
-    userId: string;
-    iat: number;
-    exp: number;
+    userId: string
+    iat: number
+    exp: number
 }

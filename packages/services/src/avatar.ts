@@ -1,20 +1,20 @@
-import { db } from "@polar/db";
+import { db } from '@polar/db'
 
 export const getAvatarByUserId = async (userId: string) => {
     return await db.avatar.findFirst({
         where: {
             profile: {
                 user: {
-                    id: userId
-                }
-            }
+                    id: userId,
+                },
+            },
         },
         select: {
             id: true,
             url: true,
             createdAt: true,
-            updatedAt: true
-        }
+            updatedAt: true,
+        },
     })
 }
 
@@ -39,21 +39,21 @@ export const uploadAvatar = async (userId: string, avatarUrl: string) => {
         include: {
             avatar: true,
         },
-    });
+    })
 }
 
 export const deleteAvatar = async (userId: string) => {
     const profile = await db.profile.findUnique({
         where: { userId },
         select: { avatarId: true },
-    });
+    })
 
     if (!profile) {
-        throw new Error("Profile not found for this user.");
+        throw new Error('Profile not found for this user.')
     }
 
     if (!profile.avatarId) {
-        throw new Error("This user has no avatar to delete.");
+        throw new Error('This user has no avatar to delete.')
     }
 
     return await db.$transaction([
@@ -64,5 +64,5 @@ export const deleteAvatar = async (userId: string) => {
         db.avatar.delete({
             where: { id: profile.avatarId },
         }),
-    ]);
-};
+    ])
+}

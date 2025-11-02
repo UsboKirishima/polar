@@ -1,20 +1,73 @@
 {
-    "name": "polar",
-    "version": "1.0.0",
-    "description": "",
-    "private": true,
-    "scripts": {
-        "dev": "turbo run dev",
-        "build": "turbo run build",
-        "lint": "turbo run lint"
+  "name": "polar",
+  "version": "1.0.0",
+  "description": "Polar - A modern full-stack application built with TypeScript",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "packageManager": "pnpm@10.20.0",
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build --filter='./apps/*'",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "type-check": "turbo run type-check",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "clean:dist": "find . -name 'dist' -type d -not -path './node_modules/*' -exec rm -rf {} +",
+    "clean:turbo": "rm -rf .turbo && turbo daemon stop",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build --filter='./apps/*' --filter=!@polar/frontend && changeset publish",
+    "db:generate": "turbo run db:generate",
+    "db:push": "turbo run db:push",
+    "db:migrate": "turbo run db:migrate",
+    "db:studio": "turbo run db:studio",
+    "postinstall": "turbo run postinstall"
+  },
+  "keywords": [
+    "monorepo",
+    "typescript",
+    "turborepo",
+    "pnpm",
+    "full-stack"
+  ],
+  "author": "Davide Usberti <usbertibox@gmail.com> (https://usbo.tech)",
+  "license": "MIT",
+  "homepage": "https://github.com/UsboKirishima/polar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UsboKirishima/polar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/UsboKirishima/polar/issues"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^0.5.0",
+    "@changesets/cli": "^2.27.9",
+    "@types/node": "^22.16.5",
+    "prettier": "^3.6.2",
+    "turbo": "^2.5.6",
+    "typescript": "^5.9.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "typescript": "$typescript"
     },
-    "keywords": [],
-    "author": "UsboKirishima <usbertibox@gmail.com>",
-    "license": "ISC",
-    "packageManager": "pnpm@10.20.0",
-    "devDependencies": {
-        "tsdown": "^0.15.11",
-        "turbo": "^2.5.6",
-        "typescript": "^5.9.2"
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "eslint": "9"
+      }
     }
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }

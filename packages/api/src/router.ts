@@ -1,10 +1,10 @@
-import { 
-    authRouter, 
-    categoryRouter, 
-    friendRouter, 
-    postRouter, 
-    userRouter 
-} from './routers';
+import {
+    authRouter,
+    categoryRouter,
+    friendRouter,
+    postRouter,
+    userRouter,
+} from './routers'
 import { t } from './trpc'
 
 export const appRouter = t.router({
@@ -12,7 +12,7 @@ export const appRouter = t.router({
     post: postRouter,
     friend: friendRouter,
     category: categoryRouter,
-    auth: authRouter
-});
+    auth: authRouter,
+})
 
-export type AppRouter = typeof appRouter;
+export type AppRouter = typeof appRouter

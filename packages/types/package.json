@@ -1,37 +1,60 @@
 {
   "name": "@polar/types",
   "version": "1.0.0",
-  "description": "",
-  "main": "",
-  "module": "",
-  "types": "dist/index.d.ts",
+  "description": "Shared TypeScript types and Zod schemas for Polar",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    },
-    "./zod": {
-      "types": "./dist/zod.d.ts",
-      "import": "./dist/zod.mjs",
-      "require": "./dist/zod.js"
+      "import": "./index.ts",
+      "require": "./index.ts",
+      "types": "./index.ts"
     },
     "./general": {
-      "types": "./dist/general.d.ts",
-      "import": "./dist/general.mjs",
-      "require": "./dist/general.js"
+      "import": "./general.ts",
+      "require": "./general.ts",
+      "types": "./general.ts"
     },
-    "./zod.js": "./dist/zod.js",
-    "./general.js": "./dist/general.js"
+    "./zod": {
+      "import": "./zod.ts",
+      "require": "./zod.ts",
+      "types": "./zod.ts"
+    },
+    "./package.json": "./package.json"
   },
+  "files": [
+    "src",
+    "*.ts",
+    "package.json",
+    "README.md"
+  ],
   "scripts": {
-    "dev": "tsdown ./general.ts ./zod.ts ./index.ts --watch --format esm,cjs --dts",
-    "build": "tsdown ./general.ts ./zod.ts ./index.ts --format esm,cjs --dts"
+    "type-check": "tsc --noEmit",
+    "lint": "eslint . --fix",
+    "clean": "rm -rf dist .turbo"
   },
-  "license": "ISC",
-  "packageManager": "pnpm@10.12.4",
   "dependencies": {
     "@polar/db": "workspace:*",
     "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@polar/typescript-config": "workspace:*",
+    "@types/node": "^22.16.5",
+    "eslint": "^9.31.0",
+    "typescript": "^5.9.2"
+  },
+  "keywords": [
+    "types",
+    "typescript",
+    "zod",
+    "schemas",
+    "polar"
+  ],
+  "author": "Davide Usberti <usbertibox@gmail.com>",
+  "license": "MIT",
+  "packageManager": "pnpm@10.20.0",
+  "publishConfig": {
+    "access": "restricted"
   }
 }

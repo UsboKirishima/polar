@@ -1,7 +1,7 @@
-import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
-import type { AppRouter } from '@polar/api';
+import { createTRPCProxyClient, httpBatchLink } from '@trpc/client'
+import type { AppRouter } from '@polar/api'
 
-const token = localStorage.getItem("token");
+const token = localStorage.getItem('token')
 
 export const trpc = createTRPCProxyClient<AppRouter>({
     links: [
@@ -9,7 +9,7 @@ export const trpc = createTRPCProxyClient<AppRouter>({
             url: 'http://localhost:3000/trpc',
             async headers() {
                 return token ? { Authorization: `Bearer ${token}` } : {}
-            }
+            },
         }),
     ],
-});
+})

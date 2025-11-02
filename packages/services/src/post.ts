@@ -1,6 +1,6 @@
-import { PostBgColor } from "@polar/db";
-import { TPostCategory, TPostCommentSchema, TPostSchema } from "@polar/types/zod";
-import { db } from "@polar/db";
+import { PostBgColor } from '@polar/db'
+import { TPostCategory, TPostCommentSchema, TPostSchema } from '@polar/types'
+import { db } from '@polar/db'
 
 /**
  * Create new post by given post and user id
@@ -16,7 +16,7 @@ export const createNewPost = async (
             authorId: userId,
             color: post.color as PostBgColor,
             categories: {
-                connectOrCreate: categories.map((cat) => ({
+                connectOrCreate: categories.map((cat: any) => ({
                     where: { name: cat.name },
                     create: { name: cat.name },
                 })),
@@ -37,8 +37,8 @@ export const createNewPost = async (
                 },
             },
         },
-    });
-};
+    })
+}
 
 /**
  * Delete a post by given post id
@@ -46,8 +46,8 @@ export const createNewPost = async (
 export const deletePost = async (postId: string) => {
     return await db.post.delete({
         where: { id: postId },
-    });
-};
+    })
+}
 
 /**
  * Like a post by given post id
@@ -59,15 +59,15 @@ export const likePost = async (postId: string, userId: string) => {
             postId,
             userId,
         },
-    });
+    })
 
     if (existingLike) {
         // Unlike -> delete the like record
         await db.like.delete({
             where: { id: existingLike.id },
-        });
+        })
 
-        return { message: "Post unliked successfully" };
+        return { message: 'Post unliked successfully' }
     } else {
         // Like -> create a new like record
         return await db.like.create({
@@ -87,9 +87,9 @@ export const likePost = async (postId: string, userId: string) => {
                     },
                 },
             },
-        });
+        })
     }
-};
+}
 
 /**
  * Create a new post comment
@@ -107,10 +107,10 @@ export const createNewComment = async (
         },
         include: {
             post: true,
-            user: true
+            user: true,
         },
-    });
-};
+    })
+}
 
 /**
  * Delete comment by given comment id
@@ -118,8 +118,8 @@ export const createNewComment = async (
 export const deleteComment = async (commentId: string) => {
     return await db.comment.delete({
         where: { id: commentId },
-    });
-};
+    })
+}
 
 /**
  * Get comment by given id
@@ -128,8 +128,8 @@ export const getCommentById = async (commentId: string) => {
     return await db.comment.findFirst({
         where: { id: commentId },
         include: {
-            user: true
-        }
+            user: true,
+        },
     })
 }
 
@@ -165,12 +165,11 @@ export const getPostByid = async (postId: string) => {
                             updatedAt: true,
                             profile: {
                                 include: {
-                                    avatar: true
-                                }
-                            }
-                        }
+                                    avatar: true,
+                                },
+                            },
+                        },
                     },
-
                 },
             },
             likes: {
@@ -188,8 +187,8 @@ export const getPostByid = async (postId: string) => {
                 },
             },
         },
-    });
-};
+    })
+}
 
 /**
  * Get all posts by a given user id
@@ -209,9 +208,9 @@ export const getPostsByUserId = async (userId: string) => {
                     profile: {
                         include: {
                             avatar: true,
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             },
             likes: {
                 include: {
@@ -224,9 +223,9 @@ export const getPostsByUserId = async (userId: string) => {
                 },
             },
         },
-        orderBy: { createdAt: "desc" },
-    });
-};
+        orderBy: { createdAt: 'desc' },
+    })
+}
 
 /**
  * Get all posts
@@ -244,7 +243,7 @@ export const getAllPosts = async () => {
                             username: true,
                             fullName: true,
                             avatar: true,
-                            bio: true
+                            bio: true,
                         },
                     },
                 },
@@ -265,9 +264,9 @@ export const getAllPosts = async () => {
                 },
             },
         },
-        orderBy: { createdAt: "desc" },
-    });
-};
+        orderBy: { createdAt: 'desc' },
+    })
+}
 
 export const getAllCategories = async () => {
     return await db.category.findMany({
@@ -276,9 +275,9 @@ export const getAllCategories = async () => {
             name: true,
             posts: {
                 select: {
-                    id: true
-                }
-            }
+                    id: true,
+                },
+            },
         },
     })
 }
@@ -286,7 +285,7 @@ export const getAllCategories = async () => {
 export const getCategoryById = async (categoryId: number) => {
     return await db.category.findUnique({
         where: {
-            id: categoryId
+            id: categoryId,
         },
         include: {
             posts: {
@@ -300,7 +299,7 @@ export const getCategoryById = async (categoryId: number) => {
                                 select: {
                                     username: true,
                                     fullName: true,
-                                    bio: true
+                                    bio: true,
                                 },
                             },
                         },
@@ -319,16 +318,16 @@ export const getCategoryById = async (categoryId: number) => {
                             },
                         },
                     },
-                }
-            }
-        }
+                },
+            },
+        },
     })
 }
 
 export const getCategoryByName = async (categoryName: string) => {
     return await db.category.findUnique({
         where: {
-            name: categoryName
+            name: categoryName,
         },
         include: {
             posts: {
@@ -342,7 +341,7 @@ export const getCategoryByName = async (categoryName: string) => {
                                 select: {
                                     username: true,
                                     fullName: true,
-                                    bio: true
+                                    bio: true,
                                 },
                             },
                         },
@@ -361,23 +360,28 @@ export const getCategoryByName = async (categoryName: string) => {
                             },
                         },
                     },
-                }
-            }
-        }
+                },
+            },
+        },
     })
 }
 
-export const updatePost = async (postId: string, newPostInformation: TPostSchema) => {
+export const updatePost = async (
+    postId: string,
+    newPostInformation: TPostSchema
+) => {
     return await db.post.update({
         where: {
-            id: postId
+            id: postId,
         },
         data: {
             text: newPostInformation.text,
             categories: {
-                set: newPostInformation.categories.map((cat) => ({ name: cat.name }))
-            }
-        }
+                set: newPostInformation.categories.map(cat => ({
+                    name: cat.name,
+                })),
+            },
+        },
     })
 }
 
@@ -385,9 +389,9 @@ export const searchCategory = async (query: string, limit: number = 20) => {
     return await db.category.findMany({
         where: {
             name: {
-                contains: query
-            }
+                contains: query,
+            },
         },
-        take: limit
+        take: limit,
     })
 }

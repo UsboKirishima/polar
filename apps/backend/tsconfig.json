@@ -1,23 +1,35 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@polar/typescript-config/node",
   "compilerOptions": {
-    "target": "esnext",
-    "module": "commonjs",
-    "strict": true,
-    "noImplicitAny": true,
-    "outDir": "dist",
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "./dist",
     "sourceMap": true,
+    "declaration": false,
+    "declarationMap": false,
+    "composite": false,
+    "incremental": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "allowJs": true,
+    "checkJs": false,
+    "noEmitOnError": false,
+    "types": ["node", "vitest/globals"]
   },
-  "typeRoots": [
-    "./src/types",
-    "./node_modules/@types"
-  ],
-  "include": [
-    "./*.js",
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "test/**/*.ts"
-  ]
+  "include": ["src/**/*", "test/**/*", "*.config.*", ".env"],
+  "exclude": ["node_modules", "dist", "build", "coverage"],
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  }
 }

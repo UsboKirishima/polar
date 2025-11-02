@@ -1,30 +1,56 @@
 {
   "name": "@polar/services",
   "version": "1.0.0",
-  "description": "The Polar's business logic package.",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "src/index.ts",
+  "description": "Business logic services for the Polar application",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
-    }
+      "import": "./src/index.ts",
+      "require": "./src/index.ts",
+      "types": "./src/index.ts"
+    },
+    "./src/*": {
+      "import": "./src/*.ts",
+      "require": "./src/*.ts",
+      "types": "./src/*.ts"
+    },
+    "./package.json": "./package.json"
   },
+  "files": [
+    "src",
+    "package.json",
+    "README.md"
+  ],
   "scripts": {
-    "dev": "tsdown src/index.ts --watch --format esm,cjs --dts",
-    "build": "tsdown src/index.ts --format esm,cjs --dts"
+    "build": "tsc",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --fix",
+    "clean": "rm -rf dist .turbo"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.12.4",
   "dependencies": {
     "@polar/db": "workspace:*",
     "@polar/types": "workspace:*",
     "@polar/utils": "workspace:*",
     "@types/bcrypt": "^6.0.0",
     "bcrypt": "^6.0.0"
+  },
+  "devDependencies": {
+    "@polar/typescript-config": "workspace:*",
+    "@types/node": "^22.16.5",
+    "eslint": "^9.31.0",
+    "typescript": "^5.9.2"
+  },
+  "keywords": [
+    "services",
+    "business-logic",
+    "polar"
+  ],
+  "author": "Davide Usberti <usbertibox@gmail.com>",
+  "license": "MIT",
+  "packageManager": "pnpm@10.20.0",
+  "publishConfig": {
+    "access": "restricted"
   }
 }

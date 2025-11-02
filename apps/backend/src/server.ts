@@ -1,6 +1,6 @@
-import { createServer } from 'node:http';
+import { createServer } from 'node:http'
 
-import app from './app.js';
+import app from './app.js'
 
 /**
  * By creating HTTPS Server with this method,
@@ -15,6 +15,6 @@ import app from './app.js';
  *                        └────────────────────┘
  *
  */
-const server = createServer(app);
+const server = createServer(app)
 
-export default server;
+export default server

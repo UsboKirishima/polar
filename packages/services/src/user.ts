@@ -1,30 +1,34 @@
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt'
 
-import type { SimpleProfileSchema, SimpleUserSchema } from "@polar/types/general.js";
-import { db } from "@polar/db";
+import type { SimpleProfileSchema, SimpleUserSchema } from '@polar/types'
+import { db } from '@polar/db'
 
 export function findUserByEmail(email: string) {
     return db.user.findUnique({
         where: {
             email,
         },
-    });
+    })
 }
 
 type UserMailNPassword = {
-    email: string;
-    password: string;
-};
-
-export function createUserByEmailAndPassword(user: UserMailNPassword) {
-    user.password = bcrypt.hashSync(user.password, 12);
-    return db.user.create({
-        data: user,
-    });
+    email: string
+    password: string
 }
 
-export function createUserWithProfile(user: Omit<SimpleUserSchema, "profile.bio"> & { profile: Omit<SimpleProfileSchema, "bio"> }) {
-    const hashedPassword = bcrypt.hashSync(user.password, 12);
+export function createUserByEmailAndPassword(user: UserMailNPassword) {
+    user.password = bcrypt.hashSync(user.password, 12)
+    return db.user.create({
+        data: user,
+    })
+}
+
+export function createUserWithProfile(
+    user: Omit<SimpleUserSchema, 'profile.bio'> & {
+        profile: Omit<SimpleProfileSchema, 'bio'>
+    }
+) {
+    const hashedPassword = bcrypt.hashSync(user.password, 12)
     return db.user.create({
         data: {
             email: user.email,
@@ -38,7 +42,7 @@ export function createUserWithProfile(user: Omit<SimpleUserSchema, "profile.bio"
                 },
             },
         },
-    });
+    })
 }
 
 export function createProfile(profile: SimpleProfileSchema, userId: string) {
@@ -47,10 +51,10 @@ export function createProfile(profile: SimpleProfileSchema, userId: string) {
             username: profile.username,
             dateOfBirth: new Date(profile.dateOfBirth),
             fullName: profile.fullName,
-            bio: profile.bio ?? "unknown",
+            bio: profile.bio ?? 'unknown',
             userId,
         },
-    });
+    })
 }
 
 export function findUserById(id: string) {
@@ -58,7 +62,7 @@ export function findUserById(id: string) {
         where: {
             id,
         },
-    });
+    })
 }
 
 export function findProfileById(profileId: string) {
@@ -66,7 +70,7 @@ export function findProfileById(profileId: string) {
         where: {
             id: profileId,
         },
-    });
+    })
 }
 
 export function findUserAndProfileById(userId: string) {
@@ -84,16 +88,16 @@ export function findUserAndProfileById(userId: string) {
                                         include: {
                                             avatar: true,
                                             banner: true,
-                                        }
+                                        },
                                     },
                                     password: false,
                                 },
                             },
                             likes: true,
-                            comments: true
-                        }
+                            comments: true,
+                        },
                     },
-                }
+                },
             },
             comments: {
                 include: {
@@ -112,10 +116,10 @@ export function findUserAndProfileById(userId: string) {
                                 },
                             },
                             likes: true,
-                            comments: true
-                        }
+                            comments: true,
+                        },
                     },
-                }
+                },
             },
             profile: {
                 include: {
@@ -124,7 +128,7 @@ export function findUserAndProfileById(userId: string) {
                 },
             },
         },
-    });
+    })
 }
 
 export function findUserAndProfileByUsername(username: string) {
@@ -144,7 +148,7 @@ export function findUserAndProfileByUsername(username: string) {
                 },
             },
         },
-    });
+    })
 }
 
 export function findAllFriendsByUserId(userId: string) {
@@ -171,32 +175,38 @@ export function findAllFriendsByUserId(userId: string) {
                 },
             },
         },
-    });
+    })
 }
 
-export function updateProfileById(profileId: string, updates: Partial<SimpleProfileSchema>) {
+export function updateProfileById(
+    profileId: string,
+    updates: Partial<SimpleProfileSchema>
+) {
     return db.profile.update({
         where: { id: profileId },
         data: {
             ...updates,
-            dateOfBirth: updates.dateOfBirth ? new Date(updates.dateOfBirth) : undefined,
+            dateOfBirth: updates.dateOfBirth
+                ? new Date(updates.dateOfBirth)
+                : undefined,
         },
-    });
+    })
 }
 
 export async function getProfileByUserId(userId: string) {
     return db.user.findUnique({
         where: {
-            id: userId
-        }, select: {
+            id: userId,
+        },
+        select: {
             profile: {
                 include: {
                     avatar: true,
                     banner: true,
                 },
             },
-        }
-    });
+        },
+    })
 }
 
 export async function searchUsers(query: string, limit = 20) {
@@ -205,23 +215,23 @@ export async function searchUsers(query: string, limit = 20) {
             OR: [
                 {
                     profile: {
-                        username: { contains: query }
-                    }
+                        username: { contains: query },
+                    },
                 },
                 {
                     profile: {
-                        fullName: { contains: query }
-                    }
+                        fullName: { contains: query },
+                    },
                 },
             ],
         },
         take: limit,
         orderBy: {
             profile: {
-                username: "asc"
-            }
+                username: 'asc',
+            },
         },
-    });
+    })
 }
 
 /**
@@ -238,5 +248,5 @@ export async function getAllUsers() {
                 },
             },
         },
-    });
+    })
 }

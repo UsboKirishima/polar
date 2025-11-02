@@ -1,7 +1,30 @@
 {
   "name": "@polar/typescript-config",
   "version": "1.0.0",
-  "exports": "./base.json",
-  "main": "index.js",
-  "packageManager": "pnpm@10.12.4"
+  "description": "Shared TypeScript configuration for Polar monorepo",
+  "main": "base.json",
+  "exports": {
+    "./base": "./base.json",
+    "./node": "./node.json",
+    "./package": "./package.json"
+  },
+  "files": [
+    "base.json",
+    "node.json",
+    "package.json"
+  ],
+  "keywords": [
+    "typescript",
+    "config",
+    "polar"
+  ],
+  "author": "Davide Usberti <usbertibox@gmail.com>",
+  "license": "MIT",
+  "packageManager": "pnpm@10.20.0",
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  },
+  "peerDependencies": {
+    "typescript": ">=4.5.0"
+  }
 }
