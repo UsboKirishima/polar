@@ -1,0 +1,16 @@
+{
+    "files": [],
+    "references": [
+        { "path": "apps/backend" },
+        { "path": "apps/frontend" },
+        { "path": "packages/algorithm" },
+        { "path": "packages/api" },
+        { "path": "packages/db" },
+        { "path": "packages/media" },
+        { "path": "packages/redis-manager" },
+        { "path": "packages/services" },
+        { "path": "packages/types" },
+        { "path": "packages/typescript-config" },
+        { "path": "packages/utils" },
+    ]
+}

@@ -1,7 +1,45 @@
 {
   "name": "@polar/typescript-config",
   "version": "1.0.0",
-  "exports": "./base.json",
-  "main": "index.js",
-  "packageManager": "pnpm@10.12.4"
+  "description": "Shared TypeScript configuration for Polar monorepo",
+  "exports": {
+    "./base": "./base.json",
+    "./tsconfig.build.json": "./tsconfig.build.json",
+    "./package.json": "./package.json"
+  },
+  "main": "./base.json",
+  "files": [
+    "base.json",
+    "tsconfig.build.json"
+  ],
+  "scripts": {
+    "lint": "echo 'No linting required for config package'",
+    "type-check": "echo 'No type checking required for config package'",
+    "clean": "echo 'No build artifacts to clean for config package'"
+  },
+  "keywords": [
+    "typescript",
+    "config",
+    "tsconfig",
+    "monorepo",
+    "polar"
+  ],
+  "author": "Davide Usberti <usbertibox@gmail.com> (https://usbo.tech)",
+  "license": "MIT",
+  "homepage": "https://github.com/UsboKirishima/polar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UsboKirishima/polar.git",
+    "directory": "packages/typescript-config"
+  },
+  "bugs": {
+    "url": "https://github.com/UsboKirishima/polar/issues"
+  },
+  "packageManager": "pnpm@10.20.0",
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

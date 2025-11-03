@@ -1,37 +1,53 @@
 {
   "name": "@polar/types",
   "version": "1.0.0",
-  "description": "",
-  "main": "",
-  "module": "",
+  "description": "Shared TypeScript types and Zod schemas for Polar",
+  "main": "dist/index.js",
+  "module": "index.ts",
   "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    },
-    "./zod": {
-      "types": "./dist/zod.d.ts",
-      "import": "./dist/zod.mjs",
-      "require": "./dist/zod.js"
-    },
-    "./general": {
-      "types": "./dist/general.d.ts",
-      "import": "./dist/general.mjs",
-      "require": "./dist/general.js"
-    },
-    "./zod.js": "./dist/zod.js",
-    "./general.js": "./dist/general.js"
-  },
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
-    "dev": "tsdown ./general.ts ./zod.ts ./index.ts --watch --format esm,cjs --dts",
-    "build": "tsdown ./general.ts ./zod.ts ./index.ts --format esm,cjs --dts"
+    "dev": "tsc -p tsconfig.json --watch",
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "type-check": "tsc --noEmit",
+    "test": "echo \"No tests specified\"",
+    "clean": "rm -rf dist && rm -rf node_modules"
   },
-  "license": "ISC",
-  "packageManager": "pnpm@10.12.4",
+  "keywords": [
+    "types",
+    "typescript",
+    "zod",
+    "schemas",
+    "validation",
+    "polar",
+    "monorepo"
+  ],
+  "author": "Davide Usberti <usbertibox@gmail.com> (https://usbo.tech)",
+  "license": "MIT",
+  "homepage": "https://github.com/UsboKirishima/polar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UsboKirishima/polar.git",
+    "directory": "packages/types"
+  },
+  "bugs": {
+    "url": "https://github.com/UsboKirishima/polar/issues"
+  },
+  "packageManager": "pnpm@10.20.0",
   "dependencies": {
-    "@polar/db": "workspace:*",
     "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@polar/typescript-config": "workspace:*",
+    "@antfu/eslint-config": "^3.10.1",
+    "eslint": "^9.17.0",
+    "typescript": "^5.9.2"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

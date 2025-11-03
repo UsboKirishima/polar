@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 
 import type { SimpleProfileSchema, SimpleUserSchema } from "@polar/types/general.js";
-import { db } from "@polar/db";
+import { db, Prisma, User } from "@polar/db";
 
 export function findUserByEmail(email: string) {
     return db.user.findUnique({
@@ -240,3 +240,9 @@ export async function getAllUsers() {
         },
     });
 }
+
+
+export type GetAllUsersResult = Prisma.PromiseReturnType<typeof getAllUsers>;
+
+
+export const _getAllUsers = getAllUsers;

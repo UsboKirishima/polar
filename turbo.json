@@ -1,19 +1,114 @@
 {
-    "$schema": "https://turborepo.com/schema.json",
-    "tasks": {
-        "build": {
-            "outputs": [
-                "dist/**"
-            ]
-        },
-        "check-types": {
-            "dependsOn": [
-                "^check-types"
-            ]
-        },
-        "dev": {
-            "persistent": true,
-            "cache": false
-        }
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "inputs": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "*.ts",
+        "*.js",
+        "tsconfig.json",
+        "package.json"
+      ],
+      "outputs": [
+        "dist/**",
+        "build/**",
+        ".next/**",
+        "!.next/cache/**"
+      ],
+      "env": ["NODE_ENV"]
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "type-check": {
+      "inputs": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "*.ts",
+        "tsconfig.json",
+        "package.json"
+      ],
+      "outputs": []
+    },
+    "lint": {
+      "inputs": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "*.ts",
+        "*.js",
+        ".eslintrc.*",
+        "eslint.config.*",
+        "package.json"
+      ],
+      "outputs": []
+    },
+    "lint:fix": {
+      "inputs": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "*.ts",
+        "*.js",
+        ".eslintrc.*",
+        "eslint.config.*",
+        "package.json"
+      ],
+      "outputs": []
+    },
+    "test": {
+      "inputs": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "test/**/*.ts",
+        "test/**/*.js",
+        "**/*.test.*",
+        "**/*.spec.*",
+        "jest.config.*",
+        "vitest.config.*",
+        "package.json"
+      ],
+      "outputs": ["coverage/**"]
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true
+    },
+    "clean": {
+      "cache": false,
+      "inputs": [],
+      "outputs": []
+    },
+    "db:generate": {
+      "cache": false,
+      "inputs": ["src/schema.prisma", "prisma/schema.prisma"],
+      "outputs": ["node_modules/.prisma/**"]
+    },
+    "db:push": {
+      "cache": false
+    },
+    "db:migrate": {
+      "cache": false
+    },
+    "db:studio": {
+      "cache": false,
+      "persistent": true
+    },
+    "postinstall": {
+      "cache": false,
+      "dependsOn": []
     }
+  },
+  "globalDependencies": [".env", ".env.local", ".env.production", ".env.development"],
+  "globalEnv": ["NODE_ENV", "DATABASE_URL", "REDIS_URL"]
 }

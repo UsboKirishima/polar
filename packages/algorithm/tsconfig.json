@@ -1,22 +1,13 @@
 {
+  "extends": "@polar/typescript-config/base",
   "compilerOptions": {
-    "target": "esnext",
-    "module": "commonjs",
-    "strict": true,
-    "noImplicitAny": true,
+    "composite": true,
+    "rootDir": ".",
+    "declaration": true,
+    "declarationMap": true,
     "outDir": "dist",
-    "sourceMap": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true
+    "sourceMap": true
   },
-  "typeRoots": [
-    "./src/types",
-    "./node_modules/@types"
-  ],
-  "include": [
-    "./*.js",
-    "src/**/*.ts",
-    "test/**/*.ts"
-  ]
+  "include": ["src/**/*", "index.ts", "*.ts"],
+  "exclude": ["dist", "node_modules", "**/*.test.ts", "**/*.spec.ts"]
 }

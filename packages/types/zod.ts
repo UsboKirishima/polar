@@ -1,5 +1,23 @@
 import { z } from "zod";
-import { PostBgColor } from "@polar/db";
+
+const PostBgColor = {
+    Deep_blue: "Deep_blue",
+    Dark_magenta: "Dark_magenta",
+    Dark_olive: "Dark_olive",
+    Brownish: "Brownish",
+    Deep_purple: "Deep_purple",
+    Teal_ish: "Teal_ish",
+    Indigo: "Indigo",
+    Rust: "Rust",
+    Muted_blue: "Muted_blue",
+    Muted_pink: "Muted_pink",
+    Muted_green: "Muted_green",
+    Burnt_orange: "Burnt_orange",
+    Dark_violet: "Dark_violet",
+    Dark_lime: "Dark_lime",
+    Dark_rose: "Dark_rose",
+    Normal: "Normal"
+}
 
 // ------------------- Profile Schema -------------------
 const profileBaseSchema = {

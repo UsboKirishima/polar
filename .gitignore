@@ -5,6 +5,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+pnpm-debug.log*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -46,6 +47,7 @@ web_modules/
 
 # TypeScript cache
 *.tsbuildinfo
+.tscache/
 
 # Optional npm cache directory
 .npm
@@ -55,6 +57,12 @@ web_modules/
 
 # Optional stylelint cache
 .stylelintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
 
 # Optional REPL history
 .node_repl_history
@@ -67,6 +75,10 @@ web_modules/
 
 # dotenv environment variable files
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 !.env.example
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -75,6 +87,7 @@ web_modules/
 
 # Next.js build output
 .next
+.next/*
 out
 
 # Nuxt.js build / generate output
@@ -92,16 +105,9 @@ dist
 
 # vuepress v2.x temp and cache directory
 .temp
-.cache
 
 # Sveltekit cache directory
 .svelte-kit/
-
-# vitepress build output
-**/.vitepress/dist
-
-# vitepress cache directory
-**/.vitepress/cache
 
 # Docusaurus cache and generated files
 .docusaurus
@@ -115,30 +121,97 @@ dist
 # DynamoDB Local files
 .dynamodb/
 
-# Firebase cache directory
-.firebase/
-
 # TernJS port file
 .tern-port
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
+# yarn v0
+.yarn-metadata.json
+
+# Turborepo
+.turbo
+**/.turbo
+
+# Build outputs
+build/
+dist/
+out/
+*.tgz
+
+# Development files
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
 .vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
 
-# yarn v3
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
+# Temporary files
+tmp/
+temp/
 
-# Vite logs files
+# Test coverage
+coverage/
+.nyc_output/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment files
+.env*
+!.env.example
+!.env.template
+
+# Package manager lock files (keep pnpm-lock.yaml)
+# npm
+package-lock.json
+# yarn
+yarn.lock
+
+# Prisma
+prisma/migrations/migration_lock.toml
+
+# Build cache
+.cache/
+.parcel-cache/
+.webpack/
+
+# Static files
+public/uploads/
+uploads/
+
+# Docker
+.dockerignore
+
+# Deployment
+.vercel/
+.netlify/
+
+# Sentry
+.sentryclirc
+
+# ESLint
+.eslintcache
+
+# TypeScript
+*.d.ts.map
+
+# Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
-
-
-# Turbo monorepo
-.turbo

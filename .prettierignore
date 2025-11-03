@@ -1,0 +1,106 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production builds
+/build
+/dist
+/.next/
+/out/
+
+# Generated files
+.docusaurus
+.cache
+.parcel-cache
+.turbo
+
+# Logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output/
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variable files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Database
+*.db
+*.sqlite
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Temporary files
+tmp/
+temp/
+
+# Build artifacts
+*.tsbuildinfo
+
+# Prisma generated files
+prisma/migrations/
+
+# Auto-generated documentation
+/docs/api/
+
+# Third-party assets
+/public/uploads/
+/uploads/
