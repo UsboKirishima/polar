@@ -30,15 +30,19 @@ const props = defineProps<{
 <style scoped>
 .feed-sidebar {
     position: fixed;
-    top: 0;
+    top: 50%;
     right: 0;
-    width: 14.5%;
-    height: 100vh;
+    transform: translateY(-50%);
+    width: 17vw;
     display: flex;
     flex-direction: column;
-    padding-top: 28px;
+    padding-top: 1.5rem;
     z-index: 90;
+    margin: 0 2rem; /* meglio rimuovere margin-top */
+    background-color: #a5a6ff13;
+    border-radius: 16px;
 }
+
 
 .sb-friends {
     margin: 3% 10%;

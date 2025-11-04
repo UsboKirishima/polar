@@ -26,6 +26,9 @@ const props = defineProps<{
 
 <template>
     <div class="sb-friend">
+        <a v-if="type === 'suggestion'" href="#" class="add-friend">
+            <FontAwesomeIcon class="icon" :icon="faAdd" />
+        </a>
         <img :src="data.avatar" />
         <div class="f-info">
             <p class="username">{{ data.username }}
@@ -49,9 +52,6 @@ const props = defineProps<{
                     ' friends' }}
             </p>
         </div>
-        <a v-if="type === 'suggestion'" href="#" class="add-friend">
-            <FontAwesomeIcon class="icon" :icon="faAdd" />
-        </a>
     </div>
 </template>
 
@@ -60,9 +60,11 @@ const props = defineProps<{
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 6px;
+    padding: 3px;
     text-decoration: none;
     width: 80%;
+    border-radius: 12px;
+    margin: 2px 0;
 }
 
 .sb-friend img {
@@ -90,7 +92,10 @@ const props = defineProps<{
 }
 
 .add-friend {
-    margin-left: auto;
+    margin-right: 0.4rem;
     color: #fff;
+    background: #a5a6ff13;
+    padding: 0.3rem;
+    border-radius: 100%;
 }
 </style>

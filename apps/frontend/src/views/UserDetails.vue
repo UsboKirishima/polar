@@ -86,8 +86,9 @@ onMounted(async () => {
 
 <style scoped>
 .container {
-    width: 86%;
-    padding: 2rem;
+    width: 90%;
+    padding: 2rem 2rem;
+    margin: 0 auto;
 }
 
 h2 {

@@ -31,9 +31,10 @@ const emits = defineEmits<{
     padding-top: 20px;
     position: sticky;
     top: 0;
+    margin: 0 auto;
     background: #14141bc5;
     height: 4rem;
-    width: 100%;
+    width: 90%;
     backdrop-filter: blur(6px);
     z-index: 90;
 }

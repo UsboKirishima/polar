@@ -101,9 +101,14 @@ onMounted(async () => {
 <style scoped>
 .feed-container {
     display: grid;
-    grid-template-columns: 1fr 17%;
+    grid-template-columns: 1fr 17vw;
     min-height: 100vh;
     color: #ffffffc7;
+}
+
+.bar {
+    height: 90vh;
+    align-self: center;
 }
 
 .feed-space {

@@ -19,6 +19,10 @@ const props = defineProps<{
     height: 80%;
     overflow-y: auto;
     border-radius: 16px;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge legacy */
 }
 
 .friend-list::-webkit-scrollbar {

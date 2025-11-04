@@ -140,7 +140,7 @@ const openFriend = (friendId: string) => {
     padding: 0.75rem 1rem;
     border-radius: 8px;
     margin-bottom: 0.5rem;
-    background: #7cb5ff3a;
+    background: #95c0f81e;
     transition: 300ms;
     z-index: 10;
 }
@@ -189,13 +189,13 @@ const openFriend = (friendId: string) => {
 }
 
 .accept-btn:hover {
-    background: #4caf4f8f;
+    background: #4caf4f30;
     transition: 300ms;
     color: #fff;
 }
 
 .deny-btn:hover {
-    background: #ea580c8f;
+    background: #ea5a0c30;
     transition: 300ms;
     color: #fff;
 }
@@ -206,12 +206,12 @@ const openFriend = (friendId: string) => {
 
 .accept-btn {
     color: #4caf50;
-    border: 1px solid #4caf50;
+    background: #ff6a6a1f;
 }
 
 .deny-btn {
     color: #ea580c;
-    border: 1px solid #ea580c;
+    background: #ff6a6a1f;
 }
 
 .empty {

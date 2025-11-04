@@ -18,6 +18,7 @@ const props = defineProps<{
 div {
     display: flex;
     flex-direction: row;
-    width: 100%;
+    width: 90%;
+    margin: 0 auto;
 }
 </style>
