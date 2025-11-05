@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 
 import type { SimpleProfileSchema, SimpleUserSchema } from "@polar/types/general.js";
-import { db, Prisma, User } from "@polar/db";
+import { db, User } from "@polar/db";
 
 export function findUserByEmail(email: string) {
     return db.user.findUnique({
@@ -23,9 +23,9 @@ export function createUserByEmailAndPassword(user: UserMailNPassword) {
     });
 }
 
-export function createUserWithProfile(user: Omit<SimpleUserSchema, "profile.bio"> & { profile: Omit<SimpleProfileSchema, "bio"> }) {
+export async function createUserWithProfile(user: Omit<SimpleUserSchema, "profile.bio"> & { profile: Omit<SimpleProfileSchema, "bio"> }) {
     const hashedPassword = bcrypt.hashSync(user.password, 12);
-    return db.user.create({
+    return await db.user.create({
         data: {
             email: user.email,
             password: hashedPassword,
@@ -41,8 +41,8 @@ export function createUserWithProfile(user: Omit<SimpleUserSchema, "profile.bio"
     });
 }
 
-export function createProfile(profile: SimpleProfileSchema, userId: string) {
-    return db.profile.create({
+export async function createProfile(profile: SimpleProfileSchema, userId: string) {
+    return await db.profile.create({
         data: {
             username: profile.username,
             dateOfBirth: new Date(profile.dateOfBirth),
@@ -53,24 +53,24 @@ export function createProfile(profile: SimpleProfileSchema, userId: string) {
     });
 }
 
-export function findUserById(id: string) {
-    return db.user.findUnique({
+export async function findUserById(id: string) {
+    return await db.user.findUnique({
         where: {
             id,
         },
     });
 }
 
-export function findProfileById(profileId: string) {
-    return db.profile.findUnique({
+export async function findProfileById(profileId: string) {
+    return await db.profile.findUnique({
         where: {
             id: profileId,
         },
     });
 }
 
-export function findUserAndProfileById(userId: string) {
-    return db.user.findUnique({
+export async function findUserAndProfileById(userId: string) {
+    return await db.user.findUnique({
         where: { id: userId },
         include: {
             likes: {
@@ -127,8 +127,8 @@ export function findUserAndProfileById(userId: string) {
     });
 }
 
-export function findUserAndProfileByUsername(username: string) {
-    return db.user.findFirst({
+export async function findUserAndProfileByUsername(username: string) {
+    return await db.user.findFirst({
         where: {
             profile: {
                 is: {
@@ -147,8 +147,8 @@ export function findUserAndProfileByUsername(username: string) {
     });
 }
 
-export function findAllFriendsByUserId(userId: string) {
-    return db.user.findUnique({
+export async function findAllFriendsByUserId(userId: string) {
+    return await db.user.findUnique({
         where: { id: userId },
         include: {
             friends: {
@@ -174,8 +174,8 @@ export function findAllFriendsByUserId(userId: string) {
     });
 }
 
-export function updateProfileById(profileId: string, updates: Partial<SimpleProfileSchema>) {
-    return db.profile.update({
+export async function updateProfileById(profileId: string, updates: Partial<SimpleProfileSchema>) {
+    return await db.profile.update({
         where: { id: profileId },
         data: {
             ...updates,
@@ -185,7 +185,7 @@ export function updateProfileById(profileId: string, updates: Partial<SimpleProf
 }
 
 export async function getProfileByUserId(userId: string) {
-    return db.user.findUnique({
+    return await db.user.findUnique({
         where: {
             id: userId
         }, select: {
@@ -200,7 +200,7 @@ export async function getProfileByUserId(userId: string) {
 }
 
 export async function searchUsers(query: string, limit = 20) {
-    return db.user.findMany({
+    return await db.user.findMany({
         where: {
             OR: [
                 {
@@ -241,8 +241,3 @@ export async function getAllUsers() {
     });
 }
 
-
-export type GetAllUsersResult = Prisma.PromiseReturnType<typeof getAllUsers>;
-
-
-export const _getAllUsers = getAllUsers;

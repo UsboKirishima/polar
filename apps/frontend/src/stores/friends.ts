@@ -9,6 +9,7 @@ import {
     removeFriendship
 } from "@/api/friends";
 import { getUserByUsername } from "@/api/users";
+import { trpc } from "@/trpc";
 
 export const useFriendStore = defineStore("friend", {
     state: () => ({

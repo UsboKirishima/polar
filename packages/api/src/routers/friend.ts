@@ -1,94 +1,128 @@
 import { protectedProcedure, t } from "../trpc";
-
-import { friendService } from '@polar/services';
-import { internalErr, resultErr, resultOk } from "@polar/utils";
+import { TRPCError } from "@trpc/server";
+import { friendService } from "@polar/services";
 import { userIdSchema } from "@polar/types/zod";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 export const friendRouter = t.router({
     /**
-     * Get all the received friends request.
-     * Others to me.
+     * Get all received friend requests (others → me)
      */
     getReceivedRequests: protectedProcedure
         .query(async ({ ctx }) => {
             try {
-                const requests = await friendService.getAllPendingFriendRequests(ctx.user.userId);
-
-                return requests;
+                return await friendService.getAllPendingFriendRequests(ctx.user.userId);
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to fetch received friend requests",
+                });
             }
         }),
+
     /**
-     * Get all set requests, provides all the pending
-     * requests sent by the context user.
+     * Get all sent friend requests (me → others)
      */
     getSentRequests: protectedProcedure
         .query(async ({ ctx }) => {
             try {
-                const requests = await friendService.getAllSentRequests(ctx.user.userId);
-
-                return requests;
+                return await friendService.getAllSentRequests(ctx.user.userId);
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to fetch sent friend requests",
+                });
             }
         }),
+
     /**
-     * Get all friends of the context user
+     * Get all friends of the current user
      */
     getAll: protectedProcedure
         .query(async ({ ctx }) => {
             try {
-                const friends = await friendService.getAllFriendsByUserId(ctx.user.userId);
-
-                return friends;
+                return await friendService.getAllFriendsByUserId(ctx.user.userId);
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to fetch friends",
+                });
             }
         }),
+
+    /**
+     * Send a new friend request
+     */
     sendRequest: protectedProcedure
         .input(userIdSchema)
         .mutation(async ({ input, ctx }) => {
             try {
                 const friendRequest = await friendService.createFriendRequest(ctx.user.userId, input);
 
-                if (!friendRequest.id)
-                    return resultErr('Failed to create friend request.');
+                if (!friendRequest.id) {
+                    throw new TRPCError({
+                        code: "BAD_REQUEST",
+                        message: "Failed to create friend request",
+                    });
+                }
 
                 return friendRequest;
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Error while sending friend request",
+                });
             }
         }),
+
+    /**
+     * Accept a friend request
+     */
     acceptRequest: protectedProcedure
-        .input(z.uuid({ error: 'Invalid sender UUID' }))
+        .input(z.string().uuid("Invalid sender UUID"))
         .mutation(async ({ input, ctx }) => {
             try {
                 await friendService.acceptFriendRequest(input, ctx.user.userId);
-                return resultOk('Accepted friend request.');
+                return { ok: true, message: "Accepted friend request" };
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to accept friend request",
+                });
             }
         }),
+
+    /**
+     * Deny a friend request
+     */
     denyRequest: protectedProcedure
-        .input(z.uuid({ error: 'Invalid sender UUID' }))
+        .input(z.string().uuid("Invalid sender UUID"))
         .mutation(async ({ input, ctx }) => {
             try {
                 await friendService.denyFriendRequest(input, ctx.user.userId);
-                return resultOk('Friend request ignored.');
+                return { ok: true, message: "Friend request ignored" };
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to deny friend request",
+                });
             }
         }),
+
+    /**
+     * Remove a friend
+     */
     remove: protectedProcedure
         .input(userIdSchema)
         .mutation(async ({ input, ctx }) => {
             try {
                 await friendService.removeFriendship(ctx.user.userId, input);
-                return resultOk('Friend successfully removed.');
+                return { ok: true, message: "Friend successfully removed" };
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to remove friend",
+                });
             }
-        })
-})
+        }),
+});

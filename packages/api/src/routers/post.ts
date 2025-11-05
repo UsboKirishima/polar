@@ -1,5 +1,4 @@
 import { postService } from "@polar/services";
-
 import { protectedProcedure, t } from "../trpc";
 import {
     commentEditSchema,
@@ -9,7 +8,7 @@ import {
     postSchema,
     updatePostSchema
 } from "@polar/types/zod";
-import { internalErr, resultErr, resultOk } from "@polar/utils";
+import { TRPCError } from "@trpc/server";
 import { userRouter } from "./user";
 
 async function isUserThePostAuthor(userId: string, postId: string): Promise<boolean> {
@@ -17,32 +16,38 @@ async function isUserThePostAuthor(userId: string, postId: string): Promise<bool
     return userPosts.some(post => post.id === postId);
 }
 
-
 export const postRouter = t.router({
     getById: protectedProcedure
         .input(postIdSchema)
-        .query(async ({ input, ctx }) => {
+        .query(async ({ input }) => {
             try {
                 const post = await postService.getPostByid(input);
-
-                if (!post)
-                    return resultErr('Failed to find post.');
-
+                if (!post) throw new TRPCError({ code: "NOT_FOUND", message: "Post not found." });
                 return post;
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to fetch post.",
+                    cause: error
+                });
             }
         }),
+
     getAll: protectedProcedure
-        .query(async ({ ctx }) => {
+        .query(async () => {
             try {
                 return await postService.getAllPosts();
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to fetch posts.",
+                    cause: error
+                });
             }
         }),
+
     getFeed: protectedProcedure
-        .query(async ({ ctx }) => {
+        .query(async () => {
             try {
                 /**
                  * Feed
@@ -56,9 +61,14 @@ export const postRouter = t.router({
 
                 return await postService.getAllPosts();
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to fetch feed.",
+                    cause: error
+                });
             }
         }),
+
     create: protectedProcedure
         .input(postSchema)
         .mutation(async ({ input, ctx }) => {
@@ -70,71 +80,91 @@ export const postRouter = t.router({
 
                 return newPost;
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to create post.",
+                    cause: error
+                });
             }
         }),
+
     edit: protectedProcedure
         .input(updatePostSchema)
         .mutation(async ({ input, ctx }) => {
             try {
-                if (!(await isUserThePostAuthor(ctx.user.userId, input.postId))) {
-                    return resultErr(`You can't update someone else post`);
-                }
+                if (!(await isUserThePostAuthor(ctx.user.userId, input.postId)))
+                    throw new TRPCError({ code: "FORBIDDEN", message: "You can't edit someone else's post." });
 
                 const updatedPost = await postService.updatePost(input.postId, input.post);
-
                 if (!updatedPost)
-                    return resultErr(`Failed to update post`);
+                    throw new TRPCError({ code: "BAD_REQUEST", message: "Failed to update post." });
 
                 return updatedPost;
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to edit post.",
+                    cause: error
+                });
             }
         }),
+
     delete: protectedProcedure
         .input(postIdSchema)
         .mutation(async ({ input, ctx }) => {
             try {
-
-                if (!(await isUserThePostAuthor(ctx.user.userId, input))) {
-                    return resultErr(`You can't delete someone else post`);
-                }
+                if (!(await isUserThePostAuthor(ctx.user.userId, input)))
+                    throw new TRPCError({ code: "FORBIDDEN", message: "You can't delete someone else's post." });
 
                 await postService.deletePost(input);
-                return resultOk(`Post with id (${input}) was successfully deleted.`);
+                return { message: `Post with id (${input}) was successfully deleted.` };
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to delete post.",
+                    cause: error
+                });
             }
         }),
+
     toggleLike: protectedProcedure
         .input(postIdSchema)
         .mutation(async ({ input, ctx }) => {
             try {
                 await postService.likePost(input, ctx.user.userId);
-                return resultOk(`Post liked/unliked successfully`);
+                return { message: "Post liked/unliked successfully." };
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to toggle like.",
+                    cause: error
+                });
             }
         }),
+
     toggleSave: protectedProcedure
         .input(postIdSchema)
-        .mutation(async ({ input, ctx }) => {
+        .mutation(async () => {
+            /**
+             * !!! WARNING - NOT IMPLEMENTED YET !!!
+             * ===========================================
+             * This mutation is made for future purposes,
+             * in particoular the possibility to save a post
+             * maybe to rewatch it later. 
+             */
             try {
-                /**
-                 * !!! WARNING - NOT IMPLEMENTED YET !!!
-                 * ===========================================
-                 * This mutation is made for future purposes,
-                 * in particoular the possibility to save a post
-                 * maybe to rewatch it later. 
-                 */
-
-                return resultOk('Post successfully saved.');
+                return { message: "Post successfully saved (feature not yet implemented)." };
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to toggle save.",
+                    cause: error
+                });
             }
         }),
+
     getSaved: protectedProcedure
-        .query(async ({ ctx }) => {
+        .query(async () => {
             try {
                 /**
                  * !!! WARNING - NOT IMPLEMENTED YET !!!
@@ -142,71 +172,91 @@ export const postRouter = t.router({
                  * This query returns all the posts saved by the 
                  * user in the context (@me)
                  */
-                return resultOk('...post');
+                return { message: "...post" };
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to fetch saved posts.",
+                    cause: error
+                });
             }
         }),
+
     getCommentById: protectedProcedure
         .input(commentIdSchema)
-        .query(async ({ input, ctx }) => {
+        .query(async ({ input }) => {
             try {
                 const comment = await postService.getCommentById(input);
-
                 if (!comment)
-                    return resultErr('Comment not found.');
+                    throw new TRPCError({ code: "NOT_FOUND", message: "Comment not found." });
 
                 return comment;
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to fetch comment.",
+                    cause: error
+                });
             }
         }),
+
     createComment: protectedProcedure
         .input(commentRequestSchema)
         .mutation(async ({ input, ctx }) => {
             try {
                 const comment = await postService.createNewComment(ctx.user.userId, { text: input.text }, input.postId);
-
                 if (!comment)
-                    return resultErr('Failed to create comment.');
+                    throw new TRPCError({ code: "BAD_REQUEST", message: "Failed to create comment." });
 
-                return resultOk(`Comment created successfully.`);
+                return { message: "Comment created successfully." };
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to create comment.",
+                    cause: error
+                });
             }
         }),
+
     editComment: protectedProcedure
         .input(commentEditSchema)
         .mutation(async ({ input, ctx }) => {
             try {
                 const comment = await postService.getCommentById(input.commentId);
-
                 if (comment?.userId !== ctx.user.userId)
-                    return resultErr('You cannot edit a someone else comment.');
+                    throw new TRPCError({ code: "FORBIDDEN", message: "You cannot edit someone else's comment." });
 
-                return resultOk('Comment successfully edited');
+                return { message: "Comment successfully edited." };
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to edit comment.",
+                    cause: error
+                });
             }
         }),
+
     deleteComment: protectedProcedure
         .input(commentIdSchema)
         .mutation(async ({ input, ctx }) => {
             try {
                 const comment = await postService.deleteComment(input);
-
                 if (!comment)
-                    return resultErr('Comment not found.');
+                    throw new TRPCError({ code: "NOT_FOUND", message: "Comment not found." });
 
                 const userCaller = userRouter.createCaller(ctx);
                 const userPosts = await userCaller.getAll();
 
                 if (comment.userId !== ctx.user.userId || !userPosts.some(p => p.id === comment.postId))
-                    return resultErr('You can delete only your comments, or comments under your posts.');
+                    throw new TRPCError({ code: "FORBIDDEN", message: "You can only delete your comments or comments under your posts." });
 
-                return resultOk('Comment successfully deleted');
+                return { message: "Comment successfully deleted." };
             } catch (error) {
-                return internalErr();
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to delete comment.",
+                    cause: error
+                });
             }
         })
-})
+});

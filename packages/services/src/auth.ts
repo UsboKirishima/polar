@@ -4,8 +4,8 @@ import { hashToken } from '@polar/utils';
 // used when we create a refresh token.
 // a refresh token is valid for 30 days
 // that means that if a user is inactive for more than 30 days, he will be required to log in again
-export function addRefreshTokenToWhitelist({ refreshToken, userId }: { refreshToken: string; userId: string; }) {
-    return db.refreshToken.create({
+export async function addRefreshTokenToWhitelist({ refreshToken, userId }: { refreshToken: string; userId: string; }) {
+    return await db.refreshToken.create({
         data: {
             hashedToken: hashToken(refreshToken),
             userId,
@@ -15,8 +15,8 @@ export function addRefreshTokenToWhitelist({ refreshToken, userId }: { refreshTo
 }
 
 // used to check if the token sent by the client is in the database.
-export function findRefreshToken(token: string) {
-    return db.refreshToken.findUnique({
+export async function findRefreshToken(token: string) {
+    return await db.refreshToken.findUnique({
         where: {
             hashedToken: hashToken(token),
         },
@@ -24,8 +24,8 @@ export function findRefreshToken(token: string) {
 }
 
 // soft delete tokens after usage.
-export function deleteRefreshTokenById(id: string) {
-    return db.refreshToken.update({
+export async function deleteRefreshTokenById(id: string) {
+    return await db.refreshToken.update({
         where: {
             id,
         },
@@ -35,8 +35,8 @@ export function deleteRefreshTokenById(id: string) {
     });
 }
 
-export function revokeTokens(userId: string) {
-    return db.refreshToken.updateMany({
+export async function revokeTokens(userId: string) {
+    return await db.refreshToken.updateMany({
         where: {
             userId,
         },

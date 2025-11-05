@@ -6,8 +6,12 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "moduleResolution": "nodenext",
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "bundler",
     "composite": true,
+    "emitDeclarationOnly": false,
+    "skipLibCheck": true
   },
   "include": ["src/**/*", "*.ts"],
   "exclude": ["dist", "node_modules", "**/*.test.ts", "**/*.spec.ts"]

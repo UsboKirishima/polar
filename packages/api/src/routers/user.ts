@@ -1,13 +1,10 @@
 import { protectedProcedure, t } from "../trpc";
-import { z } from 'zod/v4';
+import { z } from "zod/v4";
 import { profileSchema, userIdSchema, usernameSchema } from "@polar/types/zod";
-import { resultErr, resultOk } from "@polar/utils";
 import { uploadMedia } from "@polar/media";
 
-import { userService } from "@polar/services";
-import { postService } from "@polar/services";
-import { bannerService } from "@polar/services";
-import { avatarService } from "@polar/services";
+import { userService, postService, bannerService, avatarService } from "@polar/services";
+import { TRPCError } from "@trpc/server";
 
 import type { Express } from "express";
 
@@ -16,124 +13,174 @@ export const fileSchema = z.custom<Express.Multer.File>(
     { message: "Invalid file upload" }
 );
 
-function removePassword<T extends Record<string, any>>(obj: T): Omit<T, 'password'> {
+function removePassword<T extends Record<string, any>>(obj: T): Omit<T, "password"> {
     const newObj = { ...obj };
-
-    if ('password' in newObj) {
-        delete newObj.password;
-    }
-
-    return newObj as Omit<T, 'password'>;
+    delete (newObj as any).password;
+    return newObj as Omit<T, "password">;
 }
 
 export const userRouter = t.router({
-    getMe: protectedProcedure
-        .query(async ({ ctx }) => {
+    getMe: protectedProcedure.query(async ({ ctx }) => {
+        try {
             const user = await userService.findUserAndProfileById(ctx.user.userId);
-
             if (!user)
-                return resultErr(`User not found: ${ctx.user.userId}`);
+                throw new TRPCError({ code: "NOT_FOUND", message: `User not found: ${ctx.user.userId}` });
 
             return removePassword(user);
-        }),
-    search: protectedProcedure
-        .input(z.string())
-        .query(async ({ input, ctx }) => {
+        } catch (error) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Failed to fetch user profile.",
+                cause: error
+            });
+        }
+    }),
+
+    search: protectedProcedure.input(z.string()).query(async ({ input }) => {
+        try {
             const usersMatch = await userService.searchUsers(input);
-
-            if (!usersMatch.length) return resultOk('No users found');
-
             return usersMatch.map((u: any) => removePassword(u));
-        }),
-    getAll: protectedProcedure
-        .query(async ({ ctx }) => {
-            const users = await userService.getAllUsers();
+        } catch (error) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Failed to search users.",
+                cause: error
+            });
+        }
+    }),
 
-            return users;
-        }),
-    getById: protectedProcedure
-        .input(userIdSchema)
-        .query(async ({ input }) => {
+    getAll: protectedProcedure.query(async () => {
+        try {
+            return await userService.getAllUsers();
+        } catch (error) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Failed to fetch users.",
+                cause: error
+            });
+        }
+    }),
+
+    getById: protectedProcedure.input(userIdSchema).query(async ({ input }) => {
+        try {
             const user = await userService.findUserAndProfileById(input);
-
             if (!user)
-                return resultErr(`User not found: ${input}`);
-
+                throw new TRPCError({ code: "NOT_FOUND", message: `User not found: ${input}` });
             return removePassword(user);
-        }),
-    getByUsername: protectedProcedure
-        .input(usernameSchema)
-        .query(async ({ input }) => {
+        } catch (error) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Failed to fetch user by ID.",
+                cause: error
+            });
+        }
+    }),
+
+    getByUsername: protectedProcedure.input(usernameSchema).query(async ({ input }) => {
+        try {
             const user = await userService.findUserAndProfileByUsername(input);
-
             if (!user)
-                return resultErr(`User not found: ${input}`);
-
+                throw new TRPCError({ code: "NOT_FOUND", message: `User not found: ${input}` });
             return removePassword(user);
-        }),
-    getFriends: protectedProcedure
-        .input(userIdSchema)
-        .query(async ({ input, ctx }) => {
+        } catch (error) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Failed to fetch user by username.",
+                cause: error
+            });
+        }
+    }),
+
+    getFriends: protectedProcedure.input(userIdSchema).query(async ({ input }) => {
+        try {
             const friends = await userService.findAllFriendsByUserId(input);
-
             if (!friends)
-                return resultErr(`Failed to retrieve friends for user ID: ${input}`);
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: `Failed to retrieve friends for user ID: ${input}`
+                });
 
-            const safeFriends = friends.friends.map((friend: any) => removePassword(friend));
+            return friends.friends.map((friend: any) => removePassword(friend));
+        } catch (error) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Failed to fetch user friends.",
+                cause: error
+            });
+        }
+    }),
 
-            return safeFriends;
-        }),
-    getPosts: protectedProcedure
-        .input(userIdSchema)
-        .query(async ({ input, ctx }) => {
-            const posts = await postService.getPostsByUserId(input);
+    getPosts: protectedProcedure.input(userIdSchema).query(async ({ input }) => {
+        try {
+            return await postService.getPostsByUserId(input);
+        } catch (error) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Failed to fetch user posts.",
+                cause: error
+            });
+        }
+    }),
 
-            return posts;
-        }),
-    setAvatar: protectedProcedure
-        .input(fileSchema.nullable())
-        .mutation(async ({ input, ctx }) => {
-
+    setAvatar: protectedProcedure.input(fileSchema.nullable()).mutation(async ({ input, ctx }) => {
+        try {
             if (input === null) {
-                avatarService.deleteAvatar(ctx.user.userId);
-                return resultOk('Successfully remove avatar.')
+                await avatarService.deleteAvatar(ctx.user.userId);
+                return { message: "Successfully removed avatar." };
             }
 
-            const data = await uploadMedia('avatars', input, ctx.user.userId);
+            const data = await uploadMedia("avatars", input, ctx.user.userId);
+            if (!("avatar" in data))
+                throw new TRPCError({ code: "BAD_REQUEST", message: "Failed to upload avatar." });
 
-            if ('avatar' in data) {
-                return data;
-            }
+            return data;
+        } catch (error) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Failed to set avatar.",
+                cause: error
+            });
+        }
+    }),
 
-            return resultErr('Failed to upload avatar');
-        }),
-    setBanner: protectedProcedure
-        .input(fileSchema.nullable())
-        .mutation(async ({ input, ctx }) => {
+    setBanner: protectedProcedure.input(fileSchema.nullable()).mutation(async ({ input, ctx }) => {
+        try {
             if (input === null) {
-                bannerService.deleteBanner(ctx.user.userId);
-                return resultOk('Successfully remove banner.')
+                await bannerService.deleteBanner(ctx.user.userId);
+                return { message: "Successfully removed banner." };
             }
 
-            const data = await uploadMedia('banners', input, ctx.user.userId);
+            const data = await uploadMedia("banners", input, ctx.user.userId);
+            if (!("banner" in data))
+                throw new TRPCError({ code: "BAD_REQUEST", message: "Failed to upload banner." });
 
-            if ('banner' in data) {
-                return data;
-            }
+            return data;
+        } catch (error) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Failed to set banner.",
+                cause: error
+            });
+        }
+    }),
 
-            return resultErr('Failed to upload banner');
-        }),
-    edit: protectedProcedure
-        .input(profileSchema.partial())
-        .mutation(async ({ input, ctx }) => {
-
+    edit: protectedProcedure.input(profileSchema.partial()).mutation(async ({ input, ctx }) => {
+        try {
             const profile = await userService.getProfileByUserId(ctx.user.userId);
-
-            if (!profile || !profile.profile) {
-                return resultErr(`Failed to modify information for user ${ctx.user.userId}`)
-            }
+            if (!profile || !profile.profile)
+                throw new TRPCError({
+                    code: "BAD_REQUEST",
+                    message: `Failed to modify information for user ${ctx.user.userId}`
+                });
 
             await userService.updateProfileById(profile.profile.id, input);
-            return resultOk(`Successfully update information for ${ctx.user.userId}`);
-        })
+            return { message: `Successfully updated profile for ${ctx.user.userId}` };
+        } catch (error) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Failed to edit profile.",
+                cause: error
+            });
+        }
+    })
 });
