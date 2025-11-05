@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '../axiosApi'
 import PageLoading from '@/components/PageLoading.vue'
@@ -47,19 +47,26 @@ const fetchFriends = async () => {
     friends.value = await userStore.getAllFriendsByUserId(user.value.id);
 }
 
-onMounted(async () => {
+onMounted(fetchUserData)
+
+watch(() => route.params.id, async () => {
+    loading.value = true
+    await fetchUserData()
+    loading.value = false
+})
+
+async function fetchUserData() {
     try {
-        user.value = await userStore.getUserById(route.params.id as string);
-        isProfilePage.value = route.params.id === authStore.user!.id;
-        await fetchPosts();
-        await fetchFriends();
-        await userStore.fetchUsers();
+        user.value = await userStore.getUserById(route.params.id as string)
+        isProfilePage.value = route.params.id === authStore.user!.id
+        await fetchPosts()
+        await fetchFriends()
+        await userStore.fetchUsers()
+        loading.value = false;
     } catch (error) {
         console.error('Error during user fetch: ', error)
-    } finally {
-        loading.value = false
     }
-})
+}
 </script>
 
 
@@ -74,12 +81,8 @@ onMounted(async () => {
         </div>
         <div class="container">
             <ProfileHeader :is-profile-page="isProfilePage" :user="user" :posts="[...posts]" :friends="friends" />
-            <ProfileContent :is-profile-page="isProfilePage" 
-            :user="user" 
-            :posts="[...posts]" 
-            :friends="friends"
-            :comments="user?.comments || []"
-            :likes="user?.likes || []"/>
+            <ProfileContent :is-profile-page="isProfilePage" :user="user" :posts="[...posts]" :friends="friends"
+                :comments="user?.comments || []" :likes="user?.likes || []" />
         </div>
     </div>
 </template>

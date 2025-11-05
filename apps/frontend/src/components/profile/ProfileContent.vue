@@ -88,6 +88,8 @@ const view = ref<'posts' | 'friends' | 'likes' | 'comments'>('posts');
     align-items: center;
     overflow: hidden;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .segmented-control div {

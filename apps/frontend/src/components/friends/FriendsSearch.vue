@@ -79,7 +79,7 @@ const handleKeyPress = (event: KeyboardEvent) => {
 input::placeholder {
     font-weight: 700;
     font-size: 1rem;
-    color: #ffffff62;
+    color: #ffffff3a;
 }
 
 input[type="search"]::-webkit-search-cancel-button {

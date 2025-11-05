@@ -33,13 +33,15 @@ const props = defineProps<{
     top: 50%;
     right: 0;
     transform: translateY(-50%);
-    width: 17vw;
+    width: clamp(260px, 17vw, 300px);
     display: flex;
     flex-direction: column;
     padding-top: 1.5rem;
     z-index: 90;
-    margin: 0 2rem; /* meglio rimuovere margin-top */
+    margin: 0 2rem;
     background-color: #a5a6ff13;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
 }
 

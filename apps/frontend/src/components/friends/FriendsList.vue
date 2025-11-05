@@ -140,15 +140,20 @@ const openFriend = (friendId: string) => {
     padding: 0.75rem 1rem;
     border-radius: 8px;
     margin-bottom: 0.5rem;
-    background: #95c0f81e;
-    transition: 300ms;
+    background: #e1eeff33;
+    background: radial-gradient(circle at 20% 30%, #9a9bff33, transparent 60%),
+        radial-gradient(circle at 80% 70%, #f081ff1a, transparent 60%);
+    transition: 100ms;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 10;
+    background-attachment: fixed;
 }
 
 .friend-item:hover,
 .request-item:hover {
-    background: #1c2532;
-    transition: 300ms;
+    opacity: 75%;
+    transition: 100ms;
 }
 
 .indentifier {

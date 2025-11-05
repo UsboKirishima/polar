@@ -104,6 +104,8 @@ onMounted(async () => {
     width: 70%;
     background-color: #a5a6ff13;
     border-radius: 16px;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .photos {
@@ -186,6 +188,8 @@ onMounted(async () => {
     justify-content: center;
     border-radius: 16px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .stats-box div {

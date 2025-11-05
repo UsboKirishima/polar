@@ -30,6 +30,9 @@ const props = defineProps<{
     flex-direction: column;
     justify-content: center;
     border-radius: 16px;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
 }
 
 .container:hover {

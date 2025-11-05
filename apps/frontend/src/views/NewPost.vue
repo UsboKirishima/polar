@@ -182,9 +182,11 @@ input::placeholder {
 }
 
 .background-container {
-    background: #7cb5ff3a;
+    background: #a5a6ff13;
     padding: 1rem;
     border-radius: 16px;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .background {

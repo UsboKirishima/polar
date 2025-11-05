@@ -101,7 +101,7 @@ onMounted(async () => {
 <style scoped>
 .feed-container {
     display: grid;
-    grid-template-columns: 1fr 17vw;
+    grid-template-columns: 1fr clamp(260px, 17vw, 300px);
     min-height: 100vh;
     color: #ffffffc7;
 }

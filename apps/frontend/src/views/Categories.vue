@@ -36,6 +36,9 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.space {
+    width: 100%;
+}
 .container {
     width: 78%;
     margin: 0 auto;
