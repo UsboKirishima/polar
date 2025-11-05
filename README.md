@@ -37,9 +37,8 @@ This is a **monorepo** built with modern tools and best practices:
 - **Caching**: Redis
 - **Authentication**: Better Auth + JWT
 - **File Storage**: ImageKit
-- **Monorepo**: Turborepo + pnpm workspaces + Internal Packages
+- **Monorepo**: Turborepo + pnpm workspaces
 - **Type Safety**: Full end-to-end type safety with tRPC
-- **Package Architecture**: Internal TypeScript packages (no build step required)
 
 ### 📁 Project Structure
 
@@ -57,46 +56,11 @@ polar/
 │   ├── media/                      # File upload and media handling
 │   ├── redis-manager/              # Redis connection management
 │   ├── algorithm/                  # Scoring algorithms
-│   ├── colors/                     # Custom color utilities (chalk fork)
 │   └── typescript-config/          # Shared TypeScript configurations
 ├── design/                         # Design assets and mockups
 ├── scripts/                        # Build and deployment scripts
 └── tools/                          # Development tools and utilities
 ```
-
-### 🎯 Internal Packages Architecture
-
-This monorepo uses **"Internal Packages"** - a modern approach where TypeScript packages point their
-`main` and `types` fields directly to raw `.ts` source files instead of compiled `.js` files. This
-eliminates the need for intermediate build steps while maintaining full type safety.
-
-**Benefits:**
-
-- ⚡ **Zero build step** for internal packages
-- 🔄 **Instant changes** - no need to rebuild packages when making changes
-- 📝 **Full IntelliSense** and type checking across the entire monorepo
-- 🎯 **Simplified development** - consuming applications handle all transpilation
-- 🚀 **Faster CI/CD** - fewer build steps overall
-
-**How it works:**
-
-```json
-{
-    "name": "@polar/utils",
-    "main": "./src/index.ts", // Points directly to TypeScript source
-    "types": "./src/index.ts", // Types field also points to source
-    "exports": {
-        ".": {
-            "import": "./src/index.ts",
-            "require": "./src/index.ts",
-            "types": "./src/index.ts"
-        }
-    }
-}
-```
-
-The consuming applications (frontend/backend) automatically transpile these packages during their
-build process.
 
 ## 🚀 Quick Start
 
@@ -153,9 +117,6 @@ build process.
     pnpm dev --filter=@polar/frontend
     ```
 
-> **Note**: Thanks to internal packages, there's no need to build packages first! The applications
-> will automatically transpile the TypeScript source files.
-
 ## 📜 Available Scripts
 
 ### Root Level Commands
@@ -206,7 +167,7 @@ pnpm --filter="./apps/*" lint
 
 ## 🏭 Development Workflow
 
-### Adding a New Internal Package
+### Adding a New Package
 
 1. Create the package directory:
 
@@ -221,7 +182,7 @@ pnpm --filter="./apps/*" lint
     pnpm init
     ```
 
-3. Update `package.json` following the **Internal Package** pattern:
+3. Update `package.json` following the **package** pattern:
 
     ```json
     {
@@ -265,9 +226,6 @@ pnpm --filter="./apps/*" lint
     echo "export {}" > src/index.ts
     ```
 
-**Important**: Internal packages should NEVER be published to npm. They're meant only for internal
-monorepo use.
-
 ### Working with Dependencies
 
 - **Add workspace dependencies**: Use `workspace:*` protocol
@@ -289,7 +247,7 @@ monorepo use.
 
 ```bash
 # Database
-DATABASE_URL="postgresql://user:password@localhost:5432/polar"
+DATABASE_URL="mariadb://user:password@localhost:5432/polar"
 
 # Redis
 REDIS_URL="redis://localhost:6379"
@@ -342,9 +300,6 @@ pnpm build
 NODE_ENV=production pnpm build
 ```
 
-> **Internal Packages Advantage**: No need to build packages separately! The applications handle all
-> transpilation during their build process, resulting in optimized bundles.
-
 ### Docker Deployment
 
 ```bash
@@ -384,7 +339,7 @@ We welcome contributions! Please follow these guidelines:
 3. Set up pre-commit hooks: `pnpm prepare`
 4. Make your changes and ensure all tests pass: `pnpm test`
 
-**Working with Internal Packages:**
+**Working with Packages:**
 
 - Changes to packages are immediately visible (no build step!)
 - Type checking works across the entire monorepo
@@ -404,9 +359,8 @@ We welcome contributions! Please follow these guidelines:
 
 1. **TypeScript errors**: Run `pnpm type-check` to identify issues across packages
 2. **Module resolution issues**: Clear node_modules and reinstall (`pnpm clean && pnpm install`)
-3. **Database connection**: Verify PostgreSQL is running and connection string is correct
+3. **Database connection**: Verify MariaDB is running and connection string is correct
 4. **Redis connection**: Ensure Redis server is running
-5. **Internal package changes not reflected**: Restart the consuming application (frontend/backend)
 
 ### Getting Help
 
