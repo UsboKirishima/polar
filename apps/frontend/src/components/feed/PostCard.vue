@@ -94,7 +94,7 @@ const handlePostLike = async () => {
         <div class="body" @click="handlePostClick">
             <p class="content">
                 <template v-for="(word, index) in post.text.split(' ')" :key="index">
-                    <a v-if="word.startsWith('#')" :href="`/categories/${word.slice(1)}`" class="hashtag">
+                    <a v-if="word.startsWith('#')" :href="`/categories/n/${word.slice(1)}`" class="hashtag">
                         {{ word }}
                     </a>
                     <a v-else-if="word.startsWith('@')" :href="`/users/u/${word.slice(1)}`" class="tags">{{ word }}</a>

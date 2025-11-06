@@ -8,6 +8,64 @@ const CACHE_KEYS = {
     userFriends: (userId: string) => `freidns:${userId}`
 }
 
+type AllPedindingReq = Awaited<ReturnType<typeof __getAllPendingFriendRequests>>;
+type AllFriendsByUserId = Awaited<ReturnType<typeof __getAllFriendsByUserId>>;
+type AllSentReq = Awaited<ReturnType<typeof __getAllSentRequests>>;
+
+export async function __getAllPendingFriendRequests(userId: string) {
+    return await db.friendRequest.findMany({
+        where: {
+            receiverId: userId,
+            status: "PENDING",
+        },
+        include: {
+            sender: {
+                select: {
+                    id: true,
+                    email: true,
+                    profile: {
+                        include: {
+                            avatar: true,
+                            banner: true
+                        }
+                    },
+                },
+            },
+        },
+    });
+}
+
+export async function __getAllFriendsByUserId(userId: string) {
+    return await db.friendship.findMany({
+        where: { userId },
+        include: {
+            friend: {
+                select: {
+                    id: true,
+                    email: true,
+                    profile: {
+                        include: {
+                            avatar: true,
+                            banner: true
+                        }
+                    },
+                },
+            },
+        },
+    });
+}
+
+export async function __getAllSentRequests(userId: string) {
+    return await db.user.findUnique({
+        where: {
+            id: userId
+        },
+        select: {
+            sentFriendRequests: true
+        }
+    })
+}
+
 /**
  * Creates a new friend requests
  * - Check if the request has been sent to itself.
@@ -116,34 +174,11 @@ export async function removeFriendship(userId: string, friendId: string) {
     })
 }
 
-export async function __getAllPendingFriendRequests(userId: string) {
-    return await db.friendRequest.findMany({
-        where: {
-            receiverId: userId,
-            status: "PENDING",
-        },
-        include: {
-            sender: {
-                select: {
-                    id: true,
-                    email: true,
-                    profile: {
-                        include: {
-                            avatar: true,
-                            banner: true
-                        }
-                    },
-                },
-            },
-        },
-    });
-}
-
 export async function getAllPendingFriendRequests(userId: string) {
     const cacheKey = CACHE_KEYS.pendingRequests(userId);
 
     const cached =
-        await cacheManager.get<ReturnType<typeof __getAllPendingFriendRequests>>(cacheKey);
+        await cacheManager.get<AllPedindingReq>(cacheKey);
     if (cached)
         return cached;
 
@@ -157,31 +192,11 @@ export async function getAllPendingFriendRequests(userId: string) {
     return result;
 }
 
-export async function __getAllFriendsByUserId(userId: string) {
-    return await db.friendship.findMany({
-        where: { userId },
-        include: {
-            friend: {
-                select: {
-                    id: true,
-                    email: true,
-                    profile: {
-                        include: {
-                            avatar: true,
-                            banner: true
-                        }
-                    },
-                },
-            },
-        },
-    });
-}
-
 export async function getAllFriendsByUserId(userId: string) {
     const cacheKey = CACHE_KEYS.userFriends(userId);
 
     const cached =
-        await cacheManager.get<ReturnType<typeof __getAllFriendsByUserId>>(cacheKey)
+        await cacheManager.get<AllFriendsByUserId>(cacheKey)
     if (cached) return cached;
 
     const result = await __getAllFriendsByUserId(userId);
@@ -194,22 +209,11 @@ export async function getAllFriendsByUserId(userId: string) {
     return result;
 }
 
-export async function __getAllSentRequests(userId: string) {
-    return await db.user.findUnique({
-        where: {
-            id: userId
-        },
-        select: {
-            sentFriendRequests: true
-        }
-    })
-}
-
 export async function getAllSentRequests(userId: string) {
     const cacheKey = CACHE_KEYS.sentRequests(userId);
 
     const cached =
-        await cacheManager.get<ReturnType<typeof __getAllSentRequests>>(cacheKey);
+        await cacheManager.get<AllSentReq>(cacheKey);
     if (cached) return cached;
 
     const result = await __getAllSentRequests(userId);

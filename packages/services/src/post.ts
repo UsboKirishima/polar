@@ -3,7 +3,7 @@ import { TPostCategory, TPostCommentSchema, TPostSchema } from "@polar/types/zod
 import { db } from "@polar/db";
 import { cacheManager } from "./cache";
 
-const CACHE_TTL = 60; // Valore di scadenza (60 secondi)
+const CACHE_TTL = 60; // Caching expiration (60 seconds)
 const CACHE_KEYS = {
     post: (postId: string) => `post:${postId}`,
     postsByUser: (userId: string) => `posts:user:${userId}`,
@@ -12,6 +12,257 @@ const CACHE_KEYS = {
     allCategories: "categories:all",
     categoryById: (categoryId: number) => `category:id:${categoryId}`,
     categoryByName: (categoryName: string) => `category:name:${categoryName}`
+}
+
+type GetPostById = Awaited<ReturnType<typeof __getPostByid>>;
+type GetCommentById = Awaited<ReturnType<typeof __getCommentById>>;
+type GetPostByUserId = Awaited<ReturnType<typeof __getPostsByUserId>>;
+type GetAllPosts = Awaited<ReturnType<typeof __getAllPosts>>;
+type GetAllCategories = Awaited<ReturnType<typeof __getAllCategories>>;
+type GetCategoryById = Awaited<ReturnType<typeof __getCategoryById>>;
+type GetCategoryByName = Awaited<ReturnType<typeof __getCategoryByName>>;
+
+/**
+ * Get post by post id
+ */
+export const __getPostByid = async (postId: string) => {
+    return await db.post.findUnique({
+        where: { id: postId },
+        include: {
+            author: {
+                select: {
+                    id: true,
+                    email: true,
+                    role: true,
+                    profile: {
+                        select: {
+                            username: true,
+                            fullName: true,
+                            avatar: true,
+                        },
+                    },
+                },
+            },
+            categories: true,
+            comments: {
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            role: true,
+                            createdAt: true,
+                            updatedAt: true,
+                            profile: {
+                                include: {
+                                    avatar: true
+                                }
+                            }
+                        }
+                    },
+
+                },
+            },
+            likes: {
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            profile: {
+                                select: {
+                                    username: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    });
+};
+
+export const __getCommentById = async (commentId: string) => {
+    return await db.comment.findFirst({
+        where: { id: commentId },
+        include: {
+            user: true
+        }
+    })
+}
+
+/**
+ * Get all posts
+ */
+export const __getAllPosts = async () => {
+    return await db.post.findMany({
+        include: {
+            author: {
+                select: {
+                    id: true,
+                    email: true,
+                    role: true,
+                    profile: {
+                        select: {
+                            username: true,
+                            fullName: true,
+                            avatar: true,
+                            bio: true
+                        },
+                    },
+                },
+            },
+            categories: true,
+            comments: true,
+            likes: {
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            role: true,
+                            profile: {
+                                select: { username: true },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        orderBy: { createdAt: "desc" },
+    });
+};
+
+/**
+ * Get all posts by a given user id
+ */
+export const __getPostsByUserId = async (userId: string) => {
+    return await db.post.findMany({
+        where: { authorId: userId },
+        include: {
+            categories: true,
+            comments: true,
+            author: {
+                select: {
+                    id: true,
+                    role: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    profile: {
+                        include: {
+                            avatar: true,
+                        }
+                    }
+                }
+            },
+            likes: {
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            profile: true,
+                        },
+                    },
+                },
+            },
+        },
+        orderBy: { createdAt: "desc" },
+    });
+};
+
+export const __getAllCategories = async () => {
+    return await db.category.findMany({
+        select: {
+            id: true,
+            name: true,
+            posts: {
+                select: {
+                    id: true
+                }
+            }
+        },
+    })
+}
+
+export const __getCategoryById = async (categoryId: number) => {
+    return await db.category.findUnique({
+        where: {
+            id: categoryId
+        },
+        include: {
+            posts: {
+                include: {
+                    author: {
+                        select: {
+                            id: true,
+                            email: true,
+                            role: true,
+                            profile: {
+                                select: {
+                                    username: true,
+                                    fullName: true,
+                                    bio: true
+                                },
+                            },
+                        },
+                    },
+                    comments: true,
+                    likes: {
+                        include: {
+                            user: {
+                                select: {
+                                    id: true,
+                                    role: true,
+                                    profile: {
+                                        select: { username: true },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                }
+            }
+        }
+    })
+}
+
+export const __getCategoryByName = async (categoryName: string) => {
+    return await db.category.findUnique({
+        where: {
+            name: categoryName
+        },
+        include: {
+            posts: {
+                include: {
+                    author: {
+                        select: {
+                            id: true,
+                            email: true,
+                            role: true,
+                            profile: {
+                                select: {
+                                    username: true,
+                                    fullName: true,
+                                    bio: true
+                                },
+                            },
+                        },
+                    },
+                    comments: true,
+                    likes: {
+                        include: {
+                            user: {
+                                select: {
+                                    id: true,
+                                    role: true,
+                                    profile: {
+                                        select: { username: true },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                }
+            }
+        }
+    })
 }
 
 /**
@@ -215,22 +466,13 @@ export const deleteComment = async (commentId: string) => {
     return result;
 };
 
-export const __getCommentById = async (commentId: string) => {
-    return await db.comment.findFirst({
-        where: { id: commentId },
-        include: {
-            user: true
-        }
-    })
-}
-
 /**
  * Get comment by given id
  */
 export const getCommentById = async (commentId: string) => {
     const cacheKey = CACHE_KEYS.comment(commentId);
     const cached =
-        await cacheManager.get<ReturnType<typeof __getCommentById>>(cacheKey);
+        await cacheManager.get<GetCommentById>(cacheKey);
 
     if (cached) {
         return cached;
@@ -248,70 +490,12 @@ export const getCommentById = async (commentId: string) => {
 }
 
 /**
- * Get post by post id
- */
-export const __getPostByid = async (postId: string) => {
-    return await db.post.findUnique({
-        where: { id: postId },
-        include: {
-            author: {
-                select: {
-                    id: true,
-                    email: true,
-                    role: true,
-                    profile: {
-                        select: {
-                            username: true,
-                            fullName: true,
-                            avatar: true,
-                        },
-                    },
-                },
-            },
-            categories: true,
-            comments: {
-                include: {
-                    user: {
-                        select: {
-                            id: true,
-                            role: true,
-                            createdAt: true,
-                            updatedAt: true,
-                            profile: {
-                                include: {
-                                    avatar: true
-                                }
-                            }
-                        }
-                    },
-
-                },
-            },
-            likes: {
-                include: {
-                    user: {
-                        select: {
-                            id: true,
-                            profile: {
-                                select: {
-                                    username: true,
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        },
-    });
-};
-
-/**
  * Get post by post id (Cache implementation)
  */
 export const getPostByid = async (postId: string) => {
     const cacheKey = CACHE_KEYS.post(postId);
     const cached =
-        await cacheManager.get<ReturnType<typeof __getPostByid>>(cacheKey);
+        await cacheManager.get<GetPostById>(cacheKey);
 
     if (cached) {
         return cached;
@@ -329,49 +513,12 @@ export const getPostByid = async (postId: string) => {
 };
 
 /**
- * Get all posts by a given user id
- */
-export const __getPostsByUserId = async (userId: string) => {
-    return await db.post.findMany({
-        where: { authorId: userId },
-        include: {
-            categories: true,
-            comments: true,
-            author: {
-                select: {
-                    id: true,
-                    role: true,
-                    createdAt: true,
-                    updatedAt: true,
-                    profile: {
-                        include: {
-                            avatar: true,
-                        }
-                    }
-                }
-            },
-            likes: {
-                include: {
-                    user: {
-                        select: {
-                            id: true,
-                            profile: true,
-                        },
-                    },
-                },
-            },
-        },
-        orderBy: { createdAt: "desc" },
-    });
-};
-
-/**
  * Get all posts by a given user id (Cache implementation)
  */
 export const getPostsByUserId = async (userId: string) => {
     const cacheKey = CACHE_KEYS.postsByUser(userId);
     const cached =
-        await cacheManager.get<ReturnType<typeof __getPostsByUserId>>(cacheKey);
+        await cacheManager.get<GetPostByUserId>(cacheKey);
 
     if (cached) {
         return cached;
@@ -389,53 +536,12 @@ export const getPostsByUserId = async (userId: string) => {
 };
 
 /**
- * Get all posts
- */
-export const __getAllPosts = async () => {
-    return await db.post.findMany({
-        include: {
-            author: {
-                select: {
-                    id: true,
-                    email: true,
-                    role: true,
-                    profile: {
-                        select: {
-                            username: true,
-                            fullName: true,
-                            avatar: true,
-                            bio: true
-                        },
-                    },
-                },
-            },
-            categories: true,
-            comments: true,
-            likes: {
-                include: {
-                    user: {
-                        select: {
-                            id: true,
-                            role: true,
-                            profile: {
-                                select: { username: true },
-                            },
-                        },
-                    },
-                },
-            },
-        },
-        orderBy: { createdAt: "desc" },
-    });
-};
-
-/**
  * Get all posts (Cache implementation)
  */
 export const getAllPosts = async () => {
     const cacheKey = CACHE_KEYS.allPosts;
     const cached =
-        await cacheManager.get<ReturnType<typeof __getAllPosts>>(cacheKey);
+        await cacheManager.get<GetAllPosts>(cacheKey);
 
     if (cached) {
         return cached;
@@ -452,27 +558,13 @@ export const getAllPosts = async () => {
     return posts;
 };
 
-export const __getAllCategories = async () => {
-    return await db.category.findMany({
-        select: {
-            id: true,
-            name: true,
-            posts: {
-                select: {
-                    id: true
-                }
-            }
-        },
-    })
-}
-
 /**
  * Get all categories (Cache implementation)
  */
 export const getAllCategories = async () => {
     const cacheKey = CACHE_KEYS.allCategories;
     const cached =
-        await cacheManager.get<ReturnType<typeof __getAllCategories>>(cacheKey);
+        await cacheManager.get<GetAllCategories>(cacheKey);
 
     if (cached) {
         return cached;
@@ -489,55 +581,13 @@ export const getAllCategories = async () => {
     return categories;
 }
 
-export const __getCategoryById = async (categoryId: number) => {
-    return await db.category.findUnique({
-        where: {
-            id: categoryId
-        },
-        include: {
-            posts: {
-                include: {
-                    author: {
-                        select: {
-                            id: true,
-                            email: true,
-                            role: true,
-                            profile: {
-                                select: {
-                                    username: true,
-                                    fullName: true,
-                                    bio: true
-                                },
-                            },
-                        },
-                    },
-                    comments: true,
-                    likes: {
-                        include: {
-                            user: {
-                                select: {
-                                    id: true,
-                                    role: true,
-                                    profile: {
-                                        select: { username: true },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                }
-            }
-        }
-    })
-}
-
 /**
  * Get category by given id (Cache implementation)
  */
 export const getCategoryById = async (categoryId: number) => {
     const cacheKey = CACHE_KEYS.categoryById(categoryId);
     const cached =
-        await cacheManager.get<ReturnType<typeof __getCategoryById>>(cacheKey);
+        await cacheManager.get<GetCategoryById>(cacheKey);
 
     if (cached) {
         return cached;
@@ -554,55 +604,13 @@ export const getCategoryById = async (categoryId: number) => {
     return category;
 }
 
-export const __getCategoryByName = async (categoryName: string) => {
-    return await db.category.findUnique({
-        where: {
-            name: categoryName
-        },
-        include: {
-            posts: {
-                include: {
-                    author: {
-                        select: {
-                            id: true,
-                            email: true,
-                            role: true,
-                            profile: {
-                                select: {
-                                    username: true,
-                                    fullName: true,
-                                    bio: true
-                                },
-                            },
-                        },
-                    },
-                    comments: true,
-                    likes: {
-                        include: {
-                            user: {
-                                select: {
-                                    id: true,
-                                    role: true,
-                                    profile: {
-                                        select: { username: true },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                }
-            }
-        }
-    })
-}
-
 /**
  * Get category by given name (Cache implementation)
  */
 export const getCategoryByName = async (categoryName: string) => {
     const cacheKey = CACHE_KEYS.categoryByName(categoryName);
     const cached =
-        await cacheManager.get<ReturnType<typeof __getCategoryByName>>(cacheKey);
+        await cacheManager.get<GetCategoryByName>(cacheKey);
 
     if (cached) {
         return cached;

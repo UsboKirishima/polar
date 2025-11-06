@@ -13,10 +13,11 @@ const postStore = usePostStore();
 const err = ref('');
 
 onMounted(async () => {
+    console.log(route.params.categoryName)
     if (+route.params.categoryId) {
         category.value = await postStore.getCategoryById(+route.params.categoryId);
     } else if (route.params.categoryName) {
-        category.value = await postStore.getCategoryByName(route.params.categoryName.toString());
+        category.value = await postStore.getCategoryByName(`${route.params.categoryName}`);
     } else {
         err.value = 'Failed to fetch category';
     }

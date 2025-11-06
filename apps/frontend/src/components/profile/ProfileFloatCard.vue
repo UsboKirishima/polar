@@ -20,7 +20,8 @@ const props = defineProps<{
             </div>
         </div>
         <p class="bio">
-            {{ user.profile.bio.length > 50 ? user.profile.bio.slice(0, 50) + '...' : user.profile.bio }}
+            {{ user.profile.bio.length > 50 ? user.profile.bio.slice(0, 50) + '...' : user.profile.bio == 'unknown' ?
+                'no bio yet' : user.profile.bio }}
         </p>
     </div>
 </template>
