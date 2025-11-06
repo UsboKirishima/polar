@@ -3,8 +3,8 @@ import bcrypt from "bcrypt";
 import type { SimpleProfileSchema, SimpleUserSchema } from "@polar/types/general.js";
 import { db, User } from "@polar/db";
 
-export function findUserByEmail(email: string) {
-    return db.user.findUnique({
+export async function findUserByEmail(email: string) {
+    return await db.user.findUnique({
         where: {
             email,
         },

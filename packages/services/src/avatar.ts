@@ -1,6 +1,12 @@
 import { db } from "@polar/db";
+import { cacheManager } from "./cache";
 
-export const getAvatarByUserId = async (userId: string) => {
+const CACHE_TTL = 60; // Expiriation value (60 seconds)
+const CACHE_KEYS = {
+    userAvatar: (userId: string) => `userAvatar:${userId}`
+}
+
+export const __getAvatarByUserId = async (userId: string) => {
     return await db.avatar.findFirst({
         where: {
             profile: {
@@ -18,8 +24,29 @@ export const getAvatarByUserId = async (userId: string) => {
     })
 }
 
+export const getAvatarByUserId = async (userId: string) => {
+    const cacheKey = CACHE_KEYS.userAvatar(userId);
+    const cached = await cacheManager.get<ReturnType<typeof __getAvatarByUserId>>(cacheKey);
+
+    if (cached) {
+        return cached;
+    }
+
+    const avatar = await __getAvatarByUserId(userId);
+
+    if (avatar) {
+        await cacheManager.set(cacheKey, avatar, {
+            ttl: CACHE_TTL
+        });
+    }
+
+    return avatar;
+}
+
 export const uploadAvatar = async (userId: string, avatarUrl: string) => {
-    return await db.profile.update({
+    const cacheKey = CACHE_KEYS.userAvatar(userId);
+
+    const result = await db.profile.update({
         where: {
             userId,
         },
@@ -40,9 +67,15 @@ export const uploadAvatar = async (userId: string, avatarUrl: string) => {
             avatar: true,
         },
     });
+
+    await cacheManager.delete(cacheKey);
+
+    return result;
 }
 
 export const deleteAvatar = async (userId: string) => {
+    const cacheKey = CACHE_KEYS.userAvatar(userId);
+
     const profile = await db.profile.findUnique({
         where: { userId },
         select: { avatarId: true },
@@ -56,7 +89,7 @@ export const deleteAvatar = async (userId: string) => {
         throw new Error("This user has no avatar to delete.");
     }
 
-    return await db.$transaction([
+    const result = await db.$transaction([
         db.profile.update({
             where: { userId },
             data: { avatarId: null },
@@ -65,4 +98,8 @@ export const deleteAvatar = async (userId: string) => {
             where: { id: profile.avatarId },
         }),
     ]);
+
+    await cacheManager.delete(cacheKey);
+
+    return result;
 };

@@ -1,6 +1,12 @@
 import { db } from "@polar/db";
+import { cacheManager } from "./cache";
 
-export const getBannerByUserId = async (userId: string) => {
+const CACHE_TTL = 60; // Expiriation value (60 seconds)
+const CACHE_KEYS = {
+    userBanner: (userId: string) => `userBanner:${userId}`
+}
+
+export const __getBannerByUserId = async (userId: string) => {
     return await db.banner.findFirst({
         where: {
             profile: {
@@ -18,8 +24,29 @@ export const getBannerByUserId = async (userId: string) => {
     })
 }
 
+export const getBannerByUserId = async (userId: string) => {
+    const cacheKey = CACHE_KEYS.userBanner(userId);
+    const cached = await cacheManager.get<ReturnType<typeof __getBannerByUserId>>(cacheKey);
+
+    if (cached) {
+        return cached;
+    }
+
+    const banner = await __getBannerByUserId(userId);
+
+    if (banner) {
+        await cacheManager.set(cacheKey, banner, {
+            ttl: CACHE_TTL
+        });
+    }
+
+    return banner;
+}
+
 export const uploadBanner = async (userId: string, bannerUrl: string) => {
-    return await db.profile.update({
+    const cacheKey = CACHE_KEYS.userBanner(userId);
+
+    const result = await db.profile.update({
         where: {
             userId,
         },
@@ -40,9 +67,15 @@ export const uploadBanner = async (userId: string, bannerUrl: string) => {
             banner: true,
         },
     });
+
+    await cacheManager.delete(cacheKey);
+
+    return result;
 }
 
 export const deleteBanner = async (userId: string) => {
+    const cacheKey = CACHE_KEYS.userBanner(userId);
+
     const profile = await db.profile.findUnique({
         where: { userId },
         select: { bannerId: true },
@@ -56,7 +89,7 @@ export const deleteBanner = async (userId: string) => {
         throw new Error("This user has no banner to delete.");
     }
 
-    return await db.$transaction([
+    const result = await db.$transaction([
         db.profile.update({
             where: { userId },
             data: { bannerId: null },
@@ -65,4 +98,8 @@ export const deleteBanner = async (userId: string) => {
             where: { id: profile.bannerId },
         }),
     ]);
+
+    await cacheManager.delete(cacheKey);
+
+    return result;
 };

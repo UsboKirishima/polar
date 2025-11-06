@@ -17,7 +17,7 @@ export interface CacheSetOptions {
 /**
  * The relaxed type for the redis.createClient type.
  */
-type RedisInstance = ReturnType<typeof createClient>;
+export type RedisInstance = RedisClientType;
 
 /**
  * ## CacheManager
@@ -44,7 +44,7 @@ export default class CacheManager {
         if (opts?.retry_delay)
             this.retry_delay = opts.retry_delay;
 
-        this.client = client;
+        this.client = client as RedisClientType;
     }
 
     /**
@@ -87,7 +87,7 @@ export default class CacheManager {
      * @return {*}  {(Promise<T | null>)}
      * @memberof CacheManager
      */
-    public async get<T extends object>(key: CacheKey): Promise<T | null> {
+    public async get<T>(key: CacheKey): Promise<T | null> {
         if (!this.client.isOpen)
             await this.connect();
 
@@ -151,7 +151,7 @@ export default class CacheManager {
         return JSON.stringify(obj);
     }
 
-    private deserializeJSON<T extends object>(str: string): T | null {
+    private deserializeJSON<T>(str: string): T | null {
         try {
             return JSON.parse(str) as T;
         } catch (e) {

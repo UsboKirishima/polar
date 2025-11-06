@@ -4,7 +4,6 @@ import { authRouter } from "./auth";
 import { friendRouter } from "./friend";
 import { userRouter } from "./user";
 
-
 export {
     postRouter,
     authRouter,
