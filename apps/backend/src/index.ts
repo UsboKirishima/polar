@@ -18,21 +18,11 @@ __________      .__
                           \/                         
 `;
 
-/* Cache system intialization */
-const redisClient = redis.createClient({
-    url: env.REDIS_URL ?? 'redis://localhost:6379',
-});
-export const cacheManager = new CacheManager(redisClient, {
-    max_retries: 5,
-    retry_delay: 500,
-});
-
 const port = env.PORT;
 const serverListen = server.listen(port, () => {
     /* eslint-disable no-console */
     console.log(asciiArt);
     logger.info(chalk.bgGreen.black(`Listening: http://localhost:${port}`));
-    cacheManager.connect();
     /* eslint-enable no-console */
 });
 

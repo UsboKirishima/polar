@@ -1,6 +1,18 @@
 import { PostBgColor } from "@polar/db";
 import { TPostCategory, TPostCommentSchema, TPostSchema } from "@polar/types/zod";
 import { db } from "@polar/db";
+import { cacheManager } from "./cache";
+
+const CACHE_TTL = 60; // Valore di scadenza (60 secondi)
+const CACHE_KEYS = {
+    post: (postId: string) => `post:${postId}`,
+    postsByUser: (userId: string) => `posts:user:${userId}`,
+    allPosts: "posts:all",
+    comment: (commentId: string) => `comment:${commentId}`,
+    allCategories: "categories:all",
+    categoryById: (categoryId: number) => `category:id:${categoryId}`,
+    categoryByName: (categoryName: string) => `category:name:${categoryName}`
+}
 
 /**
  * Create new post by given post and user id
@@ -10,7 +22,7 @@ export const createNewPost = async (
     post: TPostSchema,
     categories: TPostCategory[]
 ) => {
-    return await db.post.create({
+    const newPost = await db.post.create({
         data: {
             text: post.text,
             authorId: userId,
@@ -38,15 +50,40 @@ export const createNewPost = async (
             },
         },
     });
+
+    await cacheManager.delete(CACHE_KEYS.postsByUser(userId));
+    await cacheManager.delete(CACHE_KEYS.allPosts);
+
+    await cacheManager.delete(CACHE_KEYS.allCategories);
+    categories.forEach(async (cat) => {
+        await cacheManager.delete(CACHE_KEYS.categoryByName(cat.name));
+    });
+
+    return newPost;
 };
 
 /**
  * Delete a post by given post id
  */
 export const deletePost = async (postId: string) => {
-    return await db.post.delete({
+    const postToDelete = await db.post.findUnique({
+        where: { id: postId },
+        select: { authorId: true }
+    });
+
+    if (!postToDelete) {
+        throw new Error("Post not found.");
+    }
+
+    const result = await db.post.delete({
         where: { id: postId },
     });
+
+    await cacheManager.delete(CACHE_KEYS.post(postId));
+    await cacheManager.delete(CACHE_KEYS.postsByUser(postToDelete.authorId));
+    await cacheManager.delete(CACHE_KEYS.allPosts);
+
+    return result;
 };
 
 /**
@@ -54,6 +91,15 @@ export const deletePost = async (postId: string) => {
  * (Toggle-like behavior)
  */
 export const likePost = async (postId: string, userId: string) => {
+    const post = await db.post.findUnique({
+        where: { id: postId },
+        select: { authorId: true }
+    });
+
+    if (!post) {
+        throw new Error("Post not found.");
+    }
+
     const existingLike = await db.like.findFirst({
         where: {
             postId,
@@ -61,16 +107,17 @@ export const likePost = async (postId: string, userId: string) => {
         },
     });
 
+    let result;
     if (existingLike) {
         // Unlike -> delete the like record
         await db.like.delete({
             where: { id: existingLike.id },
         });
 
-        return { message: "Post unliked successfully" };
+        result = { message: "Post unliked successfully" };
     } else {
         // Like -> create a new like record
-        return await db.like.create({
+        result = await db.like.create({
             data: {
                 postId,
                 userId,
@@ -89,6 +136,13 @@ export const likePost = async (postId: string, userId: string) => {
             },
         });
     }
+
+    await cacheManager.delete(CACHE_KEYS.post(postId));
+    await cacheManager.delete(CACHE_KEYS.postsByUser(post.authorId));
+    await cacheManager.delete(CACHE_KEYS.allPosts);
+
+
+    return result;
 };
 
 /**
@@ -99,7 +153,16 @@ export const createNewComment = async (
     comment: TPostCommentSchema,
     postId: string
 ) => {
-    return await db.comment.create({
+    const post = await db.post.findUnique({
+        where: { id: postId },
+        select: { authorId: true }
+    });
+
+    if (!post) {
+        throw new Error("Post not found.");
+    }
+
+    const newComment = await db.comment.create({
         data: {
             userId: userId,
             text: comment.text,
@@ -110,21 +173,49 @@ export const createNewComment = async (
             user: true
         },
     });
+
+    await cacheManager.delete(CACHE_KEYS.post(postId));
+    await cacheManager.delete(CACHE_KEYS.postsByUser(post.authorId));
+    await cacheManager.delete(CACHE_KEYS.allPosts);
+
+    return newComment;
 };
 
 /**
  * Delete comment by given comment id
  */
 export const deleteComment = async (commentId: string) => {
-    return await db.comment.delete({
+    const commentToDelete = await db.comment.findUnique({
+        where: { id: commentId },
+        select: { postId: true }
+    });
+
+    if (!commentToDelete) {
+        throw new Error("Comment not found.");
+    }
+
+    const post = await db.post.findUnique({
+        where: { id: commentToDelete.postId },
+        select: { authorId: true }
+    });
+
+    if (!post) {
+        throw new Error("Post for comment not found.");
+    }
+
+    const result = await db.comment.delete({
         where: { id: commentId },
     });
+
+    await cacheManager.delete(CACHE_KEYS.comment(commentId));
+    await cacheManager.delete(CACHE_KEYS.post(commentToDelete.postId));
+    await cacheManager.delete(CACHE_KEYS.postsByUser(post.authorId));
+    await cacheManager.delete(CACHE_KEYS.allPosts);
+
+    return result;
 };
 
-/**
- * Get comment by given id
- */
-export const getCommentById = async (commentId: string) => {
+export const __getCommentById = async (commentId: string) => {
     return await db.comment.findFirst({
         where: { id: commentId },
         include: {
@@ -134,9 +225,32 @@ export const getCommentById = async (commentId: string) => {
 }
 
 /**
+ * Get comment by given id
+ */
+export const getCommentById = async (commentId: string) => {
+    const cacheKey = CACHE_KEYS.comment(commentId);
+    const cached =
+        await cacheManager.get<ReturnType<typeof __getCommentById>>(cacheKey);
+
+    if (cached) {
+        return cached;
+    }
+
+    const comment = await __getCommentById(commentId);
+
+    if (comment) {
+        await cacheManager.set(cacheKey, comment, {
+            ttl: CACHE_TTL
+        });
+    }
+
+    return comment;
+}
+
+/**
  * Get post by post id
  */
-export const getPostByid = async (postId: string) => {
+export const __getPostByid = async (postId: string) => {
     return await db.post.findUnique({
         where: { id: postId },
         include: {
@@ -192,9 +306,32 @@ export const getPostByid = async (postId: string) => {
 };
 
 /**
+ * Get post by post id (Cache implementation)
+ */
+export const getPostByid = async (postId: string) => {
+    const cacheKey = CACHE_KEYS.post(postId);
+    const cached =
+        await cacheManager.get<ReturnType<typeof __getPostByid>>(cacheKey);
+
+    if (cached) {
+        return cached;
+    }
+
+    const post = await __getPostByid(postId);
+
+    if (post) {
+        await cacheManager.set(cacheKey, post, {
+            ttl: CACHE_TTL
+        });
+    }
+
+    return post;
+};
+
+/**
  * Get all posts by a given user id
  */
-export const getPostsByUserId = async (userId: string) => {
+export const __getPostsByUserId = async (userId: string) => {
     return await db.post.findMany({
         where: { authorId: userId },
         include: {
@@ -229,9 +366,32 @@ export const getPostsByUserId = async (userId: string) => {
 };
 
 /**
+ * Get all posts by a given user id (Cache implementation)
+ */
+export const getPostsByUserId = async (userId: string) => {
+    const cacheKey = CACHE_KEYS.postsByUser(userId);
+    const cached =
+        await cacheManager.get<ReturnType<typeof __getPostsByUserId>>(cacheKey);
+
+    if (cached) {
+        return cached;
+    }
+
+    const posts = await __getPostsByUserId(userId);
+
+    if (posts && posts.length > 0) {
+        await cacheManager.set(cacheKey, posts, {
+            ttl: CACHE_TTL
+        });
+    }
+
+    return posts;
+};
+
+/**
  * Get all posts
  */
-export const getAllPosts = async () => {
+export const __getAllPosts = async () => {
     return await db.post.findMany({
         include: {
             author: {
@@ -269,7 +429,30 @@ export const getAllPosts = async () => {
     });
 };
 
-export const getAllCategories = async () => {
+/**
+ * Get all posts (Cache implementation)
+ */
+export const getAllPosts = async () => {
+    const cacheKey = CACHE_KEYS.allPosts;
+    const cached =
+        await cacheManager.get<ReturnType<typeof __getAllPosts>>(cacheKey);
+
+    if (cached) {
+        return cached;
+    }
+
+    const posts = await __getAllPosts();
+
+    if (posts && posts.length > 0) {
+        await cacheManager.set(cacheKey, posts, {
+            ttl: CACHE_TTL
+        });
+    }
+
+    return posts;
+};
+
+export const __getAllCategories = async () => {
     return await db.category.findMany({
         select: {
             id: true,
@@ -283,7 +466,30 @@ export const getAllCategories = async () => {
     })
 }
 
-export const getCategoryById = async (categoryId: number) => {
+/**
+ * Get all categories (Cache implementation)
+ */
+export const getAllCategories = async () => {
+    const cacheKey = CACHE_KEYS.allCategories;
+    const cached =
+        await cacheManager.get<ReturnType<typeof __getAllCategories>>(cacheKey);
+
+    if (cached) {
+        return cached;
+    }
+
+    const categories = await __getAllCategories();
+
+    if (categories && categories.length > 0) {
+        await cacheManager.set(cacheKey, categories, {
+            ttl: CACHE_TTL
+        });
+    }
+
+    return categories;
+}
+
+export const __getCategoryById = async (categoryId: number) => {
     return await db.category.findUnique({
         where: {
             id: categoryId
@@ -325,7 +531,30 @@ export const getCategoryById = async (categoryId: number) => {
     })
 }
 
-export const getCategoryByName = async (categoryName: string) => {
+/**
+ * Get category by given id (Cache implementation)
+ */
+export const getCategoryById = async (categoryId: number) => {
+    const cacheKey = CACHE_KEYS.categoryById(categoryId);
+    const cached =
+        await cacheManager.get<ReturnType<typeof __getCategoryById>>(cacheKey);
+
+    if (cached) {
+        return cached;
+    }
+
+    const category = await __getCategoryById(categoryId);
+
+    if (category) {
+        await cacheManager.set(cacheKey, category, {
+            ttl: CACHE_TTL
+        });
+    }
+
+    return category;
+}
+
+export const __getCategoryByName = async (categoryName: string) => {
     return await db.category.findUnique({
         where: {
             name: categoryName
@@ -367,8 +596,40 @@ export const getCategoryByName = async (categoryName: string) => {
     })
 }
 
+/**
+ * Get category by given name (Cache implementation)
+ */
+export const getCategoryByName = async (categoryName: string) => {
+    const cacheKey = CACHE_KEYS.categoryByName(categoryName);
+    const cached =
+        await cacheManager.get<ReturnType<typeof __getCategoryByName>>(cacheKey);
+
+    if (cached) {
+        return cached;
+    }
+
+    const category = await __getCategoryByName(categoryName);
+
+    if (category) {
+        await cacheManager.set(cacheKey, category, {
+            ttl: CACHE_TTL
+        });
+    }
+
+    return category;
+}
+
 export const updatePost = async (postId: string, newPostInformation: TPostSchema) => {
-    return await db.post.update({
+    const post = await db.post.findUnique({
+        where: { id: postId },
+        select: { authorId: true, categories: true }
+    });
+
+    if (!post) {
+        throw new Error("Post not found.");
+    }
+
+    const result = await db.post.update({
         where: {
             id: postId
         },
@@ -379,6 +640,20 @@ export const updatePost = async (postId: string, newPostInformation: TPostSchema
             }
         }
     })
+
+    await cacheManager.delete(CACHE_KEYS.post(postId));
+    await cacheManager.delete(CACHE_KEYS.postsByUser(post.authorId));
+    await cacheManager.delete(CACHE_KEYS.allPosts);
+
+    await cacheManager.delete(CACHE_KEYS.allCategories);
+    post.categories.forEach(async (cat) => {
+        await cacheManager.delete(CACHE_KEYS.categoryByName(cat.name));
+    });
+    newPostInformation.categories.forEach(async (cat) => {
+        await cacheManager.delete(CACHE_KEYS.categoryByName(cat.name));
+    });
+
+    return result;
 }
 
 export const searchCategory = async (query: string, limit: number = 20) => {
