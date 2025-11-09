@@ -117,6 +117,18 @@ onMounted(async () => {
 }
 
 @media (max-width: 768px) {
+    .feed-space {
+        padding: 0;
+    }
+
+    .feed-container {
+        display: flex;
+        grid-template-columns: none;
+        margin: 0 auto;
+        justify-content: center;
+        width: 100vw;
+    }
+
     .bar {
         display: none;
     }

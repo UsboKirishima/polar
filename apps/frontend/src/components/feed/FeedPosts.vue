@@ -21,4 +21,12 @@ div {
     width: 90%;
     margin: 0 auto;
 }
+
+
+@media (max-width: 768px) {
+    div {
+        width: 90%;
+        margin: 0 auto;
+    }
+}
 </style>

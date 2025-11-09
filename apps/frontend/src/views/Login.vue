@@ -3,12 +3,15 @@ import api from '@/axiosApi';
 import { onMounted, ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
+import { useDeviceType } from "@/composables/useDeviceType";
 const auth = useAuthStore();
 
 const email = ref('');
 const password = ref('');
 const error = ref('');
 const isLoading = ref(false);
+
+const { deviceType, isMobile } = useDeviceType();
 
 const router = useRouter()
 
@@ -76,97 +79,142 @@ onMounted(() => {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 80vh;
+    min-height: 100vh;
     padding: 20px;
+    box-sizing: border-box;
 }
 
 .login-form {
-    background: #0000002f;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
+    width: 90%;
     max-width: 400px;
+    background: #0000002f;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 h2 {
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     color: #fff;
+    font-size: 1.8rem;
 }
 
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
 }
 
 .forgot_pwd {
+    display: block;
+    text-align: right;
+    font-size: 0.9rem;
+    color: #999;
     text-decoration: none;
-    margin: 2% 0;
-    color: #f5f5f557;
+    transition: color 0.2s;
+}
+
+.forgot_pwd:hover {
+    color: #fff;
 }
 
 label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
+    color: #f0f0f0;
 }
 
 input {
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #f0f0f00a;
-    border-radius: 4px;
+    padding: 0.9rem 1rem;
+    border: 1px solid #ffffff1a;
+    border-radius: 6px;
     font-size: 1rem;
-    color: inherit;
+    color: #fff;
     box-sizing: border-box;
-    background: #f0f0f00a;
+    background: #ffffff0a;
+    transition: border-color 0.2s, background-color 0.2s;
 }
 
 input:focus {
     outline: none;
-    border-color: #f0f0f065;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    border-color: #61afef;
+    background: #ffffff12;
 }
 
 input:disabled {
-    background-color: #f5f5f5;
+    background-color: #333;
     cursor: not-allowed;
+    color: #aaa;
 }
 
 .error-message {
-    background-color: #66101038;
-    color: #c33;
-    padding: 0.75rem;
-    border-radius: 4px;
-    margin-top: 1rem;
+    background-color: #ff000030;
+    color: #ff6666;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-top: 1.5rem;
+    text-align: center;
 }
 
 .login-button {
     width: 100%;
-    padding: 0.75rem;
-    background-color: #f0f0f018;
-    color: white;
+    padding: 1rem;
+    background-color: #61afef;
+    color: #1a1a1a;
     border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-weight: 500;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: bold;
     cursor: pointer;
-    margin-top: 1rem;
-    transition: background-color 0.2s;
-    margin-bottom: 5px;
+    margin-top: 2rem;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 10px rgba(97, 175, 239, 0.4);
 }
 
 .login-button:hover:not(:disabled) {
-    background-color: #f0f0f031;
+    background-color: #79c0ff;
+    box-shadow: 0 4px 15px rgba(97, 175, 239, 0.6);
 }
 
 .login-button:disabled {
-    background-color: #f0f0f007;
+    background-color: #444;
+    color: #777;
     cursor: not-allowed;
+    box-shadow: none;
 }
 
 #register {
+    display: block;
+    text-align: center;
     font-size: 0.9rem;
+    color: #61afef;
     text-decoration: none;
+    transition: color 0.2s;
+}
+
+#register:hover {
+    text-decoration: underline;
+    color: #79c0ff;
+}
+
+@media (max-width: 600px) {
+    .login-container {
+        padding: 10px;
+    }
+
+    .login-form {
+        width: 100%;
+        padding: 1.5rem;
+        margin-top: -15vh;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
 }
 </style>

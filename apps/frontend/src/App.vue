@@ -37,26 +37,40 @@ const { deviceType, isMobile } = useDeviceType();
 
 <template>
     <div class="container">
-        <Sidebar />
+        <Sidebar class="sidebar" />
+        
         <div class="view">
-            <div class="padding"></div>
-            <h1 v-if="isMobile">Mobile Website on development</h1>
-            <router-view v-else class="page" />
+            <router-view class="page" />
         </div>
     </div>
 </template>
 
 <style scoped>
 .container {
-    width: 100%;
-}
-
-.padding {
-    width: 100%;
+    display: grid;
+    grid-template-columns: 14.5% auto; 
+    min-height: 100vh;
+    width: 100vw;
 }
 
 .view {
-    display: grid;
-    grid-template-columns: 14.5% auto;
+    padding: 1.5rem;
+}
+
+
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 100%;
+        min-height: auto;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .view {
+        width: 100%;
+        padding: 0;
+    }
 }
 </style>
