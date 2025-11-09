@@ -199,7 +199,7 @@ const handlePostLike = async () => {
 }
 
 .time {
-    font-size: 0.8rem;
+    font-size: 0.7em;
     color: #ffffff73;
 }
 </style>

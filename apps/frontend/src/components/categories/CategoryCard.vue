@@ -2,17 +2,23 @@
 import type { Category } from '@/types';
 import { faHashtag } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { protectedProcedure } from '@polar/api';
+import { ref } from 'vue';
 
 const props = defineProps<{
     category: Category;
 }>();
+
+const categoryName = ref(props.category.name.length > 10
+    ? props.category.name.slice(0, 10) + '...'
+    : props.category.name)
 
 </script>
 
 <template>
     <div class="container">
         <p class="name">
-            <FontAwesomeIcon :icon="faHashtag" />{{ category.name }}
+            <FontAwesomeIcon :icon="faHashtag" />{{ categoryName }}
         </p>
         <p>{{ category.posts.length }} posts</p>
     </div>
@@ -32,7 +38,7 @@ const props = defineProps<{
     border-radius: 16px;
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    
+
 }
 
 .container:hover {

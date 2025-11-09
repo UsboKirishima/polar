@@ -170,6 +170,8 @@ b {
     width: 98%;
     margin: 0.2rem 0rem;
     background: #7cb5ff3a;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .date {
