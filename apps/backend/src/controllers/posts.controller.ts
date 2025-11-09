@@ -15,7 +15,7 @@ export async function createPost(req: Request, res: Response, next: NextFunction
         }
 
         const { text, categories } = postSchema.parse(req.body);
-        const post = await postService.createNewPost(authorId, { text, categories }, categories);
+        const post = await postService.createNewPost(authorId, { text, categories });
 
         res.status(201).json({ message: 'Post created successfully', post });
     }

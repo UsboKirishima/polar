@@ -39,8 +39,8 @@
   },
   "packageManager": "pnpm@10.20.0",
   "dependencies": {
-    "@polar/media": "workspace:*",
     "@polar/services": "workspace:*",
+    "@polar/media": "workspace:*",
     "@polar/types": "workspace:*",
     "@polar/utils": "workspace:*",
     "@trpc/server": "^11.6.0",

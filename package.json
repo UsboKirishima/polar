@@ -27,8 +27,7 @@
         "db:generate": "turbo run db:generate",
         "db:push": "turbo run db:push",
         "db:migrate": "turbo run db:migrate",
-        "db:studio": "turbo run db:studio",
-        "postinstall": "turbo run postinstall"
+        "db:studio": "turbo run db:studio"
     },
     "keywords": [
         "monorepo",

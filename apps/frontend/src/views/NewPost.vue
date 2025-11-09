@@ -5,33 +5,23 @@ import { usePostStore } from '@/stores/posts';
 import type { Category } from '@/types';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { trpc } from '@/trpc';
+import { colorMap, getColorRgba, type ColorEnum } from '@/utils/colors';
 
 
-const palettes = [
-    [45, 75, 130, 255],   // Deep blue
-    [130, 45, 75, 255],   // Dark magenta
-    [75, 130, 45, 255],   // Dark olive green
-    [130, 100, 45, 255],  // Brownish
-    [75, 45, 130, 255],   // Deep purple
-    [45, 130, 100, 255],  // Teal-ish
-    [100, 45, 130, 255],  // Indigo
-    [130, 75, 45, 255],   // Rust
-    [60, 90, 150, 255],   // Muted blue
-    [150, 60, 90, 255],   // Muted pink
-    [60, 150, 90, 255],   // Muted green
-    [150, 90, 60, 255],   // Burnt orange
-    [90, 60, 150, 255],   // Dark violet
-    [90, 150, 60, 255],   // Dark lime green
-    [120, 60, 120, 255],  // Dark rose
-];
+const { Normal, ...colorMapToShow } = colorMap;
 
 const postStore = usePostStore();
 const router = useRouter();
 
 const postContent = ref('');
-const postColor = ref(palettes[0]);
+const selectedColorKey = ref<ColorEnum>('Normal');
+
+const computedBackgroundColor = computed(() => {
+    return getColorRgba(selectedColorKey.value);
+});
 
 const handleNewPost = async () => {
     //handle categories #
@@ -42,7 +32,12 @@ const handleNewPost = async () => {
     const parsedCategories: { name: string }[] = categories.map(cat => {
         return { name: cat.slice(1) };
     })
-    await postStore.createNewPost(postContent.value, parsedCategories);
+    //await postStore.createNewPost(postContent.value, parsedCategories);
+    await trpc.post.create.mutate({
+        text: postContent.value.trim(),
+        categories: parsedCategories,
+        color: selectedColorKey.value
+    })
     postContent.value = '';
     await postStore.fetchAllPosts();
     router.push('/feed');
@@ -71,7 +66,7 @@ const auth = useAuthStore();
         </div>
 
         <div class="body">
-            <div class="create" :style="{ background: `rgba(${postColor.join(',')})` }">
+            <div class="create" :style="{ background: computedBackgroundColor }">
                 <div class="profile">
                     <Userinfo :user="auth.user" disable-over />
                 </div>
@@ -85,8 +80,9 @@ const auth = useAuthStore();
             <div class="background-container">
                 <h2>Palette</h2>
                 <div class="background">
-                    <div class="palette" v-for="palette in palettes" @click="postColor = palette"
-                        :style="{ background: `rgba(${palette.join(',')})` }">
+                    <div class="palette" v-for="(colorArray, key) in colorMapToShow" :key="key"
+                        @click="selectedColorKey = key as ColorEnum"
+                        :style="{ background: `rgba(${colorArray.join(',')})` }">
                     </div>
 
                 </div>

@@ -19,6 +19,13 @@ const PostBgColor = {
     Normal: "Normal"
 }
 
+export const PostBgColorEnum = z.enum([
+    "Deep_blue", "Dark_magenta", "Dark_olive", "Brownish", "Deep_purple",
+    "Teal_ish", "Indigo", "Rust", "Muted_blue", "Muted_pink",
+    "Muted_green", "Burnt_orange", "Dark_violet", "Dark_lime",
+    "Dark_rose", "Normal"
+]);
+
 // ------------------- Profile Schema -------------------
 const profileBaseSchema = {
     username: z.string().min(4, { message: "username must be at least 4 characters long" }).max(20, {
@@ -70,12 +77,10 @@ export const commentSchema = z.object({
 const postBaseSchema = {
     text: z.string()
         .min(10, { message: "post content must be at least 10 characters long" })
-        .max(512, { message: "content cannot be longer than 30 characters" }),
+        .max(512, { message: "content cannot be longer than 512 characters" }),
     categories: categorySchema.array().default([]),
     /* Check color provided */
-    color: z.string().refine((val) => val in PostBgColor, {
-        message: `Invalid color, try (${Object.keys(PostBgColor).join(", ")}) `,
-    }).optional()
+    color: PostBgColorEnum.optional()
 };
 
 export const postSchema = z.object(postBaseSchema);

@@ -81,44 +81,49 @@ onMounted(async () => {
         <HeaderBar><b>Preferences</b></HeaderBar>
 
         <div class="settings">
-            <div class="media">
-                <div class="upload-section">
-                    <label for="avatarFile" class="image-label">
-                        <img class="avatar" :src="avatarPreview ?? '/pfp_placeholder.png'" alt="Avatar Preview" />
-                        <span class="overlay-text">Click to change avatar</span>
-                    </label>
-                    <input type="file" id="avatarFile" accept="image/*" @change="(e) => handleFileChange(e, 'avatar')"
-                        hidden />
+            <div class="sub">
+                <h3>Media</h3>
+                <hr>
+                <div class="media">
+                    <div class="upload-section">
+                        <label for="avatarFile" class="image-label">
+                            <img class="avatar" :src="avatarPreview ?? '/pfp_placeholder.png'" alt="Avatar Preview" />
+                            <span class="overlay-text">Click to change avatar</span>
+                        </label>
+                        <input type="file" id="avatarFile" accept="image/*"
+                            @change="(e) => handleFileChange(e, 'avatar')" hidden />
+                    </div>
+
+                    <div class="upload-section">
+                        <label for="bannerFile" class="image-label">
+                            <img class="banner" :src="bannerPreview ?? '/bg_placeholder.jpg'" alt="Banner Preview" />
+                            <span class="overlay-text">Click to change banner</span>
+                        </label>
+                        <input type="file" id="bannerFile" accept="image/*"
+                            @change="(e) => handleFileChange(e, 'banner')" hidden />
+                    </div>
                 </div>
 
-                <div class="upload-section">
-                    <label for="bannerFile" class="image-label">
-                        <img class="banner" :src="bannerPreview ?? '/bg_placeholder.jpg'" alt="Banner Preview" />
-                        <span class="overlay-text">Click to change banner</span>
-                    </label>
-                    <input type="file" id="bannerFile" accept="image/*" @change="(e) => handleFileChange(e, 'banner')"
-                        hidden />
+                <div class="bio-section">
+                    <div class="bio-input">
+                        <label for="bio">Biography</label>
+                        <hr>
+                        <textarea rows="1" name="bio" id="bio" placeholder="Write something about yourself..."
+                            v-model="bio" @input="autoResize"></textarea>
+                    </div>
                 </div>
+                <button class="save" @click="uploadAll">
+                    {{ !isUploading ? 'Save' : 'Loading' }}
+                </button>
             </div>
 
-            <div class="bio-section">
-                <div class="bio-input">
-                    <label for="bio">Biography</label>
-                    <textarea rows="1" name="bio" id="bio" placeholder="Write something about yourself..." v-model="bio"
-                        @input="autoResize"></textarea>
-                </div>
-            </div>
-
-            <button class="save" @click="uploadAll">
-                {{ !isUploading ? 'Save' : 'Loading' }}
-            </button>
         </div>
     </div>
 </template>
 
 <style scoped>
 .settings {
-    width: 78%;
+    width: 68%;
     margin: 0 auto;
     padding: 2rem;
     background: #a5a6ff13;
@@ -126,9 +131,12 @@ onMounted(async () => {
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-label {
+label,
+h3 {
     display: block;
     margin-bottom: 10px;
     font-weight: 700;
@@ -138,16 +146,19 @@ label {
 .media {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
-    justify-content: flex-start;
+    align-items: center;
+    justify-content: start;
+    width: 100%;
     gap: 2rem;
+    margin-bottom: 2rem;
+    margin-top: 1rem;
 }
 
 .upload-section {
     position: relative;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
 }
 
 input[type="file"] {
@@ -163,6 +174,11 @@ input[type="file"] {
 
 .image-label:hover {
     transform: scale(1.03);
+}
+
+.sub {
+    width: 60%;
+    margin: 0 auto;
 }
 
 .overlay-text {
@@ -206,28 +222,33 @@ input[type="file"] {
 .bio-section {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+}
+
+.bio-input {
+    width: 100%;
 }
 
 textarea {
     background-color: #a369ff10;
     border: 1px solid #f7f7f750;
-    width: 28rem;
-    min-height: 35px;
+    width: 90%;
+    min-height: 5rem;
     border-radius: 16px;
     outline: none;
     color: #fff;
     font-size: 1rem;
+    margin-top: 1rem;
     padding: 10px;
     resize: none;
     overflow: hidden;
+    font-family: Arial, sans-serif;
     line-height: 1.4;
     transition: border 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
 
 textarea:focus {
-    border-color: #a369ff80;
-    background-color: #a369ff20;
+    background-color: #a68dff20;
 }
 
 textarea::placeholder {
@@ -240,11 +261,14 @@ textarea::placeholder {
     height: 2rem;
     border: none;
     background: #c978ff21;
-    border-radius: 16px;
+    border-radius: 12px;
     color: #ffffffd0;
     font-weight: 700;
     cursor: pointer;
     transition: 300ms;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 2rem;
 }
 
 .save:hover {

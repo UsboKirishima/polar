@@ -8,29 +8,16 @@ import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Username from '../Username.vue';
 import ProfileFloatCard from '../profile/ProfileFloatCard.vue';
+import { colorMap, getColorRgba, type ColorEnum } from '@/utils/colors';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
+dayjs.extend(relativeTime);
 
 const props = defineProps<{
     post: Post;
 }>();
 
-const palettes = [
-    [45, 75, 130, 255],   // Deep blue
-    [130, 45, 75, 255],   // Dark magenta
-    [75, 130, 45, 255],   // Dark olive green
-    [130, 100, 45, 255],  // Brownish
-    [75, 45, 130, 255],   // Deep purple
-    [45, 130, 100, 255],  // Teal-ish
-    [100, 45, 130, 255],  // Indigo
-    [130, 75, 45, 255],   // Rust
-    [60, 90, 150, 255],   // Muted blue
-    [150, 60, 90, 255],   // Muted pink
-    [60, 150, 90, 255],   // Muted green
-    [150, 90, 60, 255],   // Burnt orange
-    [90, 60, 150, 255],   // Dark violet
-    [90, 150, 60, 255],   // Dark lime green
-    [120, 60, 120, 255],  // Dark rose
-];
 
 // -------- Hover Card ---------
 const profileHover = ref(false);
@@ -41,13 +28,6 @@ const handleMouseMove = (event: MouseEvent) => {
     mouseX.value = event.clientX;
     mouseY.value = event.clientY;
 };
-
-
-const randomColor = () => {
-    const [r, g, b, a] = palettes[Math.floor(Math.random() * palettes.length)];
-    // Convert alpha from 0-255 to 0-1
-    return `background: rgba(${r}, ${g}, ${b}, ${a / 255});`
-}
 
 const router = useRouter();
 const postStore = usePostStore();
@@ -77,7 +57,7 @@ const handlePostLike = async () => {
 </script>
 
 <template>
-    <div class="post-container" :style="{ background: '#7cb5ff13' }">
+    <div class="post-container" :style="{ background: getColorRgba(post.color as ColorEnum) }">
         <div @mouseenter="profileHover = true" @mouseleave="profileHover = false" @mousemove="handleMouseMove">
             <router-link :to="`/users/${post.author.id}`" class="post-header">
                 <Transition name="fade-slide">
@@ -111,6 +91,9 @@ const handlePostLike = async () => {
             <div @click="handlePostClick">
                 <FontAwesomeIcon :icon="faCommentDots" />
                 <p class="count">{{ postMutable.comments.length || 0 }}</p>
+            </div>
+            <div>
+                <p class="time">{{ dayjs(postMutable.createdAt).fromNow() }}</p>
             </div>
         </div>
     </div>
@@ -213,5 +196,10 @@ const handlePostLike = async () => {
 .fade-slide-leave-from {
     opacity: 1;
     transform: translateY(0);
+}
+
+.time {
+    font-size: 0.8rem;
+    color: #ffffff73;
 }
 </style>

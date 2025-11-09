@@ -270,8 +270,7 @@ export const __getCategoryByName = async (categoryName: string) => {
  */
 export const createNewPost = async (
     userId: string,
-    post: TPostSchema,
-    categories: TPostCategory[]
+    post: TPostSchema
 ) => {
     const newPost = await db.post.create({
         data: {
@@ -279,7 +278,7 @@ export const createNewPost = async (
             authorId: userId,
             color: post.color as PostBgColor,
             categories: {
-                connectOrCreate: categories.map((cat) => ({
+                connectOrCreate: post.categories.map((cat) => ({
                     where: { name: cat.name },
                     create: { name: cat.name },
                 })),
@@ -306,7 +305,7 @@ export const createNewPost = async (
     await cacheManager.delete(CACHE_KEYS.allPosts);
 
     await cacheManager.delete(CACHE_KEYS.allCategories);
-    categories.forEach(async (cat) => {
+    post.categories.forEach(async (cat) => {
         await cacheManager.delete(CACHE_KEYS.categoryByName(cat.name));
     });
 

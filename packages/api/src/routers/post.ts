@@ -73,10 +73,12 @@ export const postRouter = t.router({
         .input(postSchema)
         .mutation(async ({ input, ctx }) => {
             try {
+                console.log(input);
                 const newPost = await postService.createNewPost(ctx.user.userId, {
                     text: input.text,
-                    categories: input.categories
-                }, input.categories);
+                    categories: input.categories,
+                    color: input.color
+                });
 
                 return newPost;
             } catch (error) {

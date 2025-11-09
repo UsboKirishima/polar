@@ -75,4 +75,5 @@ export interface Post {
     categories: Category[];
     comments: PostComment[];
     likes: Like[];
+    color: string;
 }
