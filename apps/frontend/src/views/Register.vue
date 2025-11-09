@@ -9,7 +9,7 @@ const router = useRouter()
 
 const email = ref('');
 const username = ref('');
-const dayOfBirth = ref(''); 
+const dayOfBirth = ref('');
 const password = ref('');
 const fullname = ref('');
 const confirmPassword = ref('');
@@ -18,12 +18,12 @@ const isLoading = ref(false);
 
 const handleRegister = async () => {
     error.value = '';
-    
+
     if (password.value !== confirmPassword.value) {
         error.value = 'Passwords do not match.';
         return;
     }
-    
+
     const dob = dayOfBirth.value ? new Date(dayOfBirth.value) : new Date();
 
     const success = await auth.register(email.value, password.value, username.value, dob, fullname.value);
@@ -67,8 +67,8 @@ onMounted(() => {
 
             <div class="form-group">
                 <label for="fullname">Full Name:</label>
-                <input id="fullname" type="text" v-model="fullname" @keypress="handleKeyPress" placeholder="Your Full Name"
-                    required :disabled="isLoading" />
+                <input id="fullname" type="text" v-model="fullname" @keypress="handleKeyPress"
+                    placeholder="Your Full Name" required :disabled="isLoading" />
             </div>
 
             <div class="form-group">
@@ -93,13 +93,13 @@ onMounted(() => {
                 {{ error }}
             </div>
 
-            <button type="submit" 
+            <button type="submit"
                 :disabled="isLoading || !email || !password || !confirmPassword || !username || !fullname || !dayOfBirth || password !== confirmPassword"
                 class="register-button">
                 <span v-if="isLoading">Loading...</span>
                 <span v-else>Register</span>
             </button>
-            
+
             <router-link id="login" to="/login">Already have an account? Login</router-link>
         </form>
     </div>
@@ -116,10 +116,10 @@ onMounted(() => {
 }
 
 .register-form {
-    width: 90%; 
+    width: 90%;
     max-width: 450px;
-    background: #0000002f; 
-    backdrop-filter: blur(8px); 
+    background: #0000002f;
+    backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     padding: 2.5rem;
     border-radius: 12px;
@@ -158,7 +158,7 @@ input {
 }
 
 input[type="date"] {
-    color-scheme: dark; 
+    color-scheme: dark;
 }
 
 input:focus {
@@ -229,12 +229,13 @@ input:disabled {
         padding: 10px;
         min-height: 100vh;
         align-items: flex-start;
+        width: 100vw;
     }
 
     .register-form {
-        width: 100%; 
+        width: 100%;
         padding: 1.5rem;
-        margin-top: 5vh; 
+        margin-top: 5vh;
         margin-bottom: 5vh;
     }
 

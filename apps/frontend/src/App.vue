@@ -38,8 +38,8 @@ const { deviceType, isMobile } = useDeviceType();
 <template>
     <div class="container">
         <Sidebar class="sidebar" />
-        
         <div class="view">
+            <div class="padding"></div>
             <router-view class="page" />
         </div>
     </div>
@@ -47,18 +47,22 @@ const { deviceType, isMobile } = useDeviceType();
 
 <style scoped>
 .container {
-    display: grid;
-    grid-template-columns: 14.5% auto; 
-    min-height: 100vh;
-    width: 100vw;
+    width: 100%;
+}
+
+.padding {
+    width: 100%;
 }
 
 .view {
-    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: 14.5% auto;
 }
 
-
 @media (max-width: 768px) {
+    .padding {
+        display: none;
+    }
     .container {
         grid-template-columns: 100%;
         min-height: auto;

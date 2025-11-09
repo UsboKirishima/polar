@@ -205,6 +205,7 @@ input:disabled {
 @media (max-width: 600px) {
     .login-container {
         padding: 10px;
+        width: 100vw;
     }
 
     .login-form {
