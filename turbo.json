@@ -121,6 +121,14 @@
     "postinstall": {
       "cache": false,
       "dependsOn": []
+    },
+    "build:go": {
+      "outputs": ["dist/**", "bin/**"],
+      "cache": true,
+      "dependsOn": ["^build:go"]
+    },
+    "dev:go": {
+      "cache": false
     }
   },
   "globalDependencies": [
