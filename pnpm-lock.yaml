@@ -251,6 +251,8 @@ importers:
         specifier: ^3.0.4
         version: 3.1.2(typescript@5.9.3)
 
+  apps/ranker: {}
+
   packages/algorithm:
     devDependencies:
       '@antfu/eslint-config':
