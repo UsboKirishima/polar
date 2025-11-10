@@ -1,13 +1,43 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
 
 const nearYouPeople = ref([
-    { username: 'usbo', avatar: '/pfp_placeholder.png', distance: '4km', status: 'Aperitivo stare in centro a Milano?' },
-    { username: 'aL3x_', avatar: '/pfp_placeholder.png', distance: '10km', status: 'Per chi vuol fare il DJ alla mia festa.' },
-    { username: 'bia', avatar: '/pfp_placeholder.png', distance: '27km', status: 'Ho il cane, chi viene a fare un giro?' },
-    { username: 'camy_b_', avatar: '/pfp_placeholder.png', distance: '34km', status: 'Devo preparare gli esami, qualcuno bravo?' },
-    { username: 'lott0', avatar: '/pfp_placeholder.png', distance: '35km', status: 'Seratina romantica?' },
-    { username: 'erb3tt4', avatar: '/pfp_placeholder.png', distance: '40km', status: 'Qualcuno che vende concerto di Drake?' },
+    {
+        username: 'usbo',
+        avatar: '/pfp_placeholder.png',
+        distance: '4km',
+        status: 'Aperitivo stare in centro a Milano?',
+    },
+    {
+        username: 'aL3x_',
+        avatar: '/pfp_placeholder.png',
+        distance: '10km',
+        status: 'Per chi vuol fare il DJ alla mia festa.',
+    },
+    {
+        username: 'bia',
+        avatar: '/pfp_placeholder.png',
+        distance: '27km',
+        status: 'Ho il cane, chi viene a fare un giro?',
+    },
+    {
+        username: 'camy_b_',
+        avatar: '/pfp_placeholder.png',
+        distance: '34km',
+        status: 'Devo preparare gli esami, qualcuno bravo?',
+    },
+    {
+        username: 'lott0',
+        avatar: '/pfp_placeholder.png',
+        distance: '35km',
+        status: 'Seratina romantica?',
+    },
+    {
+        username: 'erb3tt4',
+        avatar: '/pfp_placeholder.png',
+        distance: '40km',
+        status: 'Qualcuno che vende concerto di Drake?',
+    },
     { username: 'viscida', avatar: '/pfp_placeholder.png', distance: '41km', status: '' },
 ])
 </script>
@@ -21,11 +51,12 @@ const nearYouPeople = ref([
                 <li v-for="user in nearYouPeople" :key="user.username">
                     <div class="user_info">
                         <div>
-                            <img :src="user.avatar" alt="">
+                            <img :src="user.avatar" alt="" />
                             <a href="#">{{ user.username }}</a>
                         </div>
                         <p class="status">
-                            {{ user.status.slice(0, 50) || 'No Status' }}{{ user.status.length > 50 ? '...' : '' }}
+                            {{ user.status.slice(0, 50) || 'No Status'
+                            }}{{ user.status.length > 50 ? '...' : '' }}
                         </p>
                     </div>
                     <div class="details">

@@ -12,10 +12,16 @@ const emits = defineEmits<{
     <div class="feed-header">
         <h2>Feeds</h2>
         <div class="controls">
-            <p :class="{ active_page: currentPage === 'explore' }" @click="emits('change-page', 'explore')">
+            <p
+                :class="{ active_page: currentPage === 'explore' }"
+                @click="emits('change-page', 'explore')"
+            >
                 Explore
             </p>
-            <p :class="{ active_page: currentPage === 'friends' }" @click="emits('change-page', 'friends')">
+            <p
+                :class="{ active_page: currentPage === 'friends' }"
+                @click="emits('change-page', 'friends')"
+            >
                 Friends
             </p>
         </div>

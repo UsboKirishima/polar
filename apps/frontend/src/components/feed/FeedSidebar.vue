@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { Ref } from 'vue';
+import type { Ref } from 'vue'
 import List from './List.vue'
-import type { Friend, Suggestion } from './ListItem.vue';
+import type { Friend, Suggestion } from './ListItem.vue'
 
 const props = defineProps<{
-    friends: Friend[];
-    suggestions: Suggestion[];
+    friends: Friend[]
+    suggestions: Suggestion[]
 }>()
 </script>
 
@@ -37,14 +37,13 @@ const props = defineProps<{
     display: flex;
     flex-direction: column;
     padding-top: 1.5rem;
-    z-index: 90;
+    z-index: 10;
     margin: 0 2rem;
     background-color: #a5a6ff13;
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
 }
-
 
 .sb-friends {
     margin: 3% 10%;

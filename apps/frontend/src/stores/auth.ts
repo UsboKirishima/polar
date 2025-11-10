@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
-import api from '@/axiosApi';
-import { type User } from '@/types';
+import { defineStore } from 'pinia'
+import api from '@/axiosApi'
+import { type User } from '@/types'
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -12,61 +12,64 @@ export const useAuthStore = defineStore('auth', {
     actions: {
         async login(email: string, password: string) {
             try {
-                this.loading = true;
-                const res = await api.post('/auth/login', { email, password });
+                this.loading = true
+                const res = await api.post('/auth/login', { email, password })
 
-                localStorage.setItem('token', res.data.accessToken);
+                localStorage.setItem('token', res.data.accessToken)
 
-                await this.checkAuth();
+                await this.checkAuth()
 
-                return true;
+                return true
             } catch (err) {
-                return false;
+                return false
             } finally {
-                this.loading = false;
+                this.loading = false
             }
         },
 
-        async register(email: string, password: string,
+        async register(
+            email: string,
+            password: string,
             username: string,
             dateOfBirth: Date,
-            fullName: string) {
+            fullName: string,
+        ) {
             try {
-                this.loading = true;
+                this.loading = true
                 const res = await api.post('/auth/register', {
                     email: email,
                     password: password,
                     profile: {
                         username,
                         dateOfBirth,
-                        fullName
-                    }
-                });
+                        fullName,
+                    },
+                })
 
-                return await this.login(email, password);
+                return await this.login(email, password)
             } catch (err) {
-                return false;
+                return false
             } finally {
-                this.loading = false;
+                this.loading = false
             }
         },
 
         async checkAuth() {
             try {
-                const res = await api.get('/users/profile');
-                this.user = res.data;
-                this.isLoggedIn = true;
+                const res = await api.get('/users/profile')
+                this.user = res.data
+                this.isLoggedIn = true
             } catch {
-                this.user = null;
-                this.isLoggedIn = false;
-                localStorage.removeItem('token');
+                this.user = null
+                this.isLoggedIn = false
+                localStorage.removeItem('token')
             }
         },
 
         logout() {
-            localStorage.removeItem('token');
-            this.user = null;
-            this.isLoggedIn = false;
+            localStorage.removeItem('token')
+            this.user = null
+            this.isLoggedIn = false
         },
     },
-});
+})

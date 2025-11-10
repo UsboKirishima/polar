@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { User } from '@/types';
-import { Transition } from 'vue';
-import Username from '../Username.vue';
+import type { User } from '@/types'
+import { Transition } from 'vue'
+import Username from '../Username.vue'
 
 const props = defineProps<{
-    user: User;
-    mouseX: number;
-    mouseY: number;
+    user: User
+    mouseX: number
+    mouseY: number
 }>()
 </script>
 
@@ -20,12 +20,16 @@ const props = defineProps<{
             </div>
         </div>
         <p class="bio">
-            {{ user.profile.bio.length > 50 ? user.profile.bio.slice(0, 50) + '...' : user.profile.bio == 'unknown' ?
-                'no bio yet' : user.profile.bio }}
+            {{
+                user.profile.bio.length > 50
+                    ? user.profile.bio.slice(0, 50) + '...'
+                    : user.profile.bio == 'unknown'
+                      ? 'no bio yet'
+                      : user.profile.bio
+            }}
         </p>
     </div>
 </template>
-
 
 <style scoped>
 .hover-card {
@@ -37,7 +41,9 @@ const props = defineProps<{
     width: 220px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     pointer-events: none;
-    transition: transform 0.2s ease, opacity 0.2s ease;
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;

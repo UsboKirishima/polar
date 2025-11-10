@@ -1,130 +1,130 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import Feed from '@/views/Feed.vue';
-import Login from '@/views/Login.vue';
-import Profile from '@/views/Profile.vue';
-import Register from '@/views/Register.vue';
-import Users from '@/views/Users.vue';
-import NotFound from '@/components/NotFound.vue';
-import ExHome from '@/views/ExHome.vue';
-import UserDetails from '@/views/UserDetails.vue';
-import { useAuthStore } from '@/stores/auth';
-import Friends from '@/views/Friends.vue';
+import { createRouter, createWebHistory } from 'vue-router'
+import Feed from '@/views/Feed.vue'
+import Login from '@/views/Login.vue'
+import Profile from '@/views/Profile.vue'
+import Register from '@/views/Register.vue'
+import Users from '@/views/Users.vue'
+import NotFound from '@/components/NotFound.vue'
+import ExHome from '@/views/ExHome.vue'
+import UserDetails from '@/views/UserDetails.vue'
+import { useAuthStore } from '@/stores/auth'
+import Friends from '@/views/Friends.vue'
 import Post from '@/views/PostDetails.vue'
-import PostDetails from '@/views/PostDetails.vue';
-import Posts from '@/views/Posts.vue';
-import NewPost from '@/views/NewPost.vue';
-import UserFromUsername from '@/views/UserFromUsername.vue';
-import Categories from '@/views/Categories.vue';
-import CategoryDetails from '@/views/CategoryDetails.vue';
-import ProfileSettings from '@/views/ProfileSettings.vue';
+import PostDetails from '@/views/PostDetails.vue'
+import Posts from '@/views/Posts.vue'
+import NewPost from '@/views/NewPost.vue'
+import UserFromUsername from '@/views/UserFromUsername.vue'
+import Categories from '@/views/Categories.vue'
+import CategoryDetails from '@/views/CategoryDetails.vue'
+import ProfileSettings from '@/views/ProfileSettings.vue'
 
 const routes = [
     {
         path: '/',
         name: 'home',
         component: ExHome,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
     },
     {
         path: '/feed',
         name: 'feed',
         component: Feed,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
     },
     {
         path: '/friends',
         name: 'friends',
         component: Friends,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
     },
     {
         path: '/login',
         name: 'login',
-        component: Login
+        component: Login,
     },
     {
         path: '/profile',
         name: 'profile',
         component: Profile,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
     },
     {
         path: '/profile/settings',
         name: 'profile settings',
         component: ProfileSettings,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
     },
     {
         path: '/register',
         name: 'register',
-        component: Register
+        component: Register,
     },
     {
         path: '/users',
         name: 'users',
         component: Users,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
     },
     {
         path: '/users/:id',
         name: 'user-details',
         component: UserDetails,
         props: true,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
     },
     {
         path: '/users/u/:username',
         name: 'user-by-username',
         component: UserFromUsername,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
     },
     {
         path: '/posts',
         name: 'posts',
         component: Posts,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
     },
     {
         path: '/posts/:id',
         name: 'post',
         component: PostDetails,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
     },
     {
         path: '/posts/new',
         name: 'newpost',
         component: NewPost,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
     },
     {
         path: '/categories',
         name: 'categories',
         component: Categories,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
     },
     {
         path: '/categories/:categoryId',
         name: 'category details',
         component: CategoryDetails,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
     },
     {
         path: '/categories/n/:categoryName',
         name: 'category details by name',
         component: CategoryDetails,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
     },
     {
         path: '/:catchAll(.*)',
         name: 'not-found',
-        component: NotFound
-    }
-];
+        component: NotFound,
+    },
+]
 
 const router = createRouter({
     history: createWebHistory(),
-    routes
-});
+    routes,
+})
 
 router.beforeEach(async (to, from, next) => {
     const auth = useAuthStore()
@@ -140,5 +140,4 @@ router.beforeEach(async (to, from, next) => {
     }
 })
 
-
-export default router;
+export default router

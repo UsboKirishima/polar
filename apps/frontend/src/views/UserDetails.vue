@@ -6,7 +6,7 @@ import PageLoading from '@/components/PageLoading.vue'
 import { useUserStore } from '@/stores/users'
 import { useAuthStore } from '@/stores/auth'
 import ProfileHeader from '@/components/profile/ProfileHeader.vue'
-import type { Post, User } from '@/types';
+import type { Post, User } from '@/types'
 import { useFriendStore } from '@/stores/friends'
 import { usePostStore } from '@/stores/posts'
 import type { Friendship } from '@/types/friends'
@@ -14,23 +14,23 @@ import ProfileContent from '@/components/profile/ProfileContent.vue'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-const route = useRoute();
-const user = ref<User | null>(null);
-const friends = ref<Friendship[]>([]);
-const posts = ref<Post[]>([]);
+const route = useRoute()
+const user = ref<User | null>(null)
+const friends = ref<Friendship[]>([])
+const posts = ref<Post[]>([])
 const loading = ref(true)
 
-const userStore = useUserStore();
-const authStore = useAuthStore();
-const friendStore = useFriendStore();
-const postStore = usePostStore();
+const userStore = useUserStore()
+const authStore = useAuthStore()
+const friendStore = useFriendStore()
+const postStore = usePostStore()
 
-const isProfilePage = ref(false); /* True in case user is on its own profile. */
+const isProfilePage = ref(false) /* True in case user is on its own profile. */
 
-const router = useRouter();
+const router = useRouter()
 
 const goBack = () => {
-    router.go(-1);
+    router.go(-1)
 }
 
 const formatDate = (date: Date) => {
@@ -38,22 +38,25 @@ const formatDate = (date: Date) => {
 }
 
 const fetchPosts = async () => {
-    posts.value = await postStore.fetchAllPostsByUser(user.value!.id);
-    if (!user.value) return;
+    posts.value = await postStore.fetchAllPostsByUser(user.value!.id)
+    if (!user.value) return
 }
 
 const fetchFriends = async () => {
-    if (!user.value) return;
-    friends.value = await userStore.getAllFriendsByUserId(user.value.id);
+    if (!user.value) return
+    friends.value = await userStore.getAllFriendsByUserId(user.value.id)
 }
 
 onMounted(fetchUserData)
 
-watch(() => route.params.id, async () => {
-    loading.value = true
-    await fetchUserData()
-    loading.value = false
-})
+watch(
+    () => route.params.id,
+    async () => {
+        loading.value = true
+        await fetchUserData()
+        loading.value = false
+    },
+)
 
 async function fetchUserData() {
     try {
@@ -62,13 +65,12 @@ async function fetchUserData() {
         await fetchPosts()
         await fetchFriends()
         await userStore.fetchUsers()
-        loading.value = false;
+        loading.value = false
     } catch (error) {
         console.error('Error during user fetch: ', error)
     }
 }
 </script>
-
 
 <template>
     <PageLoading v-if="loading" />
@@ -77,12 +79,25 @@ async function fetchUserData() {
             <div @click="goBack" class="back-ic">
                 <FontAwesomeIcon :icon="faArrowLeft" />
             </div>
-            <h2>Profile of <b>{{ user?.profile.fullName }}</b></h2>
+            <h2>
+                Profile of <b>{{ user?.profile.fullName }}</b>
+            </h2>
         </div>
         <div class="container">
-            <ProfileHeader :is-profile-page="isProfilePage" :user="user" :posts="[...posts]" :friends="friends" />
-            <ProfileContent :is-profile-page="isProfilePage" :user="user" :posts="[...posts]" :friends="friends"
-                :comments="user?.comments || []" :likes="user?.likes || []" />
+            <ProfileHeader
+                :is-profile-page="isProfilePage"
+                :user="user"
+                :posts="[...posts]"
+                :friends="friends"
+            />
+            <ProfileContent
+                :is-profile-page="isProfilePage"
+                :user="user"
+                :posts="[...posts]"
+                :friends="friends"
+                :comments="user?.comments || []"
+                :likes="user?.likes || []"
+            />
         </div>
     </div>
 </template>

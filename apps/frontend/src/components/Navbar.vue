@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { useAuthStore } from '@/stores/auth';
+import { computed } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 
-const auth = useAuthStore();
+const auth = useAuthStore()
 
 const menuItems = computed(() => [
     { label: 'home', path: '#/' },
@@ -12,14 +12,16 @@ const menuItems = computed(() => [
     { label: 'friends', path: '#/friends' },
     { label: 'categories', path: '#/categories' },
     { label: 'requests', path: '#/requests' },
-    { label: auth.isLoggedIn ? 'my profile' : 'login', path: auth.isLoggedIn ? '#/profile' : '#/login' }
-]);
-
+    {
+        label: auth.isLoggedIn ? 'my profile' : 'login',
+        path: auth.isLoggedIn ? '#/profile' : '#/login',
+    },
+])
 </script>
 
 <template>
     <nav class="desktop_nav">
-        <a href='#/' class="logo"><img src="/polar_no_bg_resized.png" alt="Polar"></a>
+        <a href="#/" class="logo"><img src="/polar_no_bg_resized.png" alt="Polar" /></a>
         <ul>
             <li v-for="item in menuItems">
                 <a :href="item.path">{{ item.label }}</a>
@@ -41,21 +43,20 @@ const menuItems = computed(() => [
     padding: 16px;
 }
 
-.desktop_nav>ul {
+.desktop_nav > ul {
     display: flex;
     flex-direction: row;
     justify-content: end;
     align-items: center;
 }
 
-.desktop_nav>ul>li {
+.desktop_nav > ul > li {
     list-style-type: none;
     margin: 0 12px;
 }
 
 .logo {
     margin-left: 12px;
-
 }
 
 .logo img {

@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import type { Like, Post, PostComment, User } from '@/types';
-import type { Friendship } from '@/types/friends';
-import { ref } from 'vue';
-import FeedPosts from '../feed/FeedPosts.vue';
-import FriendsList from '../friends/FriendsList.vue';
-import PostCard from '../feed/PostCard.vue';
-import dayjs from 'dayjs';
-import Userinfo from '../Userinfo.vue';
+import type { Like, Post, PostComment, User } from '@/types'
+import type { Friendship } from '@/types/friends'
+import { ref } from 'vue'
+import FeedPosts from '../feed/FeedPosts.vue'
+import FriendsList from '../friends/FriendsList.vue'
+import PostCard from '../feed/PostCard.vue'
+import dayjs from 'dayjs'
+import Userinfo from '../Userinfo.vue'
 
 const props = defineProps<{
-    isProfilePage: boolean;
-    user: User | null;
-    posts: Post[];
-    likes: Like[];
-    comments: PostComment[];
-    friends: Friendship[];
+    isProfilePage: boolean
+    user: User | null
+    posts: Post[]
+    likes: Like[]
+    comments: PostComment[]
+    friends: Friendship[]
 }>()
 
-const view = ref<'posts' | 'friends' | 'likes' | 'comments'>('posts');
+const view = ref<'posts' | 'friends' | 'likes' | 'comments'>('posts')
 </script>
 
 <template>
@@ -46,13 +46,17 @@ const view = ref<'posts' | 'friends' | 'likes' | 'comments'>('posts');
             <div v-if="!friends.length">
                 <p class="nch">No friends here.</p>
             </div>
-            <FriendsList :current-page="'friends'" :friends="friends" :hide-remove-btn="!isProfilePage" />
+            <FriendsList
+                :current-page="'friends'"
+                :friends="friends"
+                :hide-remove-btn="!isProfilePage"
+            />
         </div>
         <div v-else-if="view === 'likes'" class="view">
             <div v-if="!user?.likes.length">
                 <p class="nch">No likes here.</p>
             </div>
-            <FeedPosts :posts="[...user?.likes.map(l => l.post).values()]" />
+            <FeedPosts :posts="[...user?.likes.map((l) => l.post).values()]" />
         </div>
         <div v-else-if="view === 'comments'" class="view">
             <div v-if="!user?.comments.length">
@@ -142,7 +146,6 @@ const view = ref<'posts' | 'friends' | 'likes' | 'comments'>('posts');
     margin-top: 0.5rem;
     color: #ffffff7a;
 }
-
 
 .ctext {
     margin-top: 1rem;

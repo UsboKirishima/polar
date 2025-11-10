@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const router = useRouter();
-
+const router = useRouter()
 
 const trendingCategories = ref([
     { name: 'Music', posts: 1240 },
@@ -89,9 +88,8 @@ const trendingCategories = ref([
 ])
 
 function openCategory(name: string) {
-    router.push(`/category/${name.toLowerCase()}`);
+    router.push(`/category/${name.toLowerCase()}`)
 }
-
 </script>
 
 <template>
@@ -103,7 +101,12 @@ function openCategory(name: string) {
             </p>
 
             <div v-else class="grid">
-                <div class="category" v-for="cat in trendingCategories" :key="cat.name" @click="openCategory(cat.name)">
+                <div
+                    class="category"
+                    v-for="cat in trendingCategories"
+                    :key="cat.name"
+                    @click="openCategory(cat.name)"
+                >
                     <h3>{{ cat.name }}</h3>
                     <span>{{ cat.posts }} posts</span>
                 </div>

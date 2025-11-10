@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from 'vue-router'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
-const router = useRouter();
+const router = useRouter()
 
 const goBack = () => {
-    router.go(-1);
+    router.go(-1)
 }
-
 </script>
 
 <template>

@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import api from '@/axiosApi';
-import { onMounted, ref } from 'vue';
-import { useAuthStore } from '@/stores/auth';
-import { useRouter } from 'vue-router';
-import { useDeviceType } from "@/composables/useDeviceType";
-const auth = useAuthStore();
+import api from '@/axiosApi'
+import { onMounted, ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
+import { useDeviceType } from '@/composables/useDeviceType'
+const auth = useAuthStore()
 
-const email = ref('');
-const password = ref('');
-const error = ref('');
-const isLoading = ref(false);
+const email = ref('')
+const password = ref('')
+const error = ref('')
+const isLoading = ref(false)
 
-const { deviceType, isMobile } = useDeviceType();
+const { deviceType, isMobile } = useDeviceType()
 
 const router = useRouter()
 
 const handleLogin = async () => {
-    error.value = '';
+    error.value = ''
 
-    const success = await auth.login(email.value, password.value);
+    const success = await auth.login(email.value, password.value)
 
     if (success) {
         router.push(`/users/${auth.user?.id}`)
@@ -28,9 +28,9 @@ const handleLogin = async () => {
 }
 const handleKeyPress = (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
-        handleLogin();
+        handleLogin()
     }
-};
+}
 
 onMounted(() => {
     if (auth.isLoggedIn) {
@@ -46,14 +46,28 @@ onMounted(() => {
 
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input id="email" type="email" v-model="email" @keypress="handleKeyPress" placeholder="Insert email"
-                    required :disabled="isLoading" />
+                <input
+                    id="email"
+                    type="email"
+                    v-model="email"
+                    @keypress="handleKeyPress"
+                    placeholder="Insert email"
+                    required
+                    :disabled="isLoading"
+                />
             </div>
 
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input id="password" type="password" v-model="password" @keypress="handleKeyPress"
-                    placeholder="Insert password" required :disabled="isLoading" />
+                <input
+                    id="password"
+                    type="password"
+                    v-model="password"
+                    @keypress="handleKeyPress"
+                    placeholder="Insert password"
+                    required
+                    :disabled="isLoading"
+                />
             </div>
 
             <div>
@@ -136,7 +150,9 @@ input {
     color: #fff;
     box-sizing: border-box;
     background: #ffffff0a;
-    transition: border-color 0.2s, background-color 0.2s;
+    transition:
+        border-color 0.2s,
+        background-color 0.2s;
 }
 
 input:focus {
@@ -171,7 +187,9 @@ input:disabled {
     font-weight: bold;
     cursor: pointer;
     margin-top: 2rem;
-    transition: background-color 0.2s, box-shadow 0.2s;
+    transition:
+        background-color 0.2s,
+        box-shadow 0.2s;
     margin-bottom: 15px;
     box-shadow: 0 2px 10px rgba(97, 175, 239, 0.4);
 }

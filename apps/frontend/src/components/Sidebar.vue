@@ -1,10 +1,21 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import { useAuthStore } from '@/stores/auth';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faHouse, faBomb, faLocationDot, faComment, faUserGroup, faList, faBell, faUser, faBars, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { computed, onMounted, ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import {
+    faHouse,
+    faBomb,
+    faLocationDot,
+    faComment,
+    faUserGroup,
+    faList,
+    faBell,
+    faUser,
+    faBars,
+    faPlusCircle,
+} from '@fortawesome/free-solid-svg-icons'
 
-const auth = useAuthStore();
+const auth = useAuthStore()
 
 const menuItems = computed(() => [
     { icon: faHouse, label: 'home', path: '/' },
@@ -15,15 +26,18 @@ const menuItems = computed(() => [
     { icon: faList, label: 'categories', path: '/categories' },
     { icon: faBell, label: 'requests', path: '/requests' },
     { icon: faPlusCircle, label: 'create post', path: '/posts/new' },
-    { icon: faUser, label: auth.isLoggedIn ? 'my profile' : 'login', path: auth.isLoggedIn ? `/users/${auth.user?.id}` : '/login' },
+    {
+        icon: faUser,
+        label: auth.isLoggedIn ? 'my profile' : 'login',
+        path: auth.isLoggedIn ? `/users/${auth.user?.id}` : '/login',
+    },
     { icon: faBars, label: 'other', path: '/users' },
-]);
-
+])
 </script>
 
 <template>
     <nav class="desktop_nav">
-        <router-link to='/' class="logo"><img src="/logo_no_bg.png" alt="Polar"></router-link>
+        <router-link to="/" class="logo"><img src="/logo_no_bg.png" alt="Polar" /></router-link>
         <ul>
             <li v-for="item in menuItems">
                 <router-link :to="item.path" class="box">

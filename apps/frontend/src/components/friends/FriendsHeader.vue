@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const props = defineProps<{
-    currentPage: string;
-    friendsCount: number;
-    requestsCount: number;
+    currentPage: string
+    friendsCount: number
+    requestsCount: number
 }>()
 
 const emits = defineEmits<{
@@ -14,10 +14,16 @@ const emits = defineEmits<{
     <div class="friend-header">
         <h2>{{ currentPage === 'friends' ? 'Friends' : 'Pending Requests' }}</h2>
         <div class="controls">
-            <p :class="{ active_page: currentPage === 'friends' }" @click="emits('change-page', 'friends')">
+            <p
+                :class="{ active_page: currentPage === 'friends' }"
+                @click="emits('change-page', 'friends')"
+            >
                 Friends ({{ friendsCount }})
             </p>
-            <p :class="{ active_page: currentPage === 'requests' }" @click="emits('change-page', 'requests')">
+            <p
+                :class="{ active_page: currentPage === 'requests' }"
+                @click="emits('change-page', 'requests')"
+            >
                 Requests ({{ requestsCount }})
             </p>
         </div>

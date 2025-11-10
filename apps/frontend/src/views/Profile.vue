@@ -1,54 +1,51 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import api from '../axiosApi';
-import { checkAuth } from '../check-auth';
-import { useAuthStore } from '../stores/auth';
-import { useRouter } from 'vue-router';
-import { useFriendStore } from '@/stores/friends';
-import { trpc } from '@/trpc';
+import { ref } from 'vue'
+import api from '../axiosApi'
+import { checkAuth } from '../check-auth'
+import { useAuthStore } from '../stores/auth'
+import { useRouter } from 'vue-router'
+import { useFriendStore } from '@/stores/friends'
+import { trpc } from '@/trpc'
 
-const router = useRouter();
+const router = useRouter()
 
-const id = ref('');
-const email = ref('');
-const error = ref('');
-const isLoading = ref(false);
+const id = ref('')
+const email = ref('')
+const error = ref('')
+const isLoading = ref(false)
 
-
-const auth = useAuthStore();
-const friendStore = useFriendStore();
+const auth = useAuthStore()
+const friendStore = useFriendStore()
 
 const getUser = async () => {
-    isLoading.value = true;
-    error.value = '';
+    isLoading.value = true
+    error.value = ''
 
     try {
         if (auth.isLoggedIn) {
-            id.value = auth.user!.id;
-            email.value = auth.user!.email;
+            id.value = auth.user!.id
+            email.value = auth.user!.email
         }
-
     } catch (err: any) {
-        error.value = err.response?.data?.message || 'Error';
+        error.value = err.response?.data?.message || 'Error'
     } finally {
-        isLoading.value = false;
+        isLoading.value = false
     }
-};
-
-getUser();
-
-const logout = () => {
-    auth.logout();
-    router.push('/login')
 }
 
+getUser()
+
+const logout = () => {
+    auth.logout()
+    router.push('/login')
+}
 </script>
 
 <template>
     <div v-if="auth.isLoggedIn" class="profile-container">
         <div class="profile-card">
             <div class="profile-image">
-                <img src="/pfp_placeholder.png" alt="Profile pic">
+                <img src="/pfp_placeholder.png" alt="Profile pic" />
                 <div class="stats">
                     <p>Posts: 22</p>
                     <p>Friends: {{ friendStore.friends?.length || 0 }}</p>
@@ -58,7 +55,7 @@ const logout = () => {
             <div class="profile-info">
                 <p class="username">{{ auth.user?.profile.username }}</p>
                 <p><b>full name:</b> {{ auth.user?.profile.fullName }}</p>
-                <p><b>email:</b> {{ email }} </p>
+                <p><b>email:</b> {{ email }}</p>
                 <p><b>day of birth:</b> {{ auth.user?.profile.dateOfBirth }}</p>
                 <p><b>id:</b> {{ id }}</p>
             </div>
@@ -71,7 +68,7 @@ const logout = () => {
         </div>
     </div>
     <div v-else class="err">
-        <img src="/logo_no_bg.png" alt="Polar">
+        <img src="/logo_no_bg.png" alt="Polar" />
         <h1>Error <b>401</b></h1>
         <p>Sorry but you need to <router-link to="/login">login</router-link> to view this page.</p>
     </div>

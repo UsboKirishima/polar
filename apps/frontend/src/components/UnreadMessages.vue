@@ -1,11 +1,31 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
 
 const unreadMessages = ref([
-    { username: 'usbo', avatar: '/pfp_placeholder.png', last_message: 'hello, how are you doing', count: 3 },
-    { username: 'aL3x_', avatar: '/pfp_placeholder.png', last_message: 'tomorrow I will in London', count: 2 },
-    { username: 'camy_b_', avatar: '/pfp_placeholder.png', last_message: 'I finish work at 7pm', count: 1 },
-    { username: 'bia', avatar: '/pfp_placeholder.png', last_message: 'Why are you so hungry', count: 7 },
+    {
+        username: 'usbo',
+        avatar: '/pfp_placeholder.png',
+        last_message: 'hello, how are you doing',
+        count: 3,
+    },
+    {
+        username: 'aL3x_',
+        avatar: '/pfp_placeholder.png',
+        last_message: 'tomorrow I will in London',
+        count: 2,
+    },
+    {
+        username: 'camy_b_',
+        avatar: '/pfp_placeholder.png',
+        last_message: 'I finish work at 7pm',
+        count: 1,
+    },
+    {
+        username: 'bia',
+        avatar: '/pfp_placeholder.png',
+        last_message: 'Why are you so hungry',
+        count: 7,
+    },
 ])
 </script>
 
@@ -19,8 +39,10 @@ const unreadMessages = ref([
                     <span class="message_count">{{ message.count }}</span>
                     <a href="#">{{ message.username }}</a>
                 </div>
-                <p class="last_msg">{{ message.last_message.slice(0, 50) }}{{ message.last_message.length > 50 ? '...' :
-                    '' }}</p>
+                <p class="last_msg">
+                    {{ message.last_message.slice(0, 50)
+                    }}{{ message.last_message.length > 50 ? '...' : '' }}
+                </p>
             </li>
         </ul>
     </div>
@@ -73,7 +95,6 @@ a {
     padding: 4px;
     padding-right: 9px;
 }
-
 
 .unread_messages ul::-webkit-scrollbar {
     width: 5px;

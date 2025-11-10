@@ -1,72 +1,86 @@
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/auth';
-import { usePostStore } from '@/stores/posts';
-import type { Post } from '@/types';
-import { faCommentDots, faComments, faFileWord, faHeartBroken, faHeart as likedIcon } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { computed, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import Username from '../Username.vue';
-import ProfileFloatCard from '../profile/ProfileFloatCard.vue';
-import { colorMap, getColorRgba, type ColorEnum } from '@/utils/colors';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
+import { useAuthStore } from '@/stores/auth'
+import { usePostStore } from '@/stores/posts'
+import type { Post } from '@/types'
+import {
+    faCommentDots,
+    faComments,
+    faFileWord,
+    faHeartBroken,
+    faHeart as likedIcon,
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import Username from '../Username.vue'
+import ProfileFloatCard from '../profile/ProfileFloatCard.vue'
+import { colorMap, getColorRgba, type ColorEnum } from '@/utils/colors'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 
-dayjs.extend(relativeTime);
+dayjs.extend(relativeTime)
 
 const props = defineProps<{
-    post: Post;
-}>();
-
+    post: Post
+}>()
 
 // -------- Hover Card ---------
-const profileHover = ref(false);
-const mouseX = ref(0);
-const mouseY = ref(0);
+const profileHover = ref(false)
+const mouseX = ref(0)
+const mouseY = ref(0)
 
 const handleMouseMove = (event: MouseEvent) => {
-    mouseX.value = event.clientX;
-    mouseY.value = event.clientY;
-};
+    mouseX.value = event.clientX
+    mouseY.value = event.clientY
+}
 
-const router = useRouter();
-const postStore = usePostStore();
+const router = useRouter()
+const postStore = usePostStore()
 
 const handlePostClick = () => {
-    router.push(`/posts/${props.post.id}`);
+    router.push(`/posts/${props.post.id}`)
 }
 
 const fetchPost = async () => {
-    const data = await postStore.fetchPostById(props.post.id);
-    if (data) postMutable.value = data;
-};
+    const data = await postStore.fetchPostById(props.post.id)
+    if (data) postMutable.value = data
+}
 
+const postMutable = ref<Post>(props.post)
 
-const postMutable = ref<Post>(props.post);
-
-const authRouter = useAuthStore();
+const authRouter = useAuthStore()
 const hasLikesPost = computed(() => {
-    return postMutable.value.likes.some(like => like.userId === authRouter.user?.id);
-});
+    return postMutable.value.likes.some((like) => like.userId === authRouter.user?.id)
+})
 
 const handlePostLike = async () => {
-    await postStore.togglePostLike(props.post.id);
+    await postStore.togglePostLike(props.post.id)
     await fetchPost()
-};
-
+}
 </script>
 
 <template>
     <div class="post-container" :style="{ background: getColorRgba(post.color as ColorEnum) }">
-        <div @mouseenter="profileHover = true" @mouseleave="profileHover = false" @mousemove="handleMouseMove">
+        <div
+            @mouseenter="profileHover = true"
+            @mouseleave="profileHover = false"
+            @mousemove="handleMouseMove"
+        >
             <router-link :to="`/users/${post.author.id}`" class="post-header">
                 <Transition name="fade-slide">
-                    <ProfileFloatCard v-if="profileHover" :user="post.author" :mouse-x="mouseX" :mouse-y="mouseY" />
+                    <ProfileFloatCard
+                        v-if="profileHover"
+                        :user="post.author"
+                        :mouse-x="mouseX"
+                        :mouse-y="mouseY"
+                    />
                 </Transition>
-                <img :src="post.author.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="">
+                <img :src="post.author.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="" />
                 <div class="h-info">
-                    <Username :username="postMutable.author.profile.fullName || 'Unknown'"
-                        :is-verified="postMutable.author.role === 'ADMIN'" />
+                    <Username
+                        :username="postMutable.author.profile.fullName || 'Unknown'"
+                        :is-verified="postMutable.author.role === 'ADMIN'"
+                    />
                     <p class="place">@{{ post.author.profile.username || 'Unknown' }}</p>
                 </div>
             </router-link>
@@ -74,10 +88,19 @@ const handlePostLike = async () => {
         <div class="body" @click="handlePostClick">
             <p class="content">
                 <template v-for="(word, index) in post.text.split(' ')" :key="index">
-                    <a v-if="word.startsWith('#')" :href="`/categories/n/${word.slice(1)}`" class="hashtag">
+                    <a
+                        v-if="word.startsWith('#')"
+                        :href="`/categories/n/${word.slice(1)}`"
+                        class="hashtag"
+                    >
                         {{ word }}
                     </a>
-                    <a v-else-if="word.startsWith('@')" :href="`/users/u/${word.slice(1)}`" class="tags">{{ word }}</a>
+                    <a
+                        v-else-if="word.startsWith('@')"
+                        :href="`/users/u/${word.slice(1)}`"
+                        class="tags"
+                        >{{ word }}</a
+                    >
                     <span v-else>{{ word }}</span>
                     {{ index !== post.text.split(' ').length - 1 ? ' ' : '' }}
                 </template>
@@ -85,7 +108,10 @@ const handlePostLike = async () => {
         </div>
         <div class="controls">
             <div @click="handlePostLike">
-                <FontAwesomeIcon :icon="likedIcon" :style="hasLikesPost ? { color: '#ab5382' } : { color: '#fff' }" />
+                <FontAwesomeIcon
+                    :icon="likedIcon"
+                    :style="hasLikesPost ? { color: '#ab5382' } : { color: '#fff' }"
+                />
                 <p class="count">{{ postMutable.likes.length || 0 }}</p>
             </div>
             <div @click="handlePostClick">
@@ -183,7 +209,9 @@ const handlePostLike = async () => {
 
 .fade-slide-enter-active,
 .fade-slide-leave-active {
-    transition: opacity 0.35s ease, transform 0.35s ease;
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s ease;
 }
 
 .fade-slide-enter-from,

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ListItem from './ListItem.vue'
-import type { Friend, Suggestion } from './ListItem.vue';
+import type { Friend, Suggestion } from './ListItem.vue'
 
 const props = defineProps<{
     data: Array<Friend | Suggestion>

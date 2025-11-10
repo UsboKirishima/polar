@@ -1,29 +1,29 @@
 <script setup lang="ts">
-import { useUserStore } from '@/stores/users';
-import { onMounted, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/users'
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-const userStore = useUserStore();
-const route = useRoute();
-const router = useRouter();
+const userStore = useUserStore()
+const route = useRoute()
+const router = useRouter()
 
-const err = ref('');
+const err = ref('')
 
 onMounted(async () => {
-    await userStore.fetchUsers();
+    await userStore.fetchUsers()
 
     if (!route.params.username) {
         err.value = 'url must include the username param: /users/u/:username'
-        return;
+        return
     }
 
-    const user = userStore.users?.find(user => user.profile.username === route.params.username);
+    const user = userStore.users?.find((user) => user.profile.username === route.params.username)
     if (!user) {
-        err.value = 'User not found';
-        return;
+        err.value = 'User not found'
+        return
     }
 
-    router.push(`/users/${user.id}`);
+    router.push(`/users/${user.id}`)
 })
 </script>
 

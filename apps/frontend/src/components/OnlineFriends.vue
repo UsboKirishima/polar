@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useTransitionState } from 'vue';
+import { ref, useTransitionState } from 'vue'
 
 const onlineFriends = ref([
     { username: 'usbo', avatar: '/pfp_placeholder.png', last_access: 'now' },
@@ -26,10 +26,12 @@ const onlineFriends = ref([
         <ul v-else>
             <li v-for="friend in onlineFriends" :key="friend.username">
                 <div class="user_info">
-                    <img :src="friend.avatar" alt="">
+                    <img :src="friend.avatar" alt="" />
                     <a href="#">{{ friend.username }}</a>
                 </div>
-                <p :class="friend.last_access == 'now' ? 'online' : 'past'">{{ friend.last_access }}</p>
+                <p :class="friend.last_access == 'now' ? 'online' : 'past'">
+                    {{ friend.last_access }}
+                </p>
             </li>
         </ul>
     </div>
@@ -179,6 +181,5 @@ img {
         font-size: 13px;
         margin-left: 43px;
     }
-
 }
 </style>

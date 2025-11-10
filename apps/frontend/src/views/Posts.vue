@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { usePostStore } from '@/stores/posts';
-import { onMounted } from 'vue';
+import { usePostStore } from '@/stores/posts'
+import { onMounted } from 'vue'
 
-const postStore = usePostStore();
+const postStore = usePostStore()
 
 onMounted(async () => {
-    await postStore.fetchAllPosts();
+    await postStore.fetchAllPosts()
 })
 </script>
 

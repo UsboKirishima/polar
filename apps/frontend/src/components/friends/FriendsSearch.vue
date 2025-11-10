@@ -1,30 +1,34 @@
 <script setup lang="ts">
-import { faArrowRight, faAt, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { ref } from 'vue';
-import { useFriendStore } from '../../stores/friends';
+import { faArrowRight, faAt, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { ref } from 'vue'
+import { useFriendStore } from '../../stores/friends'
 
-const friendStore = useFriendStore();
+const friendStore = useFriendStore()
 
-const searchContent = ref('');
+const searchContent = ref('')
 
 const handleSearch = async () => {
-    await friendStore.sendRequestByUsername(searchContent.value);
+    await friendStore.sendRequestByUsername(searchContent.value)
 }
 
 const handleKeyPress = (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
-        handleSearch();
+        handleSearch()
     }
-};
-
+}
 </script>
 
 <template>
     <div class="search-container">
         <FontAwesomeIcon :icon="faAt" class="tag" />
-        <input type="search" placeholder="Search friend by username" v-model="searchContent" class="search-bar"
-            @keypress="handleKeyPress">
+        <input
+            type="search"
+            placeholder="Search friend by username"
+            v-model="searchContent"
+            class="search-bar"
+            @keypress="handleKeyPress"
+        />
         <div class="submit" @click="handleSearch">
             <FontAwesomeIcon :icon="faArrowRight" class="icon" />
         </div>
@@ -82,7 +86,7 @@ input::placeholder {
     color: #ffffff3a;
 }
 
-input[type="search"]::-webkit-search-cancel-button {
+input[type='search']::-webkit-search-cancel-button {
     -webkit-appearance: none;
     appearance: none;
     display: none;

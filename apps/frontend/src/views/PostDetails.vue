@@ -1,62 +1,62 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { usePostStore } from "@/stores/posts";
-import { type Post } from "@/types";
-import { useAuthStore } from "@/stores/auth";
-import PostCard from "@/components/feed/PostCard.vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import dayjs from "dayjs";
-import relativeTime from 'dayjs/plugin/relativeTime';
-import PageLoading from "@/components/PageLoading.vue";
-import Userinfo from "@/components/Userinfo.vue";
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { usePostStore } from '@/stores/posts'
+import { type Post } from '@/types'
+import { useAuthStore } from '@/stores/auth'
+import PostCard from '@/components/feed/PostCard.vue'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import PageLoading from '@/components/PageLoading.vue'
+import Userinfo from '@/components/Userinfo.vue'
 
-dayjs.extend(relativeTime);
+dayjs.extend(relativeTime)
 
-const route = useRoute();
-const postStore = usePostStore();
-const router = useRouter();
+const route = useRoute()
+const postStore = usePostStore()
+const router = useRouter()
 const auth = useAuthStore()
-const postId = route.params.id as string;
+const postId = route.params.id as string
 
-const post = ref<Post | null>(null);
-const newComment = ref("");
-const currentUserId = auth.user?.id;
+const post = ref<Post | null>(null)
+const newComment = ref('')
+const currentUserId = auth.user?.id
 
 const fetchPost = async () => {
-    const data = await postStore.fetchPostById(postId);
-    if (data) post.value = data;
-};
+    const data = await postStore.fetchPostById(postId)
+    if (data) post.value = data
+}
 
 const toggleLikePost = async () => {
-    await postStore.togglePostLike(postId);
-    await fetchPost();
-};
+    await postStore.togglePostLike(postId)
+    await fetchPost()
+}
 
 const submitComment = async () => {
-    if (!newComment.value) return;
-    await postStore.addPostComment(postId, newComment.value);
-    newComment.value = "";
-    await fetchPost();
-};
+    if (!newComment.value) return
+    await postStore.addPostComment(postId, newComment.value)
+    newComment.value = ''
+    await fetchPost()
+}
 
 const handleKeyPress = (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
-        submitComment();
+        submitComment()
     }
 }
 
 const deleteComment = async (commentId: string) => {
-    await postStore.removePostComment(postId, commentId);
-    await fetchPost();
-};
-
-const goBack = () => {
-    router.go(-1);
+    await postStore.removePostComment(postId, commentId)
+    await fetchPost()
 }
 
-onMounted(fetchPost);
+const goBack = () => {
+    router.go(-1)
+}
+
+onMounted(fetchPost)
 </script>
 
 <template>
@@ -65,7 +65,9 @@ onMounted(fetchPost);
             <div @click="goBack" class="back-ic">
                 <FontAwesomeIcon :icon="faArrowLeft" />
             </div>
-            <h2>Post by <b>{{ post!.author.profile.fullName }}</b></h2>
+            <h2>
+                Post by <b>{{ post!.author.profile.fullName }}</b>
+            </h2>
         </div>
         <div class="post-detail">
             <PostCard :post="post" />
@@ -73,17 +75,29 @@ onMounted(fetchPost);
                 <h3>{{ post.comments.length }} comments</h3>
                 <div class="comment create">
                     <div class="profile">
-                        <img :src="auth.user?.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="">
+                        <img
+                            :src="auth.user?.profile?.avatar?.url ?? '/pfp_placeholder.png'"
+                            alt=""
+                        />
                     </div>
-                    <input type="text" v-model="newComment" @keypress="handleKeyPress" placeholder="Post a comment">
+                    <input
+                        type="text"
+                        v-model="newComment"
+                        @keypress="handleKeyPress"
+                        placeholder="Post a comment"
+                    />
                     <div class="send-btn" @click="submitComment">
                         <FontAwesomeIcon :icon="faArrowRight" />
                     </div>
                 </div>
-                <div v-for="comment in post!.comments.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())"
-                    class="comment">
+                <div
+                    v-for="comment in post!.comments.sort(
+                        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+                    )"
+                    class="comment"
+                >
                     <div class="profile">
-                        <Userinfo :user="comment.user" />
+                        <Userinfo :user="comment.user" disable-over />
                     </div>
                     <p class="content">{{ comment.text || 'unknown' }}</p>
                     <p class="date">{{ dayjs(comment.createdAt).fromNow() || 'unknown' }}</p>
@@ -180,7 +194,7 @@ b {
     color: #ffffff7a;
 }
 
-.comments>.comment:last-child {
+.comments > .comment:last-child {
     border-radius: 0 0px 16px 16px;
 }
 

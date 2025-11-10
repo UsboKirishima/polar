@@ -1,10 +1,8 @@
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <template>
     <div class="container">
-        <img src="/logo_no_bg.png" alt="">
+        <img src="/logo_no_bg.png" alt="" />
         <div class="loader"></div>
     </div>
 </template>
@@ -34,13 +32,14 @@
     height: 15px;
     aspect-ratio: 5;
     -webkit-mask: linear-gradient(90deg, #ffffff00, #ffffff 20% 80%, #ffffff00);
-    background: radial-gradient(closest-side at 37.5% 50%, #ffffff 94%, #ffffff00) 0/calc(80%/3) 100%;
-    animation: l48 .75s infinite linear;
+    background: radial-gradient(closest-side at 37.5% 50%, #ffffff 94%, #ffffff00) 0 / calc(80% / 3)
+        100%;
+    animation: l48 0.75s infinite linear;
 }
 
 @keyframes l48 {
     100% {
-        background-position: 36.36%
+        background-position: 36.36%;
     }
 }
 

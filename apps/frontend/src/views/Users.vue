@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useUserStore } from '../stores/users';
+import { onMounted, ref } from 'vue'
+import { useUserStore } from '../stores/users'
 
-const usersStore = useUserStore();
+const usersStore = useUserStore()
 
 onMounted(async () => {
-    usersStore.fetchUsers();
+    usersStore.fetchUsers()
 })
 </script>
 
@@ -14,7 +14,7 @@ onMounted(async () => {
         <ul v-for="user in usersStore.users">
             <li>
                 <a :href="'/users/' + user.id">
-                    <img src="/pfp_placeholder.png" alt="">
+                    <img src="/pfp_placeholder.png" alt="" />
                     <router-link :to="`/users/${user.id}`">{{ user.profile.username }}</router-link>
                 </a>
             </li>

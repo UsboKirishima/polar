@@ -1,78 +1,78 @@
 <script setup lang="ts">
-import HeaderBar from '@/components/HeaderBar.vue';
-import PageLoading from '@/components/PageLoading.vue';
-import { useAuthStore } from '@/stores/auth';
-import { useSettingsStore } from '@/stores/settings';
-import { useUserStore } from '@/stores/users';
-import { trpc } from '@/trpc';
-import type { User } from '@/types';
-import { onMounted, ref, watch } from 'vue';
+import HeaderBar from '@/components/HeaderBar.vue'
+import PageLoading from '@/components/PageLoading.vue'
+import { useAuthStore } from '@/stores/auth'
+import { useSettingsStore } from '@/stores/settings'
+import { useUserStore } from '@/stores/users'
+import { trpc } from '@/trpc'
+import type { User } from '@/types'
+import { onMounted, ref, watch } from 'vue'
 
-const userStore = useUserStore();
-const authStore = useAuthStore();
-const settingsStore = useSettingsStore();
-const user = ref<User>();
+const userStore = useUserStore()
+const authStore = useAuthStore()
+const settingsStore = useSettingsStore()
+const user = ref<User>()
 
-const username = ref(user.value?.profile.username);
+const username = ref(user.value?.profile.username)
 
-const avatarFile = ref<File | null>(null);
-const bannerFile = ref<File | null>(null);
-const avatarPreview = ref('');
-const bannerPreview = ref('');
-const isUploading = ref(false);
+const avatarFile = ref<File | null>(null)
+const bannerFile = ref<File | null>(null)
+const avatarPreview = ref('')
+const bannerPreview = ref('')
+const isUploading = ref(false)
 
-const bio = ref('');
-const bioPreview = ref('');
+const bio = ref('')
+const bioPreview = ref('')
 
 const handleFileChange = (event: Event, type: 'avatar' | 'banner') => {
-    const target = event.target as HTMLInputElement;
+    const target = event.target as HTMLInputElement
     if (target.files && target.files[0]) {
-        const file = target.files[0];
-        const reader = new FileReader();
+        const file = target.files[0]
+        const reader = new FileReader()
 
         reader.onload = () => {
             if (type === 'avatar') {
-                avatarFile.value = file;
-                avatarPreview.value = reader.result as string;
+                avatarFile.value = file
+                avatarPreview.value = reader.result as string
             } else {
-                bannerFile.value = file;
-                bannerPreview.value = reader.result as string;
+                bannerFile.value = file
+                bannerPreview.value = reader.result as string
             }
-        };
-        reader.readAsDataURL(file);
+        }
+        reader.readAsDataURL(file)
     }
-};
+}
 
 const uploadAvatar = () => {
-    if (avatarFile.value) settingsStore.uploadAvatar(avatarFile.value);
-};
+    if (avatarFile.value) settingsStore.uploadAvatar(avatarFile.value)
+}
 
 const uploadBanner = () => {
-    if (bannerFile.value) settingsStore.uploadBanner(bannerFile.value);
-};
+    if (bannerFile.value) settingsStore.uploadBanner(bannerFile.value)
+}
 
 const uploadAll = () => {
-    uploadAvatar();
-    uploadBanner();
+    uploadAvatar()
+    uploadBanner()
 }
 
 watch(bio, (newVal) => {
-    bioPreview.value = newVal.trim();
-});
+    bioPreview.value = newVal.trim()
+})
 
 const autoResize = (e: Event) => {
-    const textarea = e.target as HTMLTextAreaElement;
-    textarea.style.height = 'auto';
-    textarea.style.height = textarea.scrollHeight + 'px';
-};
+    const textarea = e.target as HTMLTextAreaElement
+    textarea.style.height = 'auto'
+    textarea.style.height = textarea.scrollHeight + 'px'
+}
 
 onMounted(async () => {
     if (authStore.user) {
-        user.value = await userStore.getUserById(authStore.user.id);
+        user.value = await userStore.getUserById(authStore.user.id)
         avatarPreview.value = user.value?.profile.avatar.url ?? ''
         bannerPreview.value = user.value?.profile.banner.url ?? ''
     }
-});
+})
 </script>
 
 <template>
@@ -83,40 +83,63 @@ onMounted(async () => {
         <div class="settings">
             <div class="sub">
                 <h3>Media</h3>
-                <hr>
+                <hr />
                 <div class="media">
                     <div class="upload-section">
                         <label for="avatarFile" class="image-label">
-                            <img class="avatar" :src="avatarPreview ?? '/pfp_placeholder.png'" alt="Avatar Preview" />
+                            <img
+                                class="avatar"
+                                :src="avatarPreview ?? '/pfp_placeholder.png'"
+                                alt="Avatar Preview"
+                            />
                             <span class="overlay-text">Click to change avatar</span>
                         </label>
-                        <input type="file" id="avatarFile" accept="image/*"
-                            @change="(e) => handleFileChange(e, 'avatar')" hidden />
+                        <input
+                            type="file"
+                            id="avatarFile"
+                            accept="image/*"
+                            @change="(e) => handleFileChange(e, 'avatar')"
+                            hidden
+                        />
                     </div>
 
                     <div class="upload-section">
                         <label for="bannerFile" class="image-label">
-                            <img class="banner" :src="bannerPreview ?? '/bg_placeholder.jpg'" alt="Banner Preview" />
+                            <img
+                                class="banner"
+                                :src="bannerPreview ?? '/bg_placeholder.jpg'"
+                                alt="Banner Preview"
+                            />
                             <span class="overlay-text">Click to change banner</span>
                         </label>
-                        <input type="file" id="bannerFile" accept="image/*"
-                            @change="(e) => handleFileChange(e, 'banner')" hidden />
+                        <input
+                            type="file"
+                            id="bannerFile"
+                            accept="image/*"
+                            @change="(e) => handleFileChange(e, 'banner')"
+                            hidden
+                        />
                     </div>
                 </div>
 
                 <div class="bio-section">
                     <div class="bio-input">
                         <label for="bio">Biography</label>
-                        <hr>
-                        <textarea rows="1" name="bio" id="bio" placeholder="Write something about yourself..."
-                            v-model="bio" @input="autoResize"></textarea>
+                        <hr />
+                        <textarea
+                            rows="1"
+                            name="bio"
+                            id="bio"
+                            placeholder="Write something about yourself..."
+                            v-model="bio"
+                            @input="autoResize"
+                        ></textarea>
                     </div>
                 </div>
                 <button class="save" @click="uploadAll">
                     {{ !isUploading ? 'Save' : 'Loading' }}
                 </button>
             </div>
-
         </div>
     </div>
 </template>
@@ -161,7 +184,7 @@ h3 {
     align-items: center;
 }
 
-input[type="file"] {
+input[type='file'] {
     display: none;
 }
 
@@ -244,7 +267,9 @@ textarea {
     overflow: hidden;
     font-family: Arial, sans-serif;
     line-height: 1.4;
-    transition: border 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    transition:
+        border 0.2s ease-in-out,
+        background-color 0.2s ease-in-out;
 }
 
 textarea:focus {

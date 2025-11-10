@@ -1,41 +1,40 @@
 <script setup lang="ts">
-import { onMounted, computed } from "vue";
-import { useFriendStore } from "@/stores/friends";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faCancel, faCheck, faCross, faCrosshairs } from "@fortawesome/free-solid-svg-icons";
-import { useRouter } from "vue-router";
-import PageLoading from "../PageLoading.vue";
-import type { Friend } from "../feed/ListItem.vue";
-import type { Friendship } from "@/types/friends";
-import type { User } from "@/types";
-import Userinfo from "../Userinfo.vue";
+import { onMounted, computed } from 'vue'
+import { useFriendStore } from '@/stores/friends'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faCancel, faCheck, faCross, faCrosshairs } from '@fortawesome/free-solid-svg-icons'
+import { useRouter } from 'vue-router'
+import PageLoading from '../PageLoading.vue'
+import type { Friend } from '../feed/ListItem.vue'
+import type { Friendship } from '@/types/friends'
+import type { User } from '@/types'
+import Userinfo from '../Userinfo.vue'
 
 // Props
 const props = defineProps<{
-    currentPage: "friends" | "requests";
-    friends?: Friendship[];
-    hideRemoveBtn?: boolean;
-}>();
+    currentPage: 'friends' | 'requests'
+    friends?: Friendship[]
+    hideRemoveBtn?: boolean
+}>()
 
 // Store
-const friendStore = useFriendStore();
+const friendStore = useFriendStore()
 const router = useRouter()
 
 // Fetch data on mount depending on currentPage
 onMounted(() => {
-
     if (props.friends) {
-        friendStore.friends = props.friends;
+        friendStore.friends = props.friends
     } else {
-        friendStore.fetchFriends();
+        friendStore.fetchFriends()
     }
 
-    friendStore.fetchPendingRequests();
-});
+    friendStore.fetchPendingRequests()
+})
 
 // Computed properties to simplify template
-const isFriendsPage = computed(() => props.currentPage === "friends");
-const isRequestsPage = computed(() => props.currentPage === "requests");
+const isFriendsPage = computed(() => props.currentPage === 'friends')
+const isRequestsPage = computed(() => props.currentPage === 'requests')
 
 const fetchAll = () => {
     friendStore.fetchFriends()
@@ -44,17 +43,17 @@ const fetchAll = () => {
 
 // Handlers for accepting and denying friend requests
 const acceptRequest = (senderId: string) => {
-    friendStore.acceptRequest(senderId);
-    fetchAll();
-};
+    friendStore.acceptRequest(senderId)
+    fetchAll()
+}
 
 const denyRequest = (senderId: string) => {
-    friendStore.denyRequest(senderId);
-    fetchAll();
-};
+    friendStore.denyRequest(senderId)
+    fetchAll()
+}
 
 const openFriend = (friendId: string) => {
-    window.location.href = `/users/${friendId}`;
+    window.location.href = `/users/${friendId}`
 }
 </script>
 
@@ -71,7 +70,7 @@ const openFriend = (friendId: string) => {
                 <li v-for="friend in friendStore.friends" :key="friend.userId" class="friend-item">
                     <span class="username">
                         <div class="indentifier" @click="openFriend(friend.friend.id)">
-                            <Userinfo :user="(friend.friend as User)" disable-over />
+                            <Userinfo :user="friend.friend as User" disable-over />
                         </div>
                     </span>
                     <div v-if="!hideRemoveBtn" class="controls">
@@ -87,9 +86,13 @@ const openFriend = (friendId: string) => {
 
         <div v-else-if="isRequestsPage">
             <ul v-if="friendStore.pendingRequests?.length" class="request-list">
-                <li v-for="request in friendStore.pendingRequests" :key="request.id" class="request-item">
+                <li
+                    v-for="request in friendStore.pendingRequests"
+                    :key="request.id"
+                    class="request-item"
+                >
                     <div class="indentifier" @click="openFriend(request.senderId)">
-                        <Userinfo :user="(request.sender as User)" disable-over />
+                        <Userinfo :user="request.sender as User" disable-over />
                     </div>
                     <div class="actions">
                         <button @click="acceptRequest(request.senderId)" class="accept-btn">
@@ -141,7 +144,8 @@ const openFriend = (friendId: string) => {
     border-radius: 8px;
     margin-bottom: 0.5rem;
     background: #e1eeff33;
-    background: radial-gradient(circle at 20% 30%, #9a9bff33, transparent 60%),
+    background:
+        radial-gradient(circle at 20% 30%, #9a9bff33, transparent 60%),
         radial-gradient(circle at 80% 70%, #f081ff1a, transparent 60%);
     transition: 100ms;
     backdrop-filter: blur(12px);
@@ -167,7 +171,6 @@ const openFriend = (friendId: string) => {
     width: 40px;
 }
 
-
 .actions {
     display: flex;
     gap: 0.5rem;
@@ -190,7 +193,6 @@ const openFriend = (friendId: string) => {
     background: #1c2532;
     transition: 300ms;
     z-index: 89;
-
 }
 
 .accept-btn:hover {

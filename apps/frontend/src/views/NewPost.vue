@@ -1,59 +1,58 @@
 <script setup lang="ts">
-import Userinfo from '@/components/Userinfo.vue';
-import { useAuthStore } from '@/stores/auth';
-import { usePostStore } from '@/stores/posts';
-import type { Category } from '@/types';
-import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { trpc } from '@/trpc';
-import { colorMap, getColorRgba, type ColorEnum } from '@/utils/colors';
+import Userinfo from '@/components/Userinfo.vue'
+import { useAuthStore } from '@/stores/auth'
+import { usePostStore } from '@/stores/posts'
+import type { Category } from '@/types'
+import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { trpc } from '@/trpc'
+import { colorMap, getColorRgba, type ColorEnum } from '@/utils/colors'
 
+const { Normal, ...colorMapToShow } = colorMap
 
-const { Normal, ...colorMapToShow } = colorMap;
+const postStore = usePostStore()
+const router = useRouter()
 
-const postStore = usePostStore();
-const router = useRouter();
-
-const postContent = ref('');
-const selectedColorKey = ref<ColorEnum>('Normal');
+const postContent = ref('')
+const selectedColorKey = ref<ColorEnum>('Normal')
 
 const computedBackgroundColor = computed(() => {
-    return getColorRgba(selectedColorKey.value);
-});
+    return getColorRgba(selectedColorKey.value)
+})
 
 const handleNewPost = async () => {
     //handle categories #
 
-    if (!postContent.value) return;
+    if (!postContent.value) return
 
-    const categories: string[] = postContent.value.split(' ').filter(word => word[0] === '#')
-    const parsedCategories: { name: string }[] = categories.map(cat => {
-        return { name: cat.slice(1) };
+    const categories: string[] = postContent.value.split(' ').filter((word) => word[0] === '#')
+    const parsedCategories: { name: string }[] = categories.map((cat) => {
+        return { name: cat.slice(1) }
     })
     //await postStore.createNewPost(postContent.value, parsedCategories);
     await trpc.post.create.mutate({
         text: postContent.value.trim(),
         categories: parsedCategories,
-        color: selectedColorKey.value
+        color: selectedColorKey.value,
     })
-    postContent.value = '';
-    await postStore.fetchAllPosts();
-    router.push('/feed');
+    postContent.value = ''
+    await postStore.fetchAllPosts()
+    router.push('/feed')
 }
 
 const handleKeyPress = async (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
-        await handleNewPost();
+        await handleNewPost()
     }
 }
 
 const goBack = () => {
-    router.go(-1);
+    router.go(-1)
 }
 
-const auth = useAuthStore();
+const auth = useAuthStore()
 </script>
 
 <template>
@@ -71,7 +70,12 @@ const auth = useAuthStore();
                     <Userinfo :user="auth.user" disable-over />
                 </div>
                 <div class="send">
-                    <input type="text" placeholder="Write a post..." v-model="postContent" @keypress="handleKeyPress">
+                    <input
+                        type="text"
+                        placeholder="Write a post..."
+                        v-model="postContent"
+                        @keypress="handleKeyPress"
+                    />
                     <div @click="handleNewPost">
                         <FontAwesomeIcon :icon="faArrowRight" class="send-btn" />
                     </div>
@@ -80,11 +84,13 @@ const auth = useAuthStore();
             <div class="background-container">
                 <h2>Palette</h2>
                 <div class="background">
-                    <div class="palette" v-for="(colorArray, key) in colorMapToShow" :key="key"
+                    <div
+                        class="palette"
+                        v-for="(colorArray, key) in colorMapToShow"
+                        :key="key"
                         @click="selectedColorKey = key as ColorEnum"
-                        :style="{ background: `rgba(${colorArray.join(',')})` }">
-                    </div>
-
+                        :style="{ background: `rgba(${colorArray.join(',')})` }"
+                    ></div>
                 </div>
             </div>
         </div>

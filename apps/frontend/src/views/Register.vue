@@ -1,45 +1,51 @@
 <script setup lang="ts">
-import api from '@/axiosApi';
-import { onMounted, ref } from 'vue';
-import { useAuthStore } from '@/stores/auth';
-import { useRouter } from 'vue-router';
+import api from '@/axiosApi'
+import { onMounted, ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
 
-const auth = useAuthStore();
+const auth = useAuthStore()
 const router = useRouter()
 
-const email = ref('');
-const username = ref('');
-const dayOfBirth = ref('');
-const password = ref('');
-const fullname = ref('');
-const confirmPassword = ref('');
-const error = ref('');
-const isLoading = ref(false);
+const email = ref('')
+const username = ref('')
+const dayOfBirth = ref('')
+const password = ref('')
+const fullname = ref('')
+const confirmPassword = ref('')
+const error = ref('')
+const isLoading = ref(false)
 
 const handleRegister = async () => {
-    error.value = '';
+    error.value = ''
 
     if (password.value !== confirmPassword.value) {
-        error.value = 'Passwords do not match.';
-        return;
+        error.value = 'Passwords do not match.'
+        return
     }
 
-    const dob = dayOfBirth.value ? new Date(dayOfBirth.value) : new Date();
+    const dob = dayOfBirth.value ? new Date(dayOfBirth.value) : new Date()
 
-    const success = await auth.register(email.value, password.value, username.value, dob, fullname.value);
+    const success = await auth.register(
+        email.value,
+        password.value,
+        username.value,
+        dob,
+        fullname.value,
+    )
 
     if (success) {
         router.push(`/users/${auth.user?.id}`)
     } else {
-        error.value = 'Failed to register account. Please check the information provided.';
+        error.value = 'Failed to register account. Please check the information provided.'
     }
 }
 
 const handleKeyPress = (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
-        handleRegister();
+        handleRegister()
     }
-};
+}
 
 onMounted(() => {
     if (auth.isLoggedIn) {
@@ -55,47 +61,100 @@ onMounted(() => {
 
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input id="email" type="email" v-model="email" @keypress="handleKeyPress" placeholder="Insert email"
-                    required :disabled="isLoading" />
+                <input
+                    id="email"
+                    type="email"
+                    v-model="email"
+                    @keypress="handleKeyPress"
+                    placeholder="Insert email"
+                    required
+                    :disabled="isLoading"
+                />
             </div>
 
             <div class="form-group">
                 <label for="username">Username:</label>
-                <input id="username" type="text" v-model="username" @keypress="handleKeyPress" placeholder="Nickname"
-                    required :disabled="isLoading" />
+                <input
+                    id="username"
+                    type="text"
+                    v-model="username"
+                    @keypress="handleKeyPress"
+                    placeholder="Nickname"
+                    required
+                    :disabled="isLoading"
+                />
             </div>
 
             <div class="form-group">
                 <label for="fullname">Full Name:</label>
-                <input id="fullname" type="text" v-model="fullname" @keypress="handleKeyPress"
-                    placeholder="Your Full Name" required :disabled="isLoading" />
+                <input
+                    id="fullname"
+                    type="text"
+                    v-model="fullname"
+                    @keypress="handleKeyPress"
+                    placeholder="Your Full Name"
+                    required
+                    :disabled="isLoading"
+                />
             </div>
 
             <div class="form-group">
                 <label for="dayOfBirth">Date of birth:</label>
-                <input id="dayOfBirth" type="date" v-model="dayOfBirth" @keypress="handleKeyPress"
-                    placeholder="Date of birth" required :disabled="isLoading" />
+                <input
+                    id="dayOfBirth"
+                    type="date"
+                    v-model="dayOfBirth"
+                    @keypress="handleKeyPress"
+                    placeholder="Date of birth"
+                    required
+                    :disabled="isLoading"
+                />
             </div>
 
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input id="password" type="password" v-model="password" @keypress="handleKeyPress"
-                    placeholder="Create password" required :disabled="isLoading" />
+                <input
+                    id="password"
+                    type="password"
+                    v-model="password"
+                    @keypress="handleKeyPress"
+                    placeholder="Create password"
+                    required
+                    :disabled="isLoading"
+                />
             </div>
 
             <div class="form-group">
                 <label for="confirm-password">Confirm Password:</label>
-                <input id="confirm-password" type="password" v-model="confirmPassword" @keypress="handleKeyPress"
-                    placeholder="Confirm password" required :disabled="isLoading" />
+                <input
+                    id="confirm-password"
+                    type="password"
+                    v-model="confirmPassword"
+                    @keypress="handleKeyPress"
+                    placeholder="Confirm password"
+                    required
+                    :disabled="isLoading"
+                />
             </div>
 
             <div v-if="error" class="error-message">
                 {{ error }}
             </div>
 
-            <button type="submit"
-                :disabled="isLoading || !email || !password || !confirmPassword || !username || !fullname || !dayOfBirth || password !== confirmPassword"
-                class="register-button">
+            <button
+                type="submit"
+                :disabled="
+                    isLoading ||
+                    !email ||
+                    !password ||
+                    !confirmPassword ||
+                    !username ||
+                    !fullname ||
+                    !dayOfBirth ||
+                    password !== confirmPassword
+                "
+                class="register-button"
+            >
                 <span v-if="isLoading">Loading...</span>
                 <span v-else>Register</span>
             </button>
@@ -154,10 +213,12 @@ input {
     color: #fff;
     box-sizing: border-box;
     background: #ffffff0a;
-    transition: border-color 0.2s, background-color 0.2s;
+    transition:
+        border-color 0.2s,
+        background-color 0.2s;
 }
 
-input[type="date"] {
+input[type='date'] {
     color-scheme: dark;
 }
 
@@ -193,7 +254,9 @@ input:disabled {
     font-weight: bold;
     cursor: pointer;
     margin-top: 2rem;
-    transition: background-color 0.2s, box-shadow 0.2s;
+    transition:
+        background-color 0.2s,
+        box-shadow 0.2s;
     margin-bottom: 15px;
     box-shadow: 0 2px 10px rgba(97, 175, 239, 0.4);
 }

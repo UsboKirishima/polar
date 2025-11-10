@@ -1,35 +1,45 @@
 <script setup lang="ts">
-import type { User } from '@/types';
-import { ref } from 'vue';
-import Username from './Username.vue';
-import ProfileFloatCard from './profile/ProfileFloatCard.vue';
+import type { User } from '@/types'
+import { ref } from 'vue'
+import Username from './Username.vue'
+import ProfileFloatCard from './profile/ProfileFloatCard.vue'
 
 const props = defineProps<{
-    user: User | null;
-    disableOver?: boolean;
+    user: User | null
+    disableOver?: boolean
 }>()
 
-const profileHover = ref(false);
-const mouseX = ref(0);
-const mouseY = ref(0);
+const profileHover = ref(false)
+const mouseX = ref(0)
+const mouseY = ref(0)
 
 const handleMouseMove = (event: MouseEvent) => {
-    mouseX.value = event.clientX;
-    mouseY.value = event.clientY;
-};
-
+    mouseX.value = event.clientX
+    mouseY.value = event.clientY
+}
 </script>
 
 <template>
-    <div @mouseenter="profileHover = true" @mouseleave="profileHover = false" @mousemove="handleMouseMove">
+    <div
+        @mouseenter="profileHover = true"
+        @mouseleave="profileHover = false"
+        @mousemove="handleMouseMove"
+    >
         <router-link :to="`/users/${user?.id}`" class="post-header">
             <Transition name="fade-slide" v-if="!disableOver">
-                <ProfileFloatCard v-if="profileHover" :user="user!" :mouse-x="mouseX" :mouse-y="mouseY" />
+                <ProfileFloatCard
+                    v-if="profileHover"
+                    :user="user!"
+                    :mouse-x="mouseX"
+                    :mouse-y="mouseY"
+                />
             </Transition>
-            <img :src="user?.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="">
+            <img :src="user?.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="" />
             <div class="h-info">
-                <Username :username="user?.profile.fullName || 'Unknown'"
-                    :is-verified="user?.role === 'ADMIN'" />
+                <Username
+                    :username="user?.profile.fullName || 'Unknown'"
+                    :is-verified="user?.role === 'ADMIN'"
+                />
                 <p class="place">@{{ user?.profile.username || 'Unknown' }}</p>
             </div>
         </router-link>
@@ -37,7 +47,6 @@ const handleMouseMove = (event: MouseEvent) => {
 </template>
 
 <style scoped>
-
 .post-header {
     width: 100%;
     display: flex;
@@ -67,5 +76,4 @@ const handleMouseMove = (event: MouseEvent) => {
     font-size: 0.8rem;
     color: #ffffff91;
 }
-
 </style>

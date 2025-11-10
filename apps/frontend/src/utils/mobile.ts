@@ -1,6 +1,6 @@
-import { useDeviceType } from "@/composables/useDeviceType";
+import { useDeviceType } from '@/composables/useDeviceType'
 
 export const isMobile = () => {
-    const { deviceType, isMobile } = useDeviceType();
-    return isMobile.value;
+    const { deviceType, isMobile } = useDeviceType()
+    return isMobile.value
 }

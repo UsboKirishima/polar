@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import type { Post } from '@/types';
-import PostCard from './PostCard.vue';
+import type { Post } from '@/types'
+import PostCard from './PostCard.vue'
 const props = defineProps<{
-    posts: Array<Post>;
-}>();
-
+    posts: Array<Post>
+}>()
 </script>
 
 <template>
@@ -13,7 +12,6 @@ const props = defineProps<{
     </div>
 </template>
 
-
 <style scoped>
 div {
     display: flex;
@@ -21,7 +19,6 @@ div {
     width: 90%;
     margin: 0 auto;
 }
-
 
 @media (max-width: 768px) {
     div {

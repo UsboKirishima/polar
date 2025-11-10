@@ -1,35 +1,36 @@
 <script setup lang="ts">
-import CategoryCard from '@/components/categories/CategoryCard.vue';
-import PageLoading from '@/components/PageLoading.vue';
-import { usePostStore } from '@/stores/posts';
-import type { Category } from '@/types';
-import { onMounted, ref } from 'vue';
-import router from '@/router';
-import HeaderBar from '@/components/HeaderBar.vue';
+import CategoryCard from '@/components/categories/CategoryCard.vue'
+import PageLoading from '@/components/PageLoading.vue'
+import { usePostStore } from '@/stores/posts'
+import type { Category } from '@/types'
+import { onMounted, ref } from 'vue'
+import router from '@/router'
+import HeaderBar from '@/components/HeaderBar.vue'
 
-const postStore = usePostStore();
-const categories = ref<Category[]>([]);
+const postStore = usePostStore()
+const categories = ref<Category[]>([])
 
 const handleCategoryOpen = (catId: number) => {
-    router.push(`/categories/${catId}`);
+    router.push(`/categories/${catId}`)
 }
 
 onMounted(async () => {
-    await postStore.fetchAllCategories();
-    categories.value = [...postStore.categories].sort((a, b) => b.posts.length - a.posts.length);
+    await postStore.fetchAllCategories()
+    categories.value = [...postStore.categories].sort((a, b) => b.posts.length - a.posts.length)
 })
 </script>
 
 <template>
     <PageLoading v-if="postStore.loading" />
     <div v-else class="space">
-        <HeaderBar>
-            All <b>Categories</b> ({{ categories.length }})
-        </HeaderBar>
+        <HeaderBar> All <b>Categories</b> ({{ categories.length }}) </HeaderBar>
         <div class="container">
             <div class="categories">
-                <CategoryCard v-for="category in categories" :category="category"
-                    @click="handleCategoryOpen(category.id)" />
+                <CategoryCard
+                    v-for="category in categories"
+                    :category="category"
+                    @click="handleCategoryOpen(category.id)"
+                />
             </div>
         </div>
     </div>
