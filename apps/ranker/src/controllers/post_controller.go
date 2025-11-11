@@ -15,7 +15,7 @@ func (pc *PostController) ApiGetAllPosts(c *gin.Context) {
 	posts, err := models.FetchAllPosts(pc.DB)
 
 	if err != nil {
-		c.JSON(200, gin.H{"error": "Failed to fetch posts"})
+		c.JSON(500, gin.H{"error": "Failed to fetch posts"})
 		return
 	}
 

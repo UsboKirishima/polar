@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -29,7 +28,7 @@ func connectDB() *sql.DB {
 		log.Fatalf("Error while pinging the database (Check credentials in .env) %v", err)
 	}
 
-	fmt.Println("Successfully connected to database!")
+	log.Println("Successfully connected to database!")
 
 	db.SetMaxOpenConns(20) // Max connections open
 	db.SetMaxIdleConns(10) // Max idle connections
