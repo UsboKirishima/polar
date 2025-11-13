@@ -27,7 +27,7 @@ type GetCategoryByName = Awaited<ReturnType<typeof __getCategoryByName>>;
  */
 export const __getPostByid = async (postId: string) => {
     return await db.post.findUnique({
-        where: { id: postId },
+        where: { id: postId, published: true },
         include: {
             author: {
                 select: {
@@ -94,6 +94,7 @@ export const __getCommentById = async (commentId: string) => {
  */
 export const __getAllPosts = async () => {
     return await db.post.findMany({
+        where: { published: true },
         include: {
             author: {
                 select: {
@@ -135,7 +136,7 @@ export const __getAllPosts = async () => {
  */
 export const __getPostsByUserId = async (userId: string) => {
     return await db.post.findMany({
-        where: { authorId: userId },
+        where: { authorId: userId, published: true },
         include: {
             categories: true,
             comments: true,
@@ -313,7 +314,10 @@ export const createNewPost = async (
 };
 
 /**
- * Delete a post by given post id
+ * Delete a post by given post id.
+ * ================================
+ * This function does not remove definitely the post,
+ * but It sets the flag `published` to false.
  */
 export const deletePost = async (postId: string) => {
     const postToDelete = await db.post.findUnique({
@@ -325,8 +329,11 @@ export const deletePost = async (postId: string) => {
         throw new Error("Post not found.");
     }
 
-    const result = await db.post.delete({
+    const result = await db.post.update({
         where: { id: postId },
+        data: {
+            published: false
+        }
     });
 
     await cacheManager.delete(CACHE_KEYS.post(postId));
@@ -342,7 +349,7 @@ export const deletePost = async (postId: string) => {
  */
 export const likePost = async (postId: string, userId: string) => {
     const post = await db.post.findUnique({
-        where: { id: postId },
+        where: { id: postId, published: true },
         select: { authorId: true }
     });
 
@@ -404,7 +411,7 @@ export const createNewComment = async (
     postId: string
 ) => {
     const post = await db.post.findUnique({
-        where: { id: postId },
+        where: { id: postId, published: true },
         select: { authorId: true }
     });
 
@@ -445,7 +452,7 @@ export const deleteComment = async (commentId: string) => {
     }
 
     const post = await db.post.findUnique({
-        where: { id: commentToDelete.postId },
+        where: { id: commentToDelete.postId, published: true },
         select: { authorId: true }
     });
 
@@ -628,7 +635,7 @@ export const getCategoryByName = async (categoryName: string) => {
 
 export const updatePost = async (postId: string, newPostInformation: TPostSchema) => {
     const post = await db.post.findUnique({
-        where: { id: postId },
+        where: { id: postId, published: true },
         select: { authorId: true, categories: true }
     });
 
