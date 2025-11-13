@@ -196,8 +196,6 @@ prisma/migrations/migration_lock.toml
 public/uploads/
 uploads/
 
-# Docker
-.dockerignore
 
 # Deployment
 .vercel/
