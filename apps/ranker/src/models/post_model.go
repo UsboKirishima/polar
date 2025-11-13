@@ -6,14 +6,15 @@ import (
 )
 
 type Post struct {
-	ID       string
-	Text     string
-	AuthorID string
+	ID        string
+	Text      string
+	AuthorID  string
+	CreatedAt string
 }
 
 /* Provides all the posts in database */
 func FetchAllPosts(db *sql.DB) ([]Post, error) {
-	query := "SELECT id, text, authorId FROM Post"
+	query := "SELECT id, text, authorId, createdAt FROM Post"
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, fmt.Errorf("Error while fetching posts: %w", err)
@@ -24,7 +25,7 @@ func FetchAllPosts(db *sql.DB) ([]Post, error) {
 	for rows.Next() {
 		var p Post
 
-		if err := rows.Scan(&p.ID, &p.Text, &p.AuthorID); err != nil {
+		if err := rows.Scan(&p.ID, &p.Text, &p.AuthorID, &p.CreatedAt); err != nil {
 			return nil, fmt.Errorf("Error while scanning line: %w", err)
 		}
 		posts = append(posts, p)
