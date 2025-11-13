@@ -55,4 +55,11 @@ h2 {
     color: #fff;
     margin-bottom: 13px;
 }
+
+
+@media (max-width: 1300px) {
+    .feed-sidebar {
+        display: none;
+    }
+}
 </style>
