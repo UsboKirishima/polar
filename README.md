@@ -3,7 +3,7 @@
   
   # **Polar**
   
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  [![License: P-RUAL](https://img.shields.io/badge/License-MIT-yellow.svg)](/LICENSE)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue.svg)](https://www.typescriptlang.org/)
   [![Node.js](https://img.shields.io/badge/Node.js-20+-green.svg)](https://nodejs.org/)
   [![pnpm](https://img.shields.io/badge/pnpm-10.20.0-orange.svg)](https://pnpm.io/)

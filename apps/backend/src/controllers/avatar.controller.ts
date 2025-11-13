@@ -3,6 +3,9 @@ import type { NextFunction, Request, Response } from 'express';
 import { imageKit } from '@polar/media';
 import { avatarService } from '@polar/services';
 
+/**
+ * @deprecated Use tRPC API instead
+ */
 export async function uploadAvatar(req: Request, res: Response, next: NextFunction) {
     try {
         const file = req.file;
@@ -32,6 +35,9 @@ export async function uploadAvatar(req: Request, res: Response, next: NextFuncti
     }
 }
 
+/**
+ * @deprecated Use tRPC API instead
+ */
 export async function getAvatarByUserId(req: Request, res: Response, next: NextFunction) {
     try {
         const userId: string = req.params.userId;
@@ -49,6 +55,9 @@ export async function getAvatarByUserId(req: Request, res: Response, next: NextF
     }
 }
 
+/**
+ * @deprecated Use tRPC API instead
+ */
 export async function getUserAvatar(req: Request, res: Response, next: NextFunction) {
     try {
         const userId: string = req.params.userId;
@@ -66,6 +75,9 @@ export async function getUserAvatar(req: Request, res: Response, next: NextFunct
     }
 }
 
+/**
+ * @deprecated Use tRPC API instead
+ */
 export async function deleteUserAvatar(req: Request, res: Response, next: NextFunction) {
     try {
         const userId: string = req.params.userId;

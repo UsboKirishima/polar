@@ -5,6 +5,7 @@ import { friendService } from '@polar/services';
 /**
  * Create a new friend request
  * Body: { receiverId: string }
+ * @deprecated Use tRPC API instead
  */
 export async function createFriendRequest(req: Request, res: Response, next: NextFunction) {
     try {
@@ -32,6 +33,7 @@ export async function createFriendRequest(req: Request, res: Response, next: Nex
 /**
  * Accept a pending friend request
  * Body: { senderId: string }
+ * @deprecated Use tRPC API instead
  */
 export async function acceptFriendRequest(req: Request, res: Response, next: NextFunction) {
     try {
@@ -59,6 +61,7 @@ export async function acceptFriendRequest(req: Request, res: Response, next: Nex
 /**
  * Reject a pending friend request
  * Body: { senderId: string }
+ * @deprecated Use tRPC API instead
  */
 export async function denyFriendRequest(req: Request, res: Response, next: NextFunction) {
     try {
@@ -85,6 +88,7 @@ export async function denyFriendRequest(req: Request, res: Response, next: NextF
 
 /**
  * Remove friend
+ * @deprecated Use tRPC API instead
  */
 export async function removeFriendship(req: Request, res: Response, next: NextFunction) {
     try {
@@ -106,6 +110,7 @@ export async function removeFriendship(req: Request, res: Response, next: NextFu
 
 /**
  * Get all pending friend requests received by the logged-in user
+ * @deprecated Use tRPC API instead
  */
 export async function getAllPendingFriendRequests(req: Request, res: Response, next: NextFunction) {
     try {
@@ -126,6 +131,7 @@ export async function getAllPendingFriendRequests(req: Request, res: Response, n
 
 /**
  * Get all friends of the logged-in user
+ * @deprecated Use tRPC API instead
  */
 export async function getAllFriendsByUserId(req: Request, res: Response, next: NextFunction) {
     try {

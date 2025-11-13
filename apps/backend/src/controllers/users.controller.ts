@@ -4,6 +4,9 @@ import type { NextFunction, Request, Response } from 'express';
 import { userService } from '@polar/services';
 import { userIdSchema, usernameSchema } from '@polar/types/zod.js';
 
+/*
+ * @deprecated Use tRPC API instead
+ */
 function validateUserId(res: Response, userId: string) {
     const validationResult = userIdSchema.safeParse(userId);
     if (!validationResult.success) {
@@ -15,8 +18,10 @@ function validateUserId(res: Response, userId: string) {
     }
     return validationResult.data;
 }
-
-// -------------------- GET USER BY ID --------------------
+/*
+ * Get user by id
+ * @deprecated Use tRPC API instead
+ */
 export async function getUserById(req: Request, res: Response, next: NextFunction) {
     try {
         const userId: TUserId = req.params.id;
@@ -38,7 +43,10 @@ export async function getUserById(req: Request, res: Response, next: NextFunctio
     }
 }
 
-// -------------------- GET USER BY USERNAME --------------------
+/*
+ * Get user by username
+ * @deprecated Use tRPC API instead
+ */
 export async function getUserByUsername(req: Request, res: Response, next: NextFunction) {
     try {
         const username: TUsername = req.params.username;
@@ -62,7 +70,10 @@ export async function getUserByUsername(req: Request, res: Response, next: NextF
     }
 }
 
-// -------------------- MODIFY USERNAME --------------------
+/*
+ * Modify username 
+ * @deprecated Use tRPC API instead
+ */
 export async function modifyUsername(req: Request, res: Response, next: NextFunction) {
     try {
         const userId: TUserId = req.params.id;
@@ -87,7 +98,10 @@ export async function modifyUsername(req: Request, res: Response, next: NextFunc
     }
 }
 
-// -------------------- GET ALL FRIENDS -------------------
+/*
+ * Get all friends
+ * @deprecated Use tRPC API instead
+ */
 export async function getAllFriends(req: Request, res: Response, next: NextFunction) {
     try {
         const userId: TUserId = req.params.id;
@@ -106,7 +120,10 @@ export async function getAllFriends(req: Request, res: Response, next: NextFunct
     }
 }
 
-// -------------------- GET ALL USERS --------------------
+/*
+ * Get all users
+ * @deprecated Use tRPC API instead
+ */
 export async function getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
         const users = await userService.getAllUsers();

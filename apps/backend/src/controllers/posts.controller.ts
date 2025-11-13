@@ -5,6 +5,7 @@ import { commentSchema, postSchema } from '@polar/types/zod.js';
 
 /**
  * Create a new post
+ * @deprecated Use tRPC API instead
  */
 export async function createPost(req: Request, res: Response, next: NextFunction) {
     try {
@@ -26,6 +27,7 @@ export async function createPost(req: Request, res: Response, next: NextFunction
 
 /**
  * Delete a post (only author can delete)
+ * @deprecated Use tRPC API instead
  */
 export async function deletePost(req: Request, res: Response, next: NextFunction) {
     try {
@@ -58,6 +60,7 @@ export async function deletePost(req: Request, res: Response, next: NextFunction
 
 /**
  * Like or unlike a post
+ * @deprecated Use tRPC API instead
  */
 export async function likePost(req: Request, res: Response, next: NextFunction) {
     try {
@@ -79,6 +82,7 @@ export async function likePost(req: Request, res: Response, next: NextFunction) 
 
 /**
  * Add a comment to a post
+ * @deprecated Use tRPC API instead
  */
 export async function addComment(req: Request, res: Response, next: NextFunction) {
     try {
@@ -101,6 +105,7 @@ export async function addComment(req: Request, res: Response, next: NextFunction
 
 /**
  * Delete a comment (only author of comment can delete)
+ * @deprecated Use tRPC API instead
  */
 export async function deleteComment(req: Request, res: Response, next: NextFunction) {
     try {
@@ -133,6 +138,7 @@ export async function deleteComment(req: Request, res: Response, next: NextFunct
 
 /**
  * Get a single post
+ * @deprecated Use tRPC API instead
  */
 export async function getPostById(req: Request, res: Response, next: NextFunction) {
     try {
@@ -153,6 +159,7 @@ export async function getPostById(req: Request, res: Response, next: NextFunctio
 
 /**
  * Get all posts by a user
+ * @deprecated Use tRPC API instead
  */
 export async function getPostsByUserId(req: Request, res: Response, next: NextFunction) {
     try {
@@ -167,6 +174,7 @@ export async function getPostsByUserId(req: Request, res: Response, next: NextFu
 
 /**
  * Get all posts
+ * @deprecated Use tRPC API instead
  */
 export async function getAllPosts(_req: Request, res: Response, next: NextFunction) {
     try {
@@ -180,6 +188,7 @@ export async function getAllPosts(_req: Request, res: Response, next: NextFuncti
 
 /**
  * Get all categories
+ * @deprecated Use tRPC API instead
  */
 export async function getAllCategories(req: Request, res: Response, next: NextFunction) {
     try {
@@ -191,6 +200,9 @@ export async function getAllCategories(req: Request, res: Response, next: NextFu
     }
 }
 
+/*
+ * @deprecated Use tRPC API instead
+ */
 export async function getCategoryById(req: Request, res: Response, next: NextFunction) {
     try {
         const categoryId = Number(req.params.categoryId);
@@ -214,6 +226,9 @@ export async function getCategoryById(req: Request, res: Response, next: NextFun
     }
 }
 
+/*
+ * @deprecated Use tRPC API instead
+ */
 export async function getCategoryByName(req: Request, res: Response, next: NextFunction) {
     try {
         const categoryName = req.params.categoryName?.trim();
