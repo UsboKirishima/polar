@@ -1,1 +1,51 @@
-# not yet implemented
+version: "3.9"
+
+services:
+  backend:    
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    environment:
+      DATABASE_URL: mysql://user:pass@db:3306/polar
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+      - redis
+
+  frontend:
+    build: ./apps/frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  #ranker:
+  #  build:
+  #    context: .
+  #    dockerfile: Dockerfile.ranker
+  #  ports:
+  #    - "5000:5000"
+  #  depends_on:
+  #    - db
+
+  db:
+    image: mariadb:11.1
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpass
+      MARIADB_DATABASE: polar
+      MARIADB_USER: user
+      MARIADB_PASSWORD: pass
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  mariadb-data:

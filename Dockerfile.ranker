@@ -1,0 +1,19 @@
+FROM golang:1.25.3 AS builder
+
+WORKDIR /app/ranker
+
+COPY apps/ranker/go.mod .
+COPY apps/ranker/go.sum .
+RUN go mod download
+
+COPY apps/ranker .
+
+RUN go build -o ranker ./src/main.go
+
+FROM alpine:3.20
+
+WORKDIR /app
+COPY --from=builder /app/ranker/ranker .
+
+EXPOSE 5000
+CMD ["./ranker"]

@@ -1,0 +1,18 @@
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+RUN npm install -g pnpm
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+COPY packages ./packages
+COPY apps/frontend ./apps/frontend
+
+RUN pnpm install --filter frontend...
+RUN pnpm --filter frontend build
+
+FROM nginx:1.27-alpine
+
+COPY --from=builder /app/apps/frontend/dist /usr/share/nginx/html
+
+EXPOSE 80
