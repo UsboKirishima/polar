@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import api from '../axiosApi'
 import PageLoading from '@/components/PageLoading.vue'
 import { useUserStore } from '@/stores/users'
 import { useAuthStore } from '@/stores/auth'
