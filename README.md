@@ -1,9 +1,9 @@
 <div align="center">
-  <img src="./assets/polar_screen.png" alt="Polar" width="600" />
+  <img src="./assets/screen1.png" alt="Polar" width="600" />
   
   # **Polar**
   
-  [![License: P-RUAL](https://img.shields.io/badge/License-MIT-yellow.svg)](/LICENSE)
+  [![License: P-RUAL](https://img.shields.io/badge/P-RUAL-yellow.svg)](/LICENSE)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue.svg)](https://www.typescriptlang.org/)
   [![Node.js](https://img.shields.io/badge/Node.js-20+-green.svg)](https://nodejs.org/)
   [![pnpm](https://img.shields.io/badge/pnpm-10.20.0-orange.svg)](https://pnpm.io/)
@@ -40,27 +40,20 @@ This is a **monorepo** built with modern tools and best practices:
 - **Monorepo**: Turborepo + pnpm workspaces
 - **Type Safety**: Full end-to-end type safety with tRPC
 
-### 📁 Project Structure
+### 📁 System design
 
-```
-polar/
-├── apps/                           # Applications
-│   ├── frontend/                   # Vue.js web application
-│   └── backend/                    # Express.js API server
-├── packages/                       # Shared packages
-│   ├── api/                        # tRPC API routes and procedures
-│   ├── types/                      # Shared TypeScript types and Zod schemas
-│   ├── db/                         # Database layer with Prisma
-│   ├── services/                   # Business logic services
-│   ├── utils/                      # Common utility functions
-│   ├── media/                      # File upload and media handling
-│   ├── redis-manager/              # Redis connection management
-│   ├── algorithm/                  # Scoring algorithms
-│   └── typescript-config/          # Shared TypeScript configurations
-├── design/                         # Design assets and mockups
-├── scripts/                        # Build and deployment scripts
-└── tools/                          # Development tools and utilities
-```
+![tech_stack](/assets/tech_stack.jpg)
+
+### 📷 Screenshots
+
+- Post page
+    ![post](/assets/screen_post.png)
+- Profile page
+    ![profile](/assets/screen_profile.png)
+- Friends page
+    ![friends](/assets/screen_friends.png)
+- Post creation
+    ![create](/assets/screen_create.png)
 
 ## 🚀 Quick Start
 
@@ -116,121 +109,6 @@ polar/
     pnpm dev --filter=@polar/backend
     pnpm dev --filter=@polar/frontend
     ```
-
-## 📜 Available Scripts
-
-### Root Level Commands
-
-```bash
-# Development
-pnpm dev                    # Start all apps in development mode
-pnpm dev --parallel        # Start all apps in parallel
-
-# Building
-pnpm build                  # Build applications (no package build needed!)
-
-# Code Quality
-pnpm lint                   # Lint all packages
-pnpm lint:fix              # Fix linting issues
-pnpm type-check            # Type check all packages
-pnpm format                # Format code with Prettier
-pnpm format:check          # Check code formatting
-
-# Testing
-pnpm test                   # Run all tests
-pnpm test:watch            # Run tests in watch mode
-
-# Database
-pnpm db:generate           # Generate Prisma client
-pnpm db:push              # Push schema changes to database
-pnpm db:migrate           # Run database migrations
-pnpm db:studio            # Open Prisma Studio
-
-# Utilities
-pnpm clean                 # Clean all build outputs and caches
-pnpm clean:dist           # Clean only dist folders
-pnpm clean:turbo          # Clean Turborepo cache
-```
-
-### Package-Specific Commands
-
-```bash
-# Work on specific packages
-pnpm --filter=@polar/api build
-pnpm --filter=@polar/backend dev
-pnpm --filter=@polar/frontend test
-
-# Run commands in multiple packages
-pnpm --filter="./packages/*" build
-pnpm --filter="./apps/*" lint
-```
-
-## 🏭 Development Workflow
-
-### Adding a New Package
-
-1. Create the package directory:
-
-    ```bash
-    mkdir packages/my-new-package
-    cd packages/my-new-package
-    ```
-
-2. Initialize the package:
-
-    ```bash
-    pnpm init
-    ```
-
-3. Update `package.json` following the **package** pattern:
-
-    ```json
-    {
-        "name": "@polar/my-new-package",
-        "version": "1.0.0",
-        "main": "./src/index.ts",
-        "types": "./src/index.ts",
-        "sideEffects": false,
-        "exports": {
-            ".": {
-                "import": "./src/index.ts",
-                "require": "./src/index.ts",
-                "types": "./src/index.ts"
-            }
-        },
-        "files": ["src", "package.json"],
-        "scripts": {
-            "type-check": "tsc --noEmit",
-            "lint": "eslint src --fix"
-        }
-    }
-    ```
-
-4. Create TypeScript configuration:
-
-    ```json
-    {
-        "$schema": "https://json.schemastore.org/tsconfig",
-        "extends": "@polar/typescript-config/base",
-        "compilerOptions": {
-            "noEmit": true
-        },
-        "include": ["src/**/*"],
-        "exclude": ["node_modules", "**/*.test.*", "**/*.spec.*"]
-    }
-    ```
-
-5. Create the source directory and entry file:
-    ```bash
-    mkdir src
-    echo "export {}" > src/index.ts
-    ```
-
-### Working with Dependencies
-
-- **Add workspace dependencies**: Use `workspace:*` protocol
-- **Add external dependencies**: Use exact versions when possible
-- **Update dependencies**: Use `pnpm update` to update all packages
 
 ### Code Standards
 
