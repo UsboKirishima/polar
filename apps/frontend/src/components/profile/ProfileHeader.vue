@@ -1,83 +1,66 @@
 <script setup lang="ts">
-import type { Post, User } from '@/types'
 import Username from '../Username.vue'
-import { useFriendStore } from '@/stores/friends'
-import type { Friendship } from '@/types/friends'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
     faAdd,
-    faArrowLeft,
     faCheck,
     faEdit,
     faSignOut,
-    faSquareArrowUpRight,
-    faWindowClose,
 } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
+import type { trpc } from '@/trpc'
+import { useFriendMutations } from '@/mutations'
 
 const props = defineProps<{
     isProfilePage: boolean
-    user: User | null
-    posts: Post[]
-    friends: Friendship[]
+    user?: Awaited<ReturnType<typeof trpc.user.getById.query>>
+    posts: Awaited<ReturnType<typeof trpc.user.getPosts.query>>
+    friends: Awaited<ReturnType<typeof trpc.user.getFriends.query>>
 }>()
 
 const isFriendRequested = ref<boolean>(false)
 
 const auth = useAuthStore()
 const router = useRouter()
-const friendStore = useFriendStore()
+
+const friendMutations = useFriendMutations()
+const sendRequest = friendMutations.sendRequest();
 
 const handleOpenSettings = () => {
     router.push(`/profile/settings`)
 }
 
 const handleAddFriend = async () => {
-    if (props.user) await friendStore.sendRequest(props.user?.id)
-    await friendStore.fetchPendingRequests()
-    await friendStore.fetchFriends()
-    await refreshFriends()
+    if (props.user) await sendRequest.mutateAsync(props.user?.id);
     isFriendRequested.value = true
-}
-
-const refreshFriends = async () => {
-    if (
-        friendStore.pendingRequests?.some((f) => f.receiverId === props.user?.id) ||
-        friendStore.friends?.some((f) => f.friendId === props.user?.id)
-    )
-        isFriendRequested.value = true
 }
 
 const logout = () => {
     auth.logout()
     window.location.href = '/login'
 }
-
-onMounted(async () => {
-    await refreshFriends()
-})
 </script>
 
 <template>
     <div class="container">
         <div class="photos">
             <div class="bg-container">
-                <img class="bg" :src="user?.profile.banner?.url ?? '/bg_placeholder.jpg'" alt="" />
+                <img class="bg" :src="user?.profile?.banner?.url ?? '/bg_placeholder.jpg'" alt="" />
             </div>
-            <img class="pfp" :src="user?.profile.avatar?.url ?? '/pfp_placeholder.png'" alt="" />
+            <img class="pfp" :src="user?.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="" />
         </div>
         <div class="main">
             <div class="info">
                 <Username
-                    :username="user!.profile.fullName || ''"
+                    :username="user!.profile?.fullName || ''"
                     :is-verified="user!.role === 'ADMIN' || false"
                     class="username"
                 />
-                <p class="tag">@{{ user!.profile.username || 'unknown' }}</p>
+                <p class="tag">@{{ user!.profile?.username || 'unknown' }}</p>
                 <p class="bio">
-                    {{ user!.profile.bio == 'unknown' ? 'no bio yet' : user!.profile.bio }}
+                    {{ user!.profile?.bio == 'unknown' ? 'no bio yet' : user!.profile?.bio }}
                 </p>
                 <p class="join-date">
                     Joined {{ new Date(user!.createdAt).toUTCString().slice(0, 16) }}

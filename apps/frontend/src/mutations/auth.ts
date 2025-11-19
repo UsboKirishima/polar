@@ -3,18 +3,23 @@ import { trpc } from '@/trpc';
 import type { inferProcedureInput, inferProcedureOutput } from '@trpc/server';
 import type { AppRouter } from '@polar/api';
 
-const queryClient = useQueryClient();
-const authKeys = Object.keys(trpc.auth) as Array<keyof typeof trpc.auth>;
+export function useAuthMutations() {
+    const queryClient = useQueryClient();
+    
+    const login = useMutation({
+        mutationFn: (input: inferProcedureInput<AppRouter['auth']['login']>) => 
+            trpc.auth.login.mutate(input),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['me'] }),
+    });
 
-export const authMutations: {
-    [K in keyof typeof trpc.auth]: () => ReturnType<typeof useMutation<inferProcedureOutput<AppRouter['auth'][K]>, unknown, inferProcedureInput<AppRouter['auth'][K]>>>
-} = authKeys.reduce((acc, key) => {
-    acc[key] = () =>
-        useMutation<inferProcedureOutput<AppRouter['auth'][typeof key]>, unknown, inferProcedureInput<AppRouter['auth'][typeof key]>>(
-            {
-                mutationFn: (input) => (trpc.auth[key] as any).mutation(input),
-                onSuccess: () => queryClient.invalidateQueries({ queryKey: ['me'] }),
-            }
-        );
-    return acc;
-}, {} as any);
+    const register = useMutation({
+        mutationFn: (input: inferProcedureInput<AppRouter['auth']['register']>) => 
+            trpc.auth.register.mutate(input),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['me'] }),
+    });
+
+    return {
+        login,
+        register,
+    };
+}
