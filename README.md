@@ -11,10 +11,14 @@
   
   A modern full-stack social platform to connect with nearby friends based on location.
   
-  [🌐 polar.net](https://polar.net) | [📱 Frontend](./apps/frontend/) | [⚡ Backend](./apps/backend/) | [🎨 Design](./design/)
+  [🌐 polar](https://polar.usbo.tech) | [📱 Frontend](./apps/frontend/) | [⚡ Backend](./apps/backend/) | [🎨 License](/LICENSE)
 </div>
 
 ---
+> [!WARNING]
+> There is currently **no stable release** of **Polar** available.  
+> Expect breaking changes, incomplete features, and frequent updates.
+
 
 ## ✨ Features
 
