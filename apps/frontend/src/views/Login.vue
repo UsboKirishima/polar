@@ -4,7 +4,19 @@ import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { useDeviceType } from '@/composables/useDeviceType'
-const auth = useAuthStore()
+import { useAuthMutations } from '@/mutations'
+import { trpc } from '@/trpc'
+import { useQuery } from '@tanstack/vue-query'
+
+const auth = useAuthStore();
+
+const { data: authUser, error: authError, isSuccess, isLoading: isAuthLoading } = useQuery(
+    {
+        queryKey: ['getMe'],
+        queryFn: () => trpc.user.getMe.query(),
+        enabled: true,
+    }
+);
 
 const email = ref('')
 const password = ref('')
@@ -13,15 +25,24 @@ const isLoading = ref(false)
 
 const { deviceType, isMobile } = useDeviceType()
 
+
+const authMutations = useAuthMutations()
 const router = useRouter()
 
 const handleLogin = async () => {
     error.value = ''
 
-    const success = await auth.login(email.value, password.value)
+
+    const success = await authMutations.login.mutateAsync({
+        email: email.value,
+        password: password.value
+    })
+
+    localStorage.setItem('token', success.accessToken);
+    auth.isLoggedIn = true;
 
     if (success) {
-        router.push(`/users/${auth.user?.id}`)
+        router.push(`/users/${authUser.value?.id}`)
     } else {
         error.value = 'Invalid email or password.'
     }
@@ -34,7 +55,7 @@ const handleKeyPress = (event: KeyboardEvent) => {
 
 onMounted(() => {
     if (auth.isLoggedIn) {
-        router.push(`/users/${auth.user?.id}`)
+        router.push(`/users/${authUser.value?.id}`)
     }
 })
 </script>
@@ -46,28 +67,14 @@ onMounted(() => {
 
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input
-                    id="email"
-                    type="email"
-                    v-model="email"
-                    @keypress="handleKeyPress"
-                    placeholder="Insert email"
-                    required
-                    :disabled="isLoading"
-                />
+                <input id="email" type="email" v-model="email" @keypress="handleKeyPress" placeholder="Insert email"
+                    required :disabled="isLoading" />
             </div>
 
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input
-                    id="password"
-                    type="password"
-                    v-model="password"
-                    @keypress="handleKeyPress"
-                    placeholder="Insert password"
-                    required
-                    :disabled="isLoading"
-                />
+                <input id="password" type="password" v-model="password" @keypress="handleKeyPress"
+                    placeholder="Insert password" required :disabled="isLoading" />
             </div>
 
             <div>

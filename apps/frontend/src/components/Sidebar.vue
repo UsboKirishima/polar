@@ -14,8 +14,18 @@ import {
     faBars,
     faPlusCircle,
 } from '@fortawesome/free-solid-svg-icons'
+import { trpc } from '@/trpc'
+import { useQuery } from '@tanstack/vue-query'
 
-const auth = useAuthStore()
+const auth = useAuthStore();
+
+const { data: authUser, error, isSuccess } = useQuery(
+    {
+        queryKey: ['getMe'],
+        queryFn: () => trpc.user.getMe.query(),
+        enabled: true,
+    }
+);
 
 const menuItems = computed(() => [
     { icon: faHouse, label: 'home', path: '/' },
@@ -29,7 +39,7 @@ const menuItems = computed(() => [
     {
         icon: faUser,
         label: auth.isLoggedIn ? 'my profile' : 'login',
-        path: auth.isLoggedIn ? `/users/${auth.user?.id}` : '/login',
+        path: auth.isLoggedIn ? `/users/${authUser.value?.id}` : '/login',
     },
     { icon: faBars, label: 'other', path: '/users' },
 ])

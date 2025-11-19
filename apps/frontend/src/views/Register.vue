@@ -3,9 +3,24 @@ import api from '@/axiosApi'
 import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
+import { useQuery } from '@tanstack/vue-query'
+import { trpc } from '@/trpc'
+import PageLoading from '@/components/PageLoading.vue'
+import { useAuthMutations } from '@/mutations'
 
 const auth = useAuthStore()
 const router = useRouter()
+
+const { data: authUser, error: authError, isSuccess, isLoading: isAuthLoading } = useQuery(
+    {
+        queryKey: ['getMe'],
+        queryFn: () => trpc.user.getMe.query(),
+        enabled: true,
+    }
+);
+
+const authMutations = useAuthMutations();
+const authRegister = authMutations.register;
 
 const email = ref('')
 const username = ref('')
@@ -26,16 +41,18 @@ const handleRegister = async () => {
 
     const dob = dayOfBirth.value ? new Date(dayOfBirth.value) : new Date()
 
-    const success = await auth.register(
-        email.value,
-        password.value,
-        username.value,
-        dob,
-        fullname.value,
-    )
+    const success = await authRegister.mutateAsync({
+        email: email.value,
+        password: password.value,
+        profile: {
+            username: username.value,
+            dateOfBirth: dob,
+            fullName: fullname.value,
+        }
+    })
 
     if (success) {
-        router.push(`/users/${auth.user?.id}`)
+        router.push(`/users/${authUser.value?.id}`)
     } else {
         error.value = 'Failed to register account. Please check the information provided.'
     }
@@ -55,106 +72,60 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="register-container">
+    <PageLoading v-if="isAuthLoading" />
+    <div v-else class="register-container">
         <form @submit.prevent="handleRegister" class="register-form">
             <h2>Create an Account</h2>
 
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input
-                    id="email"
-                    type="email"
-                    v-model="email"
-                    @keypress="handleKeyPress"
-                    placeholder="Insert email"
-                    required
-                    :disabled="isLoading"
-                />
+                <input id="email" type="email" v-model="email" @keypress="handleKeyPress" placeholder="Insert email"
+                    required :disabled="isLoading" />
             </div>
 
             <div class="form-group">
                 <label for="username">Username:</label>
-                <input
-                    id="username"
-                    type="text"
-                    v-model="username"
-                    @keypress="handleKeyPress"
-                    placeholder="Nickname"
-                    required
-                    :disabled="isLoading"
-                />
+                <input id="username" type="text" v-model="username" @keypress="handleKeyPress" placeholder="Nickname"
+                    required :disabled="isLoading" />
             </div>
 
             <div class="form-group">
                 <label for="fullname">Full Name:</label>
-                <input
-                    id="fullname"
-                    type="text"
-                    v-model="fullname"
-                    @keypress="handleKeyPress"
-                    placeholder="Your Full Name"
-                    required
-                    :disabled="isLoading"
-                />
+                <input id="fullname" type="text" v-model="fullname" @keypress="handleKeyPress"
+                    placeholder="Your Full Name" required :disabled="isLoading" />
             </div>
 
             <div class="form-group">
                 <label for="dayOfBirth">Date of birth:</label>
-                <input
-                    id="dayOfBirth"
-                    type="date"
-                    v-model="dayOfBirth"
-                    @keypress="handleKeyPress"
-                    placeholder="Date of birth"
-                    required
-                    :disabled="isLoading"
-                />
+                <input id="dayOfBirth" type="date" v-model="dayOfBirth" @keypress="handleKeyPress"
+                    placeholder="Date of birth" required :disabled="isLoading" />
             </div>
 
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input
-                    id="password"
-                    type="password"
-                    v-model="password"
-                    @keypress="handleKeyPress"
-                    placeholder="Create password"
-                    required
-                    :disabled="isLoading"
-                />
+                <input id="password" type="password" v-model="password" @keypress="handleKeyPress"
+                    placeholder="Create password" required :disabled="isLoading" />
             </div>
 
             <div class="form-group">
                 <label for="confirm-password">Confirm Password:</label>
-                <input
-                    id="confirm-password"
-                    type="password"
-                    v-model="confirmPassword"
-                    @keypress="handleKeyPress"
-                    placeholder="Confirm password"
-                    required
-                    :disabled="isLoading"
-                />
+                <input id="confirm-password" type="password" v-model="confirmPassword" @keypress="handleKeyPress"
+                    placeholder="Confirm password" required :disabled="isLoading" />
             </div>
 
             <div v-if="error" class="error-message">
                 {{ error }}
             </div>
 
-            <button
-                type="submit"
-                :disabled="
-                    isLoading ||
-                    !email ||
-                    !password ||
-                    !confirmPassword ||
-                    !username ||
-                    !fullname ||
-                    !dayOfBirth ||
-                    password !== confirmPassword
-                "
-                class="register-button"
-            >
+            <button type="submit" :disabled="isLoading ||
+                !email ||
+                !password ||
+                !confirmPassword ||
+                !username ||
+                !fullname ||
+                !dayOfBirth ||
+                password !== confirmPassword
+                " class="register-button">
                 <span v-if="isLoading">Loading...</span>
                 <span v-else>Register</span>
             </button>

@@ -1,30 +1,38 @@
 <script setup lang="ts">
-import { useUserStore } from '@/stores/users'
-import { onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useQuery } from '@tanstack/vue-query';
+import { trpc } from '@/trpc';
+import PageLoading from '@/components/PageLoading.vue';
 
-const userStore = useUserStore()
-const route = useRoute()
-const router = useRouter()
+const route = useRoute();
+const router = useRouter();
+const err = ref('');
 
-const err = ref('')
+const username = route.params.username as string | undefined;
 
-onMounted(async () => {
-    await userStore.fetchUsers()
+if (!username) {
+    err.value = 'URL must include the username param: /users/u/:username';
+}
 
-    if (!route.params.username) {
-        err.value = 'url must include the username param: /users/u/:username'
-        return
+const { data: userFetched, error, isSuccess } = useQuery(
+    {
+        queryKey: ['getByUsername', username],
+        queryFn: () => trpc.user.getByUsername.query(username!),
+        enabled: !!username,
     }
+);
 
-    const user = userStore.users?.find((user) => user.profile.username === route.params.username)
-    if (!user) {
-        err.value = 'User not found'
-        return
+watch(
+    () => isSuccess.value,
+    (ready) => {
+        if (ready && userFetched.value) {
+            router.push(`/users/${userFetched.value.id}`);
+        } else if (error.value) {
+            err.value = 'User not found';
+        }
     }
-
-    router.push(`/users/${user.id}`)
-})
+);
 </script>
 
 <template>
@@ -32,7 +40,7 @@ onMounted(async () => {
         <h3>{{ err }}</h3>
     </div>
     <div v-else>
-        <h3>Redirecting...</h3>
+        <PageLoading />
     </div>
 </template>
 

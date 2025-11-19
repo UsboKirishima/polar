@@ -7,14 +7,13 @@ import FriendsList from '../friends/FriendsList.vue'
 import PostCard from '../feed/PostCard.vue'
 import dayjs from 'dayjs'
 import Userinfo from '../Userinfo.vue'
+import type { trpc } from '@/trpc'
 
 const props = defineProps<{
     isProfilePage: boolean
-    user: User | null
-    posts: Post[]
-    likes: Like[]
-    comments: PostComment[]
-    friends: Friendship[]
+    user?: Awaited<ReturnType<typeof trpc.user.getById.query>>
+    posts: Awaited<ReturnType<typeof trpc.user.getPosts.query>>
+    friends: Awaited<ReturnType<typeof trpc.user.getFriends.query>>
 }>()
 
 const view = ref<'posts' | 'friends' | 'likes' | 'comments'>('posts')
@@ -40,7 +39,7 @@ const view = ref<'posts' | 'friends' | 'likes' | 'comments'>('posts')
             <div v-if="!posts.length">
                 <p class="nch">No posts here.</p>
             </div>
-            <FeedPosts :posts="[...posts.values()]" />
+            <FeedPosts :posts="[...posts.values()] as unknown as Post[]" />
         </div>
         <div v-else-if="view === 'friends'" class="view">
             <div v-if="!friends.length">
@@ -48,7 +47,7 @@ const view = ref<'posts' | 'friends' | 'likes' | 'comments'>('posts')
             </div>
             <FriendsList
                 :current-page="'friends'"
-                :friends="friends"
+                :friends="friends as Friendship[]"
                 :hide-remove-btn="!isProfilePage"
             />
         </div>
@@ -63,9 +62,9 @@ const view = ref<'posts' | 'friends' | 'likes' | 'comments'>('posts')
                 <p class="nch">No comments here.</p>
             </div>
             <div v-for="comment in user?.comments" class="comments">
-                <PostCard :post="comment.post" />
+                <PostCard :post="comment.post as unknown as Post" />
                 <div class="comment">
-                    <Userinfo :user="user" />
+                    <Userinfo :user="user as unknown as User" />
                     <p class="ctext">{{ comment.text }}</p>
                 </div>
             </div>
