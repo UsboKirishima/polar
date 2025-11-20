@@ -1,6 +1,10 @@
 import { defineStore } from 'pinia'
 import api from '@/axiosApi'
-import { type User } from '@/types'
+//import { type User } from '@/types'
+import * as services from '../interface';
+import { trpc } from '@/trpc';
+
+type User = Awaited<ReturnType<typeof trpc.user.getMe.query>>;
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -13,13 +17,19 @@ export const useAuthStore = defineStore('auth', {
         async login(email: string, password: string) {
             try {
                 this.loading = true
-                const res = await api.post('/auth/login', { email, password })
+                //const res = await api.post('/auth/login', { email, password })
+                const res = await services.login({
+                    email,
+                    password
+                })
 
-                localStorage.setItem('token', res.data.accessToken)
-
+                //localStorage.setItem('token', res.data.accessToken)
+                
+                localStorage.setItem('token', res.accessToken)
+                console.log(res.accessToken)
                 await this.checkAuth()
 
-                return true
+                return true;
             } catch (err) {
                 return false
             } finally {
@@ -56,13 +66,14 @@ export const useAuthStore = defineStore('auth', {
 
         async checkAuth() {
             try {
-                const res = await api.get('/users/profile')
-                this.user = res.data
+                //const res = await api.get('/users/profile')
+                const res = await services.checkAuth();
+                this.user = res
                 this.isLoggedIn = true
-            } catch {
+            } catch(err) {
                 this.user = null
                 this.isLoggedIn = false
-                localStorage.removeItem('token')
+                //localStorage.removeItem('token')
             }
         },
 
