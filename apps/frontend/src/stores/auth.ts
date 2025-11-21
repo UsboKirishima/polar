@@ -56,7 +56,15 @@ export const useAuthStore = defineStore('auth', {
                     },
                 })
 
-                return await this.login(email, password)
+                return await services.register({
+                    email: email,
+                    password: password,
+                    profile: {
+                        username: username,
+                        dateOfBirth: dateOfBirth,
+                        fullName: fullName
+                    }
+                })
             } catch (err) {
                 return false
             } finally {

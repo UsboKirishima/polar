@@ -1,34 +1,15 @@
 import { trpc } from "@/trpc";
 import { queryClient } from "@/query-client";
 
-type LoginOpts = {
-    email: string;
-    password: string;
-}
+type LoginInput = Parameters<typeof trpc.auth.login.mutate>[0];
+type RegisterInput = Parameters<typeof trpc.auth.register.mutate>[0];
 
-export const login = async (opts: LoginOpts) => {
+export const login = async (opts: LoginInput) => {
     return await trpc.auth.login.mutate(opts)
 }
 
-type RegisterOpts = {
-    email: string,
-    password: string,
-    username: string,
-    dateOfBirth: Date,
-    fullName: string,
-}
-
-export const register = async (opts: RegisterOpts) => {
-    return await trpc.auth.register.mutate({
-        email: opts.email,
-        password: opts.password,
-        profile: {
-            username: opts.username,
-            dateOfBirth: opts.dateOfBirth,
-            fullName: opts.fullName
-        }
-    })
-
+export const register = async (opts: RegisterInput) => {
+    return await trpc.auth.register.mutate(opts)
 }
 
 export const checkAuth = async () => {
