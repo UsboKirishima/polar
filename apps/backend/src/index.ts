@@ -1,10 +1,7 @@
 import 'dotenv/config';
-import CacheManager from '@polar/redis-manager';
 import chalk from 'chalk';
 
 import './wss.js';
-import * as redis from 'redis';
-
 import { env } from './env.js';
 import logger from './logger.js';
 import server from './server.js';

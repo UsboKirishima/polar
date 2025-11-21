@@ -71,7 +71,7 @@ export async function getUserByUsername(req: Request, res: Response, next: NextF
 }
 
 /*
- * Modify username 
+ * Modify username
  * @deprecated Use tRPC API instead
  */
 export async function modifyUsername(req: Request, res: Response, next: NextFunction) {
