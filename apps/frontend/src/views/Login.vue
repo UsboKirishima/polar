@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { useDeviceType } from '@/composables/useDeviceType'
+import { useLogStore } from '@/stores/logs'
 const auth = useAuthStore()
 
 const email = ref('')
@@ -14,6 +15,7 @@ const isLoading = ref(false)
 const { deviceType, isMobile } = useDeviceType()
 
 const router = useRouter()
+const logStore = useLogStore();
 
 const handleLogin = async () => {
     error.value = ''
@@ -21,6 +23,7 @@ const handleLogin = async () => {
     const success = await auth.login(email.value, password.value)
 
     if (success) {
+        logStore.showSuccess(`Successfully logged in as ${auth.user?.profile?.username}`)
         router.push(`/users/${auth.user?.id}`)
     } else {
         error.value = 'Invalid email or password.'
