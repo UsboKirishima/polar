@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth'
 import { usePostStore } from '@/stores/posts'
-import type { Post } from '@/types'
+import type { Post, User } from '@/types/trpc'
 import {
     faCommentDots,
     faComments,
@@ -139,13 +139,13 @@ onUnmounted(() => {
                 <router-link :to="`/users/${post.author.id}`" iv class="user-info" @mouseenter="profileHover = true"
                     @mouseleave="profileHover = false" @mousemove="handleMouseMove">
                     <Transition name="fade-slide">
-                        <ProfileFloatCard v-if="profileHover" :user="post.author" :mouse-x="mouseX" :mouse-y="mouseY" />
+                        <ProfileFloatCard v-if="profileHover" :user="post.author as User" :mouse-x="mouseX" :mouse-y="mouseY" />
                     </Transition>
                     <img :src="post.author.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="" />
                     <div class="h-info">
-                        <Username :username="postMutable.author.profile.fullName || 'Unknown'"
+                        <Username :username="postMutable.author.profile?.fullName || 'Unknown'"
                             :is-verified="postMutable.author.role === 'ADMIN'" />
-                        <p class="place">@{{ post.author.profile.username || 'Unknown' }}</p>
+                        <p class="place">@{{ post.author.profile?.username || 'Unknown' }}</p>
                     </div>
                 </router-link>
                 <div class="options" @click="isOptsOpen = !isOptsOpen">

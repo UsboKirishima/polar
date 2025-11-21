@@ -5,7 +5,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useSettingsStore } from '@/stores/settings'
 import { useUserStore } from '@/stores/users'
 import { trpc } from '@/trpc'
-import type { User } from '@/types'
+import type { User } from '@/types/trpc'
 import { onMounted, ref, watch } from 'vue'
 
 const userStore = useUserStore()
@@ -13,7 +13,7 @@ const authStore = useAuthStore()
 const settingsStore = useSettingsStore()
 const user = ref<User>()
 
-const username = ref(user.value?.profile.username)
+const username = ref(user.value?.profile?.username)
 
 const avatarFile = ref<File | null>(null)
 const bannerFile = ref<File | null>(null)
@@ -68,9 +68,9 @@ const autoResize = (e: Event) => {
 
 onMounted(async () => {
     if (authStore.user) {
-        user.value = await userStore.getUserById(authStore.user.id)
-        avatarPreview.value = user.value?.profile.avatar.url ?? ''
-        bannerPreview.value = user.value?.profile.banner.url ?? ''
+        user.value = await userStore.getUserById(authStore.user.id) as User
+        avatarPreview.value = user.value?.profile?.avatar?.url ?? ''
+        bannerPreview.value = user.value?.profile?.banner?.url ?? ''
     }
 })
 </script>

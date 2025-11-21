@@ -23,6 +23,7 @@ export async function __getAllPendingFriendRequests(userId: string) {
                 select: {
                     id: true,
                     email: true,
+                    role: true,
                     profile: {
                         include: {
                             avatar: true,
@@ -43,6 +44,7 @@ export async function __getAllFriendsByUserId(userId: string) {
                 select: {
                     id: true,
                     email: true,
+                    role: true,
                     profile: {
                         include: {
                             avatar: true,

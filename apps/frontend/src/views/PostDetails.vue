@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePostStore } from '@/stores/posts'
-import { type Post } from '@/types'
+import { type Post, type User } from '@/types/trpc'
 import { useAuthStore } from '@/stores/auth'
 import PostCard from '@/components/feed/PostCard.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -66,7 +66,7 @@ onMounted(fetchPost)
                 <FontAwesomeIcon :icon="faArrowLeft" />
             </div>
             <h2>
-                Post by <b>{{ post!.author.profile.fullName }}</b>
+                Post by <b>{{ post!.author.profile?.fullName }}</b>
             </h2>
         </div>
         <div class="post-detail">
@@ -97,7 +97,7 @@ onMounted(fetchPost)
                     class="comment"
                 >
                     <div class="profile">
-                        <Userinfo :user="comment.user" disable-over />
+                        <Userinfo :user="comment.user as User" disable-over />
                     </div>
                     <p class="content">{{ comment.text || 'unknown' }}</p>
                     <p class="date">{{ dayjs(comment.createdAt).fromNow() || 'unknown' }}</p>

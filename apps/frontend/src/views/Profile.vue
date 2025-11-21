@@ -53,10 +53,10 @@ const logout = () => {
                 </div>
             </div>
             <div class="profile-info">
-                <p class="username">{{ auth.user?.profile.username }}</p>
-                <p><b>full name:</b> {{ auth.user?.profile.fullName }}</p>
+                <p class="username">{{ auth.user?.profile?.username }}</p>
+                <p><b>full name:</b> {{ auth.user?.profile?.fullName }}</p>
                 <p><b>email:</b> {{ email }}</p>
-                <p><b>day of birth:</b> {{ auth.user?.profile.dateOfBirth }}</p>
+                <p><b>day of birth:</b> {{ auth.user?.profile?.dateOfBirth }}</p>
                 <p><b>id:</b> {{ id }}</p>
             </div>
             <div class="controls">

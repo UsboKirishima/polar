@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { User } from '@/types'
+import type { User } from '@/types/trpc'
 import { ref } from 'vue'
 import Username from './Username.vue'
 import ProfileFloatCard from './profile/ProfileFloatCard.vue'
@@ -37,10 +37,10 @@ const handleMouseMove = (event: MouseEvent) => {
             <img :src="user?.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="" />
             <div class="h-info">
                 <Username
-                    :username="user?.profile.fullName || 'Unknown'"
+                    :username="user?.profile?.fullName || 'Unknown'"
                     :is-verified="user?.role === 'ADMIN'"
                 />
-                <p class="place">@{{ user?.profile.username || 'Unknown' }}</p>
+                <p class="place">@{{ user?.profile?.username || 'Unknown' }}</p>
             </div>
         </router-link>
     </div>

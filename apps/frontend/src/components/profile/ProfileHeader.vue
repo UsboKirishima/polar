@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { Post, User } from '@/types'
+import type { Post, User } from '@/types/trpc'
 import Username from '../Username.vue'
 import { useFriendStore } from '@/stores/friends'
-import type { Friendship } from '@/types/friends'
+import type { Friendship } from '@/types/trpc'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
     faAdd,
@@ -21,7 +21,7 @@ const props = defineProps<{
     isProfilePage: boolean
     user: User | null
     posts: Post[]
-    friends: Friendship[]
+    friends: any[]
 }>()
 
 const isFriendRequested = ref<boolean>(false)
@@ -64,20 +64,20 @@ onMounted(async () => {
     <div class="container">
         <div class="photos">
             <div class="bg-container">
-                <img class="bg" :src="user?.profile.banner?.url ?? '/bg_placeholder.jpg'" alt="" />
+                <img class="bg" :src="user?.profile?.banner?.url ?? '/bg_placeholder.jpg'" alt="" />
             </div>
-            <img class="pfp" :src="user?.profile.avatar?.url ?? '/pfp_placeholder.png'" alt="" />
+            <img class="pfp" :src="user?.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="" />
         </div>
         <div class="main">
             <div class="info">
                 <Username
-                    :username="user!.profile.fullName || ''"
+                    :username="user!.profile?.fullName || ''"
                     :is-verified="user!.role === 'ADMIN' || false"
                     class="username"
                 />
-                <p class="tag">@{{ user!.profile.username || 'unknown' }}</p>
+                <p class="tag">@{{ user!.profile?.username || 'unknown' }}</p>
                 <p class="bio">
-                    {{ user!.profile.bio == 'unknown' ? 'no bio yet' : user!.profile.bio }}
+                    {{ user!.profile?.bio == 'unknown' ? 'no bio yet' : user!.profile?.bio }}
                 </p>
                 <p class="join-date">
                     Joined {{ new Date(user!.createdAt).toUTCString().slice(0, 16) }}

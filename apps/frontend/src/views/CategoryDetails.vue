@@ -3,7 +3,7 @@ import FeedPosts from '@/components/feed/FeedPosts.vue'
 import HeaderBar from '@/components/HeaderBar.vue'
 import PageLoading from '@/components/PageLoading.vue'
 import { usePostStore } from '@/stores/posts'
-import type { Category } from '@/types'
+import type { Category, Post } from '@/types/trpc'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -32,7 +32,7 @@ onMounted(async () => {
             <b>{{ category.name[0].toUpperCase() + category.name.slice(1) }}</b> posts
         </HeaderBar>
         <div class="posts">
-            <FeedPosts :posts="category.posts" />
+            <FeedPosts :posts="category.posts as unknown as Post[]" />
         </div>
     </div>
 

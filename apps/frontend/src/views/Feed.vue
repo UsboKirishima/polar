@@ -188,13 +188,7 @@ export interface PostComment {
     text: string
 }
 
-export interface Post {
-    author: PostAuthor
-    category: string
-    likes: number
-    comments: PostComment[]
-    text: string
-}
+
 
 onMounted(async () => {
     friendStore.fetchFriends()
