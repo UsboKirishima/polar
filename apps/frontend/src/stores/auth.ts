@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import api from '@/axiosApi'
-//import { type User } from '@/types'
 import * as services from '../interface';
 import { trpc } from '@/trpc';
 
@@ -17,16 +16,12 @@ export const useAuthStore = defineStore('auth', {
         async login(email: string, password: string) {
             try {
                 this.loading = true
-                //const res = await api.post('/auth/login', { email, password })
-                const res = await services.login({
+                const res = await services.auth.login({
                     email,
                     password
                 })
-
-                //localStorage.setItem('token', res.data.accessToken)
                 
                 localStorage.setItem('token', res.accessToken)
-                console.log(res.accessToken)
                 await this.checkAuth()
 
                 return true;
@@ -56,7 +51,7 @@ export const useAuthStore = defineStore('auth', {
                     },
                 })
 
-                return await services.register({
+                return await services.auth.register({
                     email: email,
                     password: password,
                     profile: {
@@ -74,14 +69,12 @@ export const useAuthStore = defineStore('auth', {
 
         async checkAuth() {
             try {
-                //const res = await api.get('/users/profile')
-                const res = await services.checkAuth();
+                const res = await services.auth.checkAuth();
                 this.user = res
                 this.isLoggedIn = true
             } catch(err) {
                 this.user = null
                 this.isLoggedIn = false
-                //localStorage.removeItem('token')
             }
         },
 

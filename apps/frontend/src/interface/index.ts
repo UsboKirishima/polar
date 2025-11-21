@@ -16,4 +16,5 @@
  * +------------+         +-----------+       +-------------+       +----------+
  */
 
-export * from './auth-interface';
+export * as auth from './auth-interface';
+export * as user from './user-interface';
