@@ -48,17 +48,6 @@ This is a **monorepo** built with modern tools and best practices:
 
 ![tech_stack](/assets/tech_stack.jpg)
 
-### 📷 Screenshots
-
-- Post page
-    ![post](/assets/screen_post.png)
-- Profile page
-    ![profile](/assets/screen_profile.png)
-- Friends page
-    ![friends](/assets/screen_friends.png)
-- Post creation
-    ![create](/assets/screen_create.png)
-
 ## 🚀 Quick Start
 
 ### Prerequisites
