@@ -11,6 +11,9 @@ importers:
 
   .:
     devDependencies:
+      prettier:
+        specifier: 3.6.2
+        version: 3.6.2
       tsdown:
         specifier: ^0.15.11
         version: 0.15.12(typescript@5.9.3)(vue-tsc@3.1.2(typescript@5.9.3))
