@@ -2,7 +2,7 @@
 import CategoryCard from '@/components/categories/CategoryCard.vue'
 import PageLoading from '@/components/PageLoading.vue'
 import { usePostStore } from '@/stores/posts'
-import type { Category } from '@/types'
+import type { Category } from '@/types/trpc'
 import { onMounted, ref } from 'vue'
 import router from '@/router'
 import HeaderBar from '@/components/HeaderBar.vue'

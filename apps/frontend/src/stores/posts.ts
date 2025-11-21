@@ -1,16 +1,7 @@
 import { defineStore } from 'pinia'
-import type { Category, Post } from '@/types'
-import {
-    getAllPosts,
-    getPostById,
-    getAllPostsByUserId,
-    toggleLike,
-    createPost,
-    deletePost,
-    addComment,
-    removeComment,
-} from '@/api/posts'
-import { getAllCategories, getCategoryById, getCategoryByName } from '@/api/categories'
+import * as postService from '@/interface/post-interface'
+import * as categoryService from '@/interface/category-interface'
+import type { Post, Category } from '@/types/trpc'
 
 export const usePostStore = defineStore('post', {
     state: () => ({
@@ -25,10 +16,10 @@ export const usePostStore = defineStore('post', {
             this.loading = true
             this.error = null
             try {
-                const response = await getAllPosts()
-                this.posts = response.data
+                const response = await postService.getAll()
+                this.posts = response
             } catch (err: any) {
-                this.error = err.response?.data?.message || 'Failed to fetch all posts'
+                this.error = err.message || 'Failed to fetch all posts'
             } finally {
                 this.loading = false
             }
@@ -38,10 +29,10 @@ export const usePostStore = defineStore('post', {
             this.loading = true
             this.error = null
             try {
-                const response = await getPostById(postId)
-                return response.data
+                const response = await postService.getById(postId)
+                return response
             } catch (err: any) {
-                this.error = err.response?.data?.message || 'Failed to fetch post'
+                this.error = err.message || 'Failed to fetch post'
             } finally {
                 this.loading = false
             }
@@ -51,24 +42,24 @@ export const usePostStore = defineStore('post', {
             this.loading = true
             this.error = null
             try {
-                const response = await getAllPostsByUserId(userId)
-                this.myPosts = response.data
-                return response.data
+                const response = await postService.getByUser(userId)
+                this.myPosts = response
+                return response
             } catch (err: any) {
-                this.error = err.response?.data?.message || "Failed to fetch user's posts"
+                this.error = err.message || "Failed to fetch user's posts"
             } finally {
                 this.loading = false
             }
         },
 
-        async createNewPost(text: string, categories: { name: string }[]) {
+        async createNewPost(text: string, categories: { name: string }[], color: string) {
             this.loading = true
             this.error = null
             try {
-                const response = await createPost(text, categories)
-                this.posts.unshift(response.data.post) // aggiungi il nuovo post in cima
+                const response = await postService.create({ text, categories, color })
+                this.posts.unshift(response) // aggiungi il nuovo post in cima
             } catch (err: any) {
-                this.error = err.response?.data?.message || 'Failed to create post'
+                this.error = err.message || 'Failed to create post'
             } finally {
                 this.loading = false
             }
@@ -78,11 +69,11 @@ export const usePostStore = defineStore('post', {
             this.loading = true
             this.error = null
             try {
-                await deletePost(postId)
+                await postService.deleteById(postId)
                 this.posts = this.posts.filter((p) => p.id !== postId)
                 this.myPosts = this.myPosts.filter((p) => p.id !== postId)
             } catch (err: any) {
-                this.error = err.response?.data?.message || 'Failed to delete post'
+                this.error = err.message || 'Failed to delete post'
             } finally {
                 this.loading = false
             }
@@ -92,16 +83,17 @@ export const usePostStore = defineStore('post', {
             this.loading = true
             this.error = null
             try {
-                const response = await toggleLike(postId)
+                await postService.toggleLike(postId)
 
                 const refreshedPost = await this.fetchPostById(postId)
+                if (!refreshedPost) return
                 // refresh likes
                 const index = this.posts.findIndex((p) => p.id === postId)
                 if (index !== -1) {
                     this.posts[index] = refreshedPost
                 }
             } catch (err: any) {
-                this.error = err.response?.data?.message || 'Failed to toggle like'
+                this.error = err.message || 'Failed to toggle like'
             } finally {
                 this.loading = false
             }
@@ -111,13 +103,14 @@ export const usePostStore = defineStore('post', {
             this.loading = true
             this.error = null
             try {
-                const response = await addComment(postId, text)
+                await postService.addComment({ postId, text })
                 const index = this.posts.findIndex((p) => p.id === postId)
                 if (index !== -1) {
-                    this.posts[index].comments.push(response.data.comment)
+                    const refreshedPost = await this.fetchPostById(postId)
+                    if (refreshedPost) this.posts[index] = refreshedPost
                 }
             } catch (err: any) {
-                this.error = err.response?.data?.message || 'Failed to add comment'
+                this.error = err.message || 'Failed to add comment'
             } finally {
                 this.loading = false
             }
@@ -127,15 +120,14 @@ export const usePostStore = defineStore('post', {
             this.loading = true
             this.error = null
             try {
-                await removeComment(commentId)
+                await postService.removeComment(commentId)
                 const postIndex = this.posts.findIndex((p) => p.id === postId)
                 if (postIndex !== -1) {
-                    this.posts[postIndex].comments = this.posts[postIndex].comments.filter(
-                        (c) => c.id !== commentId,
-                    )
+                    const refreshedPost = await this.fetchPostById(postId)
+                    if (refreshedPost) this.posts[postIndex] = refreshedPost
                 }
             } catch (err: any) {
-                this.error = err.response?.data?.message || 'Failed to remove comment'
+                this.error = err.message || 'Failed to remove comment'
             } finally {
                 this.loading = false
             }
@@ -148,11 +140,11 @@ export const usePostStore = defineStore('post', {
             this.loading = true
             this.error = null
             try {
-                const categories = await getAllCategories()
-                this.categories = categories.data
-                return categories.data
+                const categories = await categoryService.getAll()
+                this.categories = categories
+                return categories
             } catch (err: any) {
-                this.error = err.response?.data?.message || 'Failed to fetch categories'
+                this.error = err.message || 'Failed to fetch categories'
             } finally {
                 this.loading = false
             }
@@ -162,10 +154,10 @@ export const usePostStore = defineStore('post', {
             this.loading = true
             this.error = null
             try {
-                const categoryResponse = await getCategoryById(categoryId)
-                return categoryResponse.data as Category
+                const categoryResponse = await categoryService.getById(categoryId)
+                return categoryResponse as Category
             } catch (err: any) {
-                this.error = err.response?.data?.message || `Failed to fetch category ${categoryId}`
+                this.error = err.message || `Failed to fetch category ${categoryId}`
             } finally {
                 this.loading = false
             }
@@ -175,11 +167,10 @@ export const usePostStore = defineStore('post', {
             this.loading = true
             this.error = null
             try {
-                const categoryResponse = await getCategoryByName(categoryName)
-                return categoryResponse.data as Category
+                const categoryResponse = await categoryService.getByName(categoryName)
+                return categoryResponse as Category
             } catch (err: any) {
-                this.error =
-                    err.response?.data?.message || `Failed to fetch category ${categoryName}`
+                this.error = err.message || `Failed to fetch category ${categoryName}`
             } finally {
                 this.loading = false
             }

@@ -1,29 +1,31 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import api from '../axiosApi'
 import PageLoading from '@/components/PageLoading.vue'
 import { useUserStore } from '@/stores/users'
 import { useAuthStore } from '@/stores/auth'
 import ProfileHeader from '@/components/profile/ProfileHeader.vue'
-import type { Post, User } from '@/types'
+import type { Friendship, Like, Post, PostComment, User } from '@/types/trpc'
 import { useFriendStore } from '@/stores/friends'
 import { usePostStore } from '@/stores/posts'
-import type { Friendship } from '@/types/friends'
 import ProfileContent from '@/components/profile/ProfileContent.vue'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import type { trpc } from '@/trpc'
+
+export type FriendsType = Awaited<ReturnType<typeof trpc.friend.getAll.query>>;
+
+
+const userStore = useUserStore()
+const authStore = useAuthStore()
+const friendStore = useFriendStore()
+const postStore = usePostStore()
 
 const route = useRoute()
 const user = ref<User | null>(null)
 const friends = ref<Friendship[]>([])
 const posts = ref<Post[]>([])
 const loading = ref(true)
-
-const userStore = useUserStore()
-const authStore = useAuthStore()
-const friendStore = useFriendStore()
-const postStore = usePostStore()
 
 const isProfilePage = ref(false) /* True in case user is on its own profile. */
 
@@ -38,16 +40,16 @@ const formatDate = (date: Date) => {
 }
 
 const fetchPosts = async () => {
-    posts.value = await postStore.fetchAllPostsByUser(user.value!.id)
+    posts.value = await postStore.fetchAllPostsByUser(user.value!.id) as unknown as Post[];
     if (!user.value) return
 }
 
 const fetchFriends = async () => {
     if (!user.value) return
-    friends.value = await userStore.getAllFriendsByUserId(user.value.id)
+    friends.value = await userStore.getAllFriendsByUserId(user.value.id) as Friendship[];
 }
 
-onMounted(fetchUserData)
+onMounted(async () => await fetchUserData())
 
 watch(
     () => route.params.id,
@@ -60,7 +62,7 @@ watch(
 
 async function fetchUserData() {
     try {
-        user.value = await userStore.getUserById(route.params.id as string)
+        user.value = await userStore.getUserById(route.params.id as string) as User;
         isProfilePage.value = route.params.id === authStore.user!.id
         await fetchPosts()
         await fetchFriends()
@@ -80,24 +82,13 @@ async function fetchUserData() {
                 <FontAwesomeIcon :icon="faArrowLeft" />
             </div>
             <h2>
-                Profile of <b>{{ user?.profile.fullName }}</b>
+                Profile of <b>{{ user?.profile?.fullName }}</b>
             </h2>
         </div>
         <div class="container">
-            <ProfileHeader
-                :is-profile-page="isProfilePage"
-                :user="user"
-                :posts="[...posts]"
-                :friends="friends"
-            />
-            <ProfileContent
-                :is-profile-page="isProfilePage"
-                :user="user"
-                :posts="[...posts]"
-                :friends="friends"
-                :comments="user?.comments || []"
-                :likes="user?.likes || []"
-            />
+            <ProfileHeader :is-profile-page="isProfilePage" :user="user" :posts="posts" :friends="friends" />
+            <ProfileContent :is-profile-page="isProfilePage" :user="user" :posts="posts" :friends="friends"
+                :comments="user!.comments || []" :likes="user!.likes || []" />
         </div>
     </div>
 </template>

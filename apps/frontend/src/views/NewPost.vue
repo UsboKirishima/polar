@@ -2,7 +2,6 @@
 import Userinfo from '@/components/Userinfo.vue'
 import { useAuthStore } from '@/stores/auth'
 import { usePostStore } from '@/stores/posts'
-import type { Category } from '@/types'
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { computed, ref } from 'vue'

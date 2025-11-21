@@ -107,6 +107,13 @@ export async function __findUserAndProfileById(userId: string) {
                     },
                 }
             },
+            posts: {
+                include: {
+                    comments: true,
+                    likes: true
+                }
+            },
+            friends: true,
             profile: {
                 include: {
                     avatar: true,
@@ -179,17 +186,20 @@ export async function __getAllUsers() {
     return await db.user.findMany({
         select: {
             id: true,
+            role: true,
             profile: {
                 include: {
                     avatar: true,
                     banner: true,
                 },
             },
+            posts: true,
+            friends: true,
+            likes: true,
+            comments: true
         },
     });
 }
-
-// --- Funzioni di Lettura (Caching) ---
 
 export async function findUserByEmail(email: string) {
     const cacheKey = CACHE_KEY.userByEmail(email);

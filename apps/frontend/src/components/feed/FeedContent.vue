@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Post } from '@/types'
+import type { Post } from '@/types/trpc'
 import { computed, onMounted, ref } from 'vue'
 import FeedPosts from './FeedPosts.vue'
 import { usePostStore } from '@/stores/posts'

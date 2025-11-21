@@ -12,7 +12,7 @@ onMounted(async () => {
 <template>
     <ul>
         <li v-for="post in postStore.posts">
-            <p>{{ post.author.profile.username }}</p>
+            <p>{{ post.author.profile?.username }}</p>
             <p>{{ post.id }}</p>
             <p>{{ post.text }}</p>
         </li>

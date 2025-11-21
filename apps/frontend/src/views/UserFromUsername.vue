@@ -17,7 +17,7 @@ onMounted(async () => {
         return
     }
 
-    const user = userStore.users?.find((user) => user.profile.username === route.params.username)
+    const user = userStore.users?.find((user) => user.profile?.username === route.params.username)
     if (!user) {
         err.value = 'User not found'
         return

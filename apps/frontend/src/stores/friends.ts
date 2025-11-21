@@ -1,20 +1,14 @@
 import { defineStore } from 'pinia'
-import type { FriendRequest, Friendship } from '@/types/friends'
-import {
-    getPendingFriendRequests,
-    getFriends,
-    sendFriendRequest,
-    acceptFriendRequest,
-    denyFriendRequest,
-    removeFriendship,
-} from '@/api/friends'
-import { getUserByUsername } from '@/api/users'
-import { trpc } from '@/trpc'
+import * as services from '@/interface';
+
+type PendingRequests = Awaited<ReturnType<typeof services.friend.fetchPendingRequests>>;
+type FriendsType = Awaited<ReturnType<typeof services.friend.fetchFriends>>;
+
 
 export const useFriendStore = defineStore('friend', {
     state: () => ({
-        pendingRequests: null as FriendRequest[] | null,
-        friends: null as Friendship[] | null,
+        pendingRequests: null as PendingRequests | null,
+        friends: null as FriendsType | null,
         loading: false,
         error: null as string | null,
     }),
@@ -26,8 +20,8 @@ export const useFriendStore = defineStore('friend', {
             this.loading = true
             this.error = null
             try {
-                const response = await getPendingFriendRequests()
-                this.pendingRequests = response.data.requests
+                const response = await services.friend.fetchPendingRequests();
+                this.pendingRequests = response
             } catch (err: any) {
                 this.error = err.response?.data?.message || 'Failed to fetch pending requests'
             } finally {
@@ -42,10 +36,10 @@ export const useFriendStore = defineStore('friend', {
             this.loading = true
             this.error = null
             try {
-                const response = await getFriends()
-                this.friends = response.data.friends
+                const response = await services.friend.fetchFriends();
+                this.friends = response
             } catch (err: any) {
-                this.error = err.response?.data?.message || 'Failed to fetch friends'
+                this.error = err.response?.message || 'Failed to fetch friends'
             } finally {
                 this.loading = false
             }
@@ -58,10 +52,10 @@ export const useFriendStore = defineStore('friend', {
             this.loading = true
             this.error = null
             try {
-                await sendFriendRequest(receiverId)
+                await services.friend.sendRequest(receiverId);
                 await this.fetchPendingRequests() // refresh requests
             } catch (err: any) {
-                this.error = err.response?.data?.message || 'Failed to send friend request'
+                this.error = err.response?.message || 'Failed to send friend request'
             } finally {
                 this.loading = false
             }
@@ -74,18 +68,10 @@ export const useFriendStore = defineStore('friend', {
             this.loading = true
             this.error = null
             try {
-                /**
-                 * Retrive receiverId by scanning users
-                 * TODO: optimize this shit in future
-                 */
-                const response = await getUserByUsername(username)
-                console.log(response)
-                const receiverId = response.data.id
-
-                await sendFriendRequest(receiverId)
+                await services.friend.sendRequestByUsername(username);
                 await this.fetchPendingRequests() // refresh requests
             } catch (err: any) {
-                this.error = err.response?.data?.message || 'Failed to send friend request'
+                this.error = err.response?.message || 'Failed to send friend request'
             } finally {
                 this.loading = false
             }
@@ -98,11 +84,11 @@ export const useFriendStore = defineStore('friend', {
             this.loading = true
             this.error = null
             try {
-                await acceptFriendRequest(senderId)
+                await services.friend.acceptRequest(senderId);
                 await this.fetchFriends() // refresh friend list
                 await this.fetchPendingRequests() // refresh pending list
             } catch (err: any) {
-                this.error = err.response?.data?.message || 'Failed to accept friend request'
+                this.error = err.response?.message || 'Failed to accept friend request'
             } finally {
                 this.loading = false
             }
@@ -115,10 +101,10 @@ export const useFriendStore = defineStore('friend', {
             this.loading = true
             this.error = null
             try {
-                await denyFriendRequest(senderId)
+                await services.friend.denyRequest(senderId)
                 await this.fetchPendingRequests() // refresh pending list
             } catch (err: any) {
-                this.error = err.response?.data?.message || 'Failed to deny friend request'
+                this.error = err.response?.message || 'Failed to deny friend request'
             } finally {
                 this.loading = false
             }
@@ -131,10 +117,10 @@ export const useFriendStore = defineStore('friend', {
             this.loading = true
             this.error = null
             try {
-                await removeFriendship(friendId)
+                await services.friend.removeFriend(friendId)
                 await this.fetchFriends()
             } catch (err: any) {
-                this.error = err.response?.data?.message || 'Failed to remove friend'
+                this.error = err.response?.message || 'Failed to remove friend'
             } finally {
                 this.loading = false
             }

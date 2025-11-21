@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { User } from '@/types'
+import type { User } from '@/types/trpc'
 import { Transition } from 'vue'
 import Username from '../Username.vue'
 
@@ -15,17 +15,17 @@ const props = defineProps<{
         <div class="header">
             <img :src="user.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="Profile" />
             <div class="profile">
-                <Username :username="user.profile.fullName" :is-verified="user.role === 'ADMIN'" />
-                <p class="tag">@{{ user.profile.username }}</p>
+                <Username :username="user.profile?.fullName || 'Unknown'" :is-verified="user.role === 'ADMIN'" />
+                <p class="tag">@{{ user.profile?.username }}</p>
             </div>
         </div>
         <p class="bio">
             {{
-                user.profile.bio.length > 50
-                    ? user.profile.bio.slice(0, 50) + '...'
-                    : user.profile.bio == 'unknown'
+                user.profile!.bio?.length > 50
+                    ? user.profile?.bio.slice(0, 50) + '...'
+                    : user.profile?.bio == 'unknown'
                       ? 'no bio yet'
-                      : user.profile.bio
+                      : user.profile?.bio
             }}
         </p>
     </div>

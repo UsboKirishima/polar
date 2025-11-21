@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Category } from '@/types'
+import type { Category } from '@/types/trpc'
 import { faHashtag } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { protectedProcedure } from '@polar/api'

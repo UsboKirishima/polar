@@ -16,4 +16,8 @@
  * +------------+         +-----------+       +-------------+       +----------+
  */
 
-export * from './auth-interface';
+export * as auth from './auth-interface';
+export * as user from './user-interface';
+export * as friend from './friend-interface';
+export * as post from './post-interface';
+export * as category from './category-interface';

@@ -5,15 +5,13 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faCancel, faCheck, faCross, faCrosshairs } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'vue-router'
 import PageLoading from '../PageLoading.vue'
-import type { Friend } from '../feed/ListItem.vue'
-import type { Friendship } from '@/types/friends'
-import type { User } from '@/types'
+import type { Friendship } from '@/types/trpc'
+import type { User } from '@/types/trpc'
 import Userinfo from '../Userinfo.vue'
 
 // Props
 const props = defineProps<{
     currentPage: 'friends' | 'requests'
-    friends?: Friendship[]
     hideRemoveBtn?: boolean
 }>()
 
@@ -22,34 +20,29 @@ const friendStore = useFriendStore()
 const router = useRouter()
 
 // Fetch data on mount depending on currentPage
-onMounted(() => {
-    if (props.friends) {
-        friendStore.friends = props.friends
-    } else {
-        friendStore.fetchFriends()
-    }
-
-    friendStore.fetchPendingRequests()
+onMounted(async () => {
+    await friendStore.fetchFriends()
+    await friendStore.fetchPendingRequests()
 })
 
 // Computed properties to simplify template
 const isFriendsPage = computed(() => props.currentPage === 'friends')
 const isRequestsPage = computed(() => props.currentPage === 'requests')
 
-const fetchAll = () => {
-    friendStore.fetchFriends()
-    friendStore.fetchPendingRequests()
+const fetchAll = async () => {
+    await friendStore.fetchFriends()
+    await friendStore.fetchPendingRequests()
 }
 
 // Handlers for accepting and denying friend requests
-const acceptRequest = (senderId: string) => {
-    friendStore.acceptRequest(senderId)
+const acceptRequest = async (senderId: string) => {
+    await friendStore.acceptRequest(senderId)
     fetchAll()
 }
 
-const denyRequest = (senderId: string) => {
-    friendStore.denyRequest(senderId)
-    fetchAll()
+const denyRequest = async (senderId: string) => {
+    await friendStore.denyRequest(senderId)
+    await fetchAll()
 }
 
 const openFriend = (friendId: string) => {
@@ -86,11 +79,7 @@ const openFriend = (friendId: string) => {
 
         <div v-else-if="isRequestsPage">
             <ul v-if="friendStore.pendingRequests?.length" class="request-list">
-                <li
-                    v-for="request in friendStore.pendingRequests"
-                    :key="request.id"
-                    class="request-item"
-                >
+                <li v-for="request in friendStore.pendingRequests" :key="request.id" class="request-item">
                     <div class="indentifier" @click="openFriend(request.senderId)">
                         <Userinfo :user="request.sender as User" disable-over />
                     </div>

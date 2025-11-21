@@ -15,7 +15,7 @@ onMounted(async () => {
             <li>
                 <a :href="'/users/' + user.id">
                     <img src="/pfp_placeholder.png" alt="" />
-                    <router-link :to="`/users/${user.id}`">{{ user.profile.username }}</router-link>
+                    <router-link :to="`/users/${user.id}`">{{ user.profile?.username }}</router-link>
                 </a>
             </li>
         </ul>
