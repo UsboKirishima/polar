@@ -1,16 +1,17 @@
 <script setup lang="ts">
+import type { User } from '@/types/trpc';
 import ListItem from './ListItem.vue'
 import type { Friend, Suggestion } from './ListItem.vue'
 
 const props = defineProps<{
-    data: Array<Friend | Suggestion>
+    data: Array<User>
     type: 'feed' | 'suggestion' | 'verified'
 }>()
 </script>
 
 <template>
     <div class="friend-list">
-        <ListItem v-for="user in data" :key="user.username" :data="user" :type="type" />
+        <ListItem v-for="user in data" :key="user.id" :data="user" :type="type" />
     </div>
 </template>
 

@@ -70,11 +70,8 @@ onMounted(async () => {
         </div>
         <div class="main">
             <div class="info">
-                <Username
-                    :username="user!.profile?.fullName || ''"
-                    :is-verified="user!.role === 'ADMIN' || false"
-                    class="username"
-                />
+                <Username :username="user!.profile?.fullName || ''" :is-verified="user!.role === 'ADMIN' || false"
+                    class="username" />
                 <p class="tag">@{{ user!.profile?.username || 'unknown' }}</p>
                 <p class="bio">
                     {{ user!.profile?.bio == 'unknown' ? 'no bio yet' : user!.profile?.bio }}
@@ -138,6 +135,7 @@ onMounted(async () => {
     overflow: hidden;
     border-radius: 16px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    object-fit: cover;
 }
 
 .bg {
@@ -155,6 +153,7 @@ onMounted(async () => {
     border: 2px solid hsla(261, 100%, 87%, 0.459);
     padding: 2px;
     position: absolute;
+    object-fit: cover;
     bottom: -3rem;
     left: 5rem;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);

@@ -2,10 +2,12 @@
 import type { Ref } from 'vue'
 import List from './List.vue'
 import type { Friend, Suggestion } from './ListItem.vue'
+import type { User } from '@/types/trpc';
 
 const props = defineProps<{
-    friends: Friend[]
-    suggestions: Suggestion[]
+    friends: User[]
+    suggestions: User[]
+    verifiedUsers: User[]
 }>()
 </script>
 
@@ -22,7 +24,7 @@ const props = defineProps<{
         </div>
         <div class="sb-friends">
             <h2>Verified</h2>
-            <List :data="suggestions" type="verified" />
+            <List :data="verifiedUsers" type="verified" />
         </div>
     </div>
 </template>
@@ -54,6 +56,7 @@ const props = defineProps<{
 h2 {
     color: #fff;
     margin-bottom: 13px;
+    font-size: clamp(0.8rem, 1vw + 0.5rem, 3rem);
 }
 
 

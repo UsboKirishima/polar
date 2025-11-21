@@ -89,7 +89,7 @@ li .box {
     display: flex;
     align-items: center;
     color: #fff;
-    font-size: 1.1rem;
+    font-size: clamp(0.3rem, 1vw + 0.5rem, 1.1rem);
     font-weight: 400;
     text-decoration: none;
     padding: 6px;
