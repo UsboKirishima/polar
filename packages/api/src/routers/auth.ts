@@ -1,5 +1,5 @@
 import { loginInfoSchema, userSchema } from "@polar/types";
-import { publicProcedure, t } from "../trpc";
+import { protectedProcedure, publicProcedure, t } from "../trpc";
 import { authService, userService } from "@polar/services";
 import { resultErr, generateTokens } from "@polar/utils";
 import bcrypt from 'bcrypt';
@@ -69,6 +69,17 @@ export const authRouter = t.router({
                 throw new TRPCError({
                     code: "INTERNAL_SERVER_ERROR",
                     message: error?.message ?? "Authentication failed."
+                })
+            }
+        }),
+    ping: protectedProcedure
+        .query(async ({ ctx }) => {
+            try {
+                return { message: 'Pong' }
+            } catch (error: any) {
+                throw new TRPCError({
+                    code: 'INTERNAL_SERVER_ERROR',
+                    message: error?.message ?? 'Failed to ping server'
                 })
             }
         })
