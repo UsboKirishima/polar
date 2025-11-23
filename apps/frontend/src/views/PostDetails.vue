@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, Transition } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePostStore } from '@/stores/posts'
 import { type Post, type User } from '@/types/trpc'
 import { useAuthStore } from '@/stores/auth'
 import PostCard from '@/components/feed/PostCard.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faArrowRight, faCopy, faEllipsisVertical, faFlag, faTrash } from '@fortawesome/free-solid-svg-icons'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import PageLoading from '@/components/PageLoading.vue'
@@ -19,6 +19,8 @@ const postStore = usePostStore()
 const router = useRouter()
 const auth = useAuthStore()
 const postId = route.params.id as string
+
+const isOptsOpen = ref<boolean>(false);
 
 const post = ref<Post | null>(null)
 const newComment = ref('')
@@ -52,6 +54,11 @@ const deleteComment = async (commentId: string) => {
     await fetchPost()
 }
 
+const handleReport = async () => {
+    alert('Not yet implmented')
+    isOptsOpen.value = false;
+}
+
 const goBack = () => {
     router.go(-1)
 }
@@ -75,29 +82,34 @@ onMounted(fetchPost)
                 <h3>{{ post.comments.length }} comments</h3>
                 <div class="comment create">
                     <div class="profile">
-                        <img
-                            :src="auth.user?.profile?.avatar?.url ?? '/pfp_placeholder.png'"
-                            alt=""
-                        />
+                        <img :src="auth.user?.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="" />
                     </div>
-                    <input
-                        type="text"
-                        v-model="newComment"
-                        @keypress="handleKeyPress"
-                        placeholder="Post a comment"
-                    />
+                    <input type="text" v-model="newComment" @keypress="handleKeyPress" placeholder="Post a comment" />
                     <div class="send-btn" @click="submitComment">
                         <FontAwesomeIcon :icon="faArrowRight" />
                     </div>
                 </div>
-                <div
-                    v-for="comment in post!.comments.sort(
-                        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-                    )"
-                    class="comment"
-                >
+                <div v-for="comment in post!.comments.sort(
+                    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+                )" class="comment">
                     <div class="profile">
                         <Userinfo :user="comment.user as User" disable-over />
+                        <div class="options" @click="isOptsOpen = !isOptsOpen">
+                            <FontAwesomeIcon :icon="faEllipsisVertical" :style="{ color: '#fff' }" class="dots" />
+                        </div>
+                        <Transition name="fade-slide">
+                            <div v-if="isOptsOpen" class="actions">
+                                <ul>
+                                    <li v-if="post.author.id === auth.user?.id" @click="deleteComment(comment.id)"
+                                        class="delete-act">
+                                        <FontAwesomeIcon :icon="faTrash" /> Delete
+                                    </li>
+                                    <li class="report-act" @click="handleReport">
+                                        <FontAwesomeIcon :icon="faFlag" /> Report
+                                    </li>
+                                </ul>
+                            </div>
+                        </Transition>
                     </div>
                     <p class="content">{{ comment.text || 'unknown' }}</p>
                     <p class="date">{{ dayjs(comment.createdAt).fromNow() || 'unknown' }}</p>
@@ -194,7 +206,7 @@ b {
     color: #ffffff7a;
 }
 
-.comments > .comment:last-child {
+.comments>.comment:last-child {
     border-radius: 0 0px 16px 16px;
 }
 
@@ -235,5 +247,50 @@ b {
 .content {
     font-size: 0.87rem;
     margin-top: 0.5rem;
+}
+
+.dots {
+    transition: 200ms;
+    z-index: 99;
+    cursor: pointer;
+}
+
+.dots:hover {
+    opacity: 75%;
+    transition: 200ms;
+}
+
+.actions {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #2d2d44b7;
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    list-style: none;
+    padding: 5px 0;
+    margin: 0;
+    min-width: 150px;
+    z-index: 1000;
+}
+
+.actions ul li {
+    display: block;
+    padding: 8px 15px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 200ms;
+}
+
+.actions ul li:hover {
+    opacity: 75%;
+    transition: 200ms;
+}
+
+.delete-act {
+    color: rgb(255, 45, 45);
 }
 </style>

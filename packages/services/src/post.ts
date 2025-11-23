@@ -82,7 +82,7 @@ export const __getPostByid = async (postId: string) => {
 
 export const __getCommentById = async (commentId: string) => {
     return await db.comment.findFirst({
-        where: { id: commentId },
+        where: { id: commentId, published: true },
         include: {
             user: true
         }
@@ -112,7 +112,11 @@ export const __getAllPosts = async () => {
                 },
             },
             categories: true,
-            comments: true,
+            comments: {
+                where: {
+                    published: true
+                }
+            },
             likes: {
                 include: {
                     user: {
@@ -139,7 +143,11 @@ export const __getPostsByUserId = async (userId: string) => {
         where: { authorId: userId, published: true },
         include: {
             categories: true,
-            comments: true,
+            comments: {
+                where: {
+                    published: true
+                }
+            },
             author: {
                 select: {
                     id: true,
@@ -204,7 +212,11 @@ export const __getCategoryById = async (categoryId: number) => {
                             },
                         },
                     },
-                    comments: true,
+                    comments: {
+                        where: {
+                            published: true
+                        }
+                    },
                     likes: {
                         include: {
                             user: {
@@ -246,7 +258,11 @@ export const __getCategoryByName = async (categoryName: string) => {
                             },
                         },
                     },
-                    comments: true,
+                    comments: {
+                        where: {
+                            published: true
+                        }
+                    },
                     likes: {
                         include: {
                             user: {
@@ -460,9 +476,18 @@ export const deleteComment = async (commentId: string) => {
         throw new Error("Post for comment not found.");
     }
 
-    const result = await db.comment.delete({
-        where: { id: commentId },
-    });
+    //const result = await db.comment.delete({
+    //    where: { id: commentId },
+    //});
+
+    const result = await db.comment.update({
+        where: {
+            id: commentId
+        },
+        data: {
+            published: false
+        }
+    })
 
     await cacheManager.delete(CACHE_KEYS.comment(commentId));
     await cacheManager.delete(CACHE_KEYS.post(commentToDelete.postId));
