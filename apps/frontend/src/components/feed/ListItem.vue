@@ -60,6 +60,7 @@ const props = defineProps<{
     width: 40px;
     border-radius: 100%;
     object-fit: cover;
+    aspect-ratio: 1/1;
 }
 
 .f-info {

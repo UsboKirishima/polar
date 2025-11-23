@@ -8,12 +8,17 @@ import PageLoading from '../PageLoading.vue'
 import type { Friendship } from '@/types/trpc'
 import type { User } from '@/types/trpc'
 import Userinfo from '../Userinfo.vue'
+import type { FriendsType } from '@/views/UserDetails.vue'
+import { ref } from 'vue'
 
 // Props
 const props = defineProps<{
     currentPage: 'friends' | 'requests'
     hideRemoveBtn?: boolean
+    friends?: FriendsType
 }>()
+
+const parsedFriends = ref<FriendsType>([]);
 
 // Store
 const friendStore = useFriendStore()
@@ -23,6 +28,8 @@ const router = useRouter()
 onMounted(async () => {
     await friendStore.fetchFriends()
     await friendStore.fetchPendingRequests()
+
+    parsedFriends.value = props.friends as FriendsType ?? friendStore.friends as FriendsType;
 })
 
 // Computed properties to simplify template
@@ -59,8 +66,8 @@ const openFriend = (friendId: string) => {
         </div>
 
         <div v-else-if="isFriendsPage">
-            <ul v-if="friendStore.friends?.length" class="friend-list">
-                <li v-for="friend in friendStore.friends" :key="friend.userId" class="friend-item">
+            <ul v-if="parsedFriends.length" class="friend-list">
+                <li v-for="friend in parsedFriends" :key="friend.userId" class="friend-item">
                     <span class="username">
                         <div class="indentifier" @click="openFriend(friend.friend.id)">
                             <Userinfo :user="friend.friend as User" disable-over />

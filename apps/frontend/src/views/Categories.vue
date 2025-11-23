@@ -21,8 +21,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <PageLoading v-if="postStore.loading" />
-    <div v-else class="space">
+    <div class="space">
         <HeaderBar> All <b>Categories</b> ({{ categories.length }}) </HeaderBar>
         <div class="container">
             <div class="categories">

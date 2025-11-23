@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import api from '@/axiosApi'
 import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'

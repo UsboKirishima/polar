@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 
+const NOTIFICATION_TIME_MS = 4000;
+
 export const useLogStore = defineStore('logs', {
     state: () => ({
         type: null as 'err' | 'succ' | 'msg' | null,
@@ -14,7 +16,7 @@ export const useLogStore = defineStore('logs', {
             setTimeout(() => {
                 this.error = null
                 this.type = null
-            }, 3000)
+            }, NOTIFICATION_TIME_MS)
         },
         showSuccess(msg: string) {
             this.success = msg;
@@ -22,7 +24,7 @@ export const useLogStore = defineStore('logs', {
             setTimeout(() => {
                 this.success = null
                 this.type = null
-            }, 3000)
+            }, NOTIFICATION_TIME_MS)
         },
         showInfo(msg: string) {
             this.message = msg;
@@ -30,7 +32,7 @@ export const useLogStore = defineStore('logs', {
             setTimeout(() => {
                 this.message = null
                 this.type = null
-            }, 3000)
+            }, NOTIFICATION_TIME_MS)
         }
     }
 })

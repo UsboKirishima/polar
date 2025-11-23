@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import api from '@/axiosApi'
 import * as services from '../interface';
 import { trpc } from '@/trpc';
+import { useLogStore } from './logs';
 
 type User = Awaited<ReturnType<typeof trpc.user.getMe.query>>;
 
@@ -13,20 +14,25 @@ export const useAuthStore = defineStore('auth', {
     }),
 
     actions: {
+
         async login(email: string, password: string) {
+            const logs = useLogStore()
+
             try {
                 this.loading = true
-                const res = await services.auth.login({
-                    email,
-                    password
-                })
-                
+
+                const res = await services.auth.login({ email, password })
+
                 localStorage.setItem('token', res.accessToken)
                 await this.checkAuth()
 
-                return true;
-            } catch (err) {
+                logs.showSuccess(`Logged in as ${email}`)
+                return true
+
+            } catch (err: any) {
+                logs.showErr(err?.response?.message || 'Login failed')
                 return false
+
             } finally {
                 this.loading = false
             }
@@ -39,11 +45,15 @@ export const useAuthStore = defineStore('auth', {
             dateOfBirth: Date,
             fullName: string,
         ) {
+            const logs = useLogStore()
+
             try {
                 this.loading = true
-                const res = await api.post('/auth/register', {
-                    email: email,
-                    password: password,
+
+                // Optional API call (your original code)
+                await api.post('/auth/register', {
+                    email,
+                    password,
                     profile: {
                         username,
                         dateOfBirth,
@@ -51,37 +61,51 @@ export const useAuthStore = defineStore('auth', {
                     },
                 })
 
-                return await services.auth.register({
-                    email: email,
-                    password: password,
+                // TRPC/Register actual call
+                const result = await services.auth.register({
+                    email,
+                    password,
                     profile: {
-                        username: username,
-                        dateOfBirth: dateOfBirth,
-                        fullName: fullName
+                        username,
+                        dateOfBirth,
+                        fullName
                     }
                 })
-            } catch (err) {
+
+                logs.showSuccess(`Registered account for ${email}`)
+                return result
+
+            } catch (err: any) {
+                logs.showErr(err?.response?.message || 'Registration failed')
                 return false
+
             } finally {
                 this.loading = false
             }
         },
 
         async checkAuth() {
+            const logs = useLogStore()
+
             try {
-                const res = await services.auth.checkAuth();
+                const res = await services.auth.checkAuth()
                 this.user = res
                 this.isLoggedIn = true
-            } catch(err) {
+            } catch (err) {
                 this.user = null
                 this.isLoggedIn = false
+                logs.showErr('Authentication check failed')
             }
         },
 
         logout() {
+            const logs = useLogStore()
+
             localStorage.removeItem('token')
             this.user = null
             this.isLoggedIn = false
+
+            logs.showSuccess('Logged out successfully')
         },
     },
 })

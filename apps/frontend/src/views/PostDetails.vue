@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, Transition } from 'vue'
+import { ref, onMounted, Transition, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePostStore } from '@/stores/posts'
 import { type Post, type User } from '@/types/trpc'
@@ -20,7 +20,7 @@ const router = useRouter()
 const auth = useAuthStore()
 const postId = route.params.id as string
 
-const isOptsOpen = ref<boolean>(false);
+const isOptsOpen = ref<Record<string, boolean>>({ '': false });
 
 const post = ref<Post | null>(null)
 const newComment = ref('')
@@ -56,14 +56,35 @@ const deleteComment = async (commentId: string) => {
 
 const handleReport = async () => {
     alert('Not yet implmented')
-    isOptsOpen.value = false;
+    isOptsOpen.value = { '': false };
 }
 
 const goBack = () => {
     router.go(-1)
 }
 
-onMounted(fetchPost)
+const closeMenuOnClickOutside = (event: MouseEvent) => {
+    const clickedElement = event.target as HTMLElement;
+
+    const postHeader = document.querySelector(`.post-actions`);
+
+    const optionsContainer = clickedElement.closest('.post-header')?.querySelector('.options');
+
+    if (isOptsOpen.value &&
+        !clickedElement.closest('.options') &&
+        !clickedElement.closest('.actions')) {
+        isOptsOpen.value = { '': false };
+    }
+};
+
+onMounted(async () => {
+    await fetchPost()
+    document.addEventListener('click', closeMenuOnClickOutside);
+});
+
+onUnmounted(() => {
+    document.removeEventListener('click', closeMenuOnClickOutside);
+});
 </script>
 
 <template>
@@ -94,11 +115,12 @@ onMounted(fetchPost)
                 )" class="comment">
                     <div class="profile">
                         <Userinfo :user="comment.user as User" disable-over />
-                        <div class="options" @click="isOptsOpen = !isOptsOpen">
+                        <div class="options"
+                            @click="isOptsOpen[comment.id] === true ? isOptsOpen[comment.id] = false : isOptsOpen[comment.id] = true">
                             <FontAwesomeIcon :icon="faEllipsisVertical" :style="{ color: '#fff' }" class="dots" />
                         </div>
                         <Transition name="fade-slide">
-                            <div v-if="isOptsOpen" class="actions">
+                            <div v-if="isOptsOpen[comment.id] === true" class="actions">
                                 <ul>
                                     <li v-if="post.author.id === auth.user?.id" @click="deleteComment(comment.id)"
                                         class="delete-act">
@@ -175,13 +197,21 @@ b {
 
 .profile {
     display: flex;
+    flex-direction: row;
     align-items: center;
+    justify-content: space-between;
+    position: relative;
+    position: relative;
+    overflow: visible;
+    z-index: 10;
 }
 
 .profile img {
     width: 50px;
     border-radius: 100%;
     margin-right: 7px;
+    object-fit: cover;
+    aspect-ratio: 1/1;
 }
 
 .comments {
@@ -274,7 +304,7 @@ b {
     padding: 5px 0;
     margin: 0;
     min-width: 150px;
-    z-index: 1000;
+    z-index: 99;
 }
 
 .actions ul li {
@@ -292,5 +322,24 @@ b {
 
 .delete-act {
     color: rgb(255, 45, 45);
+}
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s ease;
+}
+
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.fade-slide-enter-to,
+.fade-slide-leave-from {
+    opacity: 1;
+    transform: translateY(0);
 }
 </style>

@@ -76,8 +76,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <PageLoading v-if="userStore.loading || authStore.loading" />
-    <div v-else class="container">
+    <div class="container">
         <HeaderBar><b>Preferences</b></HeaderBar>
 
         <div class="settings">

@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import api from '../axiosApi'
-import { checkAuth } from '../check-auth'
 import { useAuthStore } from '../stores/auth'
 import { useRouter } from 'vue-router'
 import { useFriendStore } from '@/stores/friends'
-import { trpc } from '@/trpc'
 
 const router = useRouter()
 

@@ -3,12 +3,25 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import Sidebar from './components/Sidebar.vue'
 import { useLogStore } from './stores/logs';
 import { faCheckCircle, faInfo, faMessage } from '@fortawesome/free-solid-svg-icons';
-import { onMounted } from 'vue';
+import PageLoading from './components/PageLoading.vue';
+
+import { useAuthStore } from './stores/auth';
+import { useFriendStore } from './stores/friends';
+import { usePostStore } from './stores/posts';
+import { useSettingsStore } from './stores/settings';
+import { useUserStore } from './stores/users';
 
 const logStore = useLogStore();
+
+const authStore = useAuthStore();
+const friendStore = useFriendStore();
+const postStore = usePostStore();
+const settingStore = useSettingsStore();
+const userStore = useUserStore();
 </script>
 
 <template>
+    <PageLoading v-if="authStore.loading || friendStore.loading || postStore.loading || settingStore.loading || userStore.loading" />
     <div class="container">
         <Sidebar class="sidebar" />
         <div class="view">
@@ -17,8 +30,8 @@ const logStore = useLogStore();
         </div>
     </div>
     <Transition name="fade-slide">
-        <div v-if="logStore.type" :class="`log-box ${logStore.type}`">
-            <FontAwesomeIcon :icon="logStore.type === 'succ' ?
+        <div v-if="logStore.type" :class="`log-box ${logStore.type}`" @click="logStore.type = null">
+            <FontAwesomeIcon class="icon" :icon="logStore.type === 'succ' ?
                 faCheckCircle
                 : logStore.type === 'err'
                     ? faInfo
@@ -52,7 +65,8 @@ const logStore = useLogStore();
     bottom: 1rem;
     z-index: 99;
     width: 20rem;
-    height: 6rem;
+    height: 4rem;
+    transition: 300ms;
 
     backdrop-filter: blur(14px) saturate(180%);
     -webkit-backdrop-filter: blur(14px) saturate(180%);
@@ -62,7 +76,18 @@ const logStore = useLogStore();
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
+    padding: 0.5rem;
+}
+
+.log-box:hover {
+    transition: 300ms;
+    transform: translateX(-0.98rem);
+    cursor: pointer;
+}
+
+.icon {
+    margin-right: 5px;
 }
 
 .succ {
@@ -86,7 +111,7 @@ const logStore = useLogStore();
 }
 
 .log-box p {
-    margin-left: 0.5rem;
+    text-align: center;
 }
 
 @media (max-width: 768px) {

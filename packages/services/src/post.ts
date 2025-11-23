@@ -45,6 +45,9 @@ export const __getPostByid = async (postId: string) => {
             },
             categories: true,
             comments: {
+                where: {
+                    published: true
+                },
                 include: {
                     user: {
                         select: {

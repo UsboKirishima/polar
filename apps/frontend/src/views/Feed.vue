@@ -54,13 +54,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div
-        v-if="friendStore.loading || (postStore.loading && !postStore.posts.length)"
-        class="loading"
-    >
-        <PageLoading />
-    </div>
-    <div v-else class="feed-container">
+    <div class="feed-container">
         <div class="feed-space">
             <FeedHeader :currentPage="feedConfig.page.value" @change-page="setPage" />
             <FeedContent :currentPage="feedConfig.page.value" :posts="postStore.posts" />
