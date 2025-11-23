@@ -21,7 +21,7 @@ const userStore = useUserStore();
 </script>
 
 <template>
-    <PageLoading v-if="authStore.loading || friendStore.loading || postStore.loading || settingStore.loading || userStore.loading" />
+    <PageLoading v-if="authStore.loading || friendStore.loading || postStore.loading && !postStore.isLike || settingStore.loading || userStore.loading" />
     <div class="container">
         <Sidebar class="sidebar" />
         <div class="view">

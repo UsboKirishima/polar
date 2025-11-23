@@ -11,6 +11,7 @@ export const usePostStore = defineStore('post', {
         categories: [] as Category[],
         loading: false,
         error: null as string | null,
+        isLike: false
     }),
 
     actions: {
@@ -32,10 +33,10 @@ export const usePostStore = defineStore('post', {
             }
         },
 
-        async fetchPostById(postId: string) {
+        async fetchPostById(postId: string, skipLoading = false) {
             const logs = useLogStore()
 
-            this.loading = true
+            if (skipLoading) this.loading = true;
             this.error = null
             try {
                 return await postService.getById(postId)
@@ -109,12 +110,13 @@ export const usePostStore = defineStore('post', {
         async togglePostLike(postId: string) {
             const logs = useLogStore()
 
-            this.loading = true
+            this.isLike = true;
+            this.loading = false // disable loading
             this.error = null
             try {
                 await postService.toggleLike(postId)
 
-                const refreshedPost = await this.fetchPostById(postId)
+                const refreshedPost = await this.fetchPostById(postId, true)
                 if (!refreshedPost) return
 
                 const index = this.posts.findIndex((p) => p.id === postId)
@@ -126,6 +128,7 @@ export const usePostStore = defineStore('post', {
                 logs.showErr(msg)
             } finally {
                 this.loading = false
+                this.isLike = false;
             }
         },
 

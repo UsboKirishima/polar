@@ -210,7 +210,9 @@ export const __getCategoryById = async (categoryId: number) => {
                                 select: {
                                     username: true,
                                     fullName: true,
-                                    bio: true
+                                    bio: true,
+                                    avatar: true,
+                                    banner: true
                                 },
                             },
                         },

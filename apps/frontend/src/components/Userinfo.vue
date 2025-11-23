@@ -47,9 +47,11 @@ const handleMouseMove = (event: MouseEvent) => {
 
 .post-header img {
     width: 50px;
-    border-radius: 100%;
-    aspect-ratio: 1/1;
+    height: 50px;
+    border-radius: 50%;
     object-fit: cover;
+    aspect-ratio: 1/1;
+    flex-shrink: 0;
 }
 
 .h-info {
