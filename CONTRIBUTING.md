@@ -1,60 +1,52 @@
-# Contributing to Polar
+# Contribution Guidelines
 
-First off, thank you for considering contributing to Polar! It's people like you that make Polar such a great project.
+Thank you for your interest in contributing to the Polar platform! These guidelines are designed to make the contribution process smooth and effective for everyone.
 
-We welcome any type of contribution, not just code. You can help with:
+## Git Workflow
 
-*   **Reporting a bug**: If you find a bug, please let us know.
-*   **Suggesting a feature**: If you have an idea for a new feature, we'd love to hear about it.
-*   **Contributing code**: If you want to write some code, we're happy to accept pull requests.
-*   **Improving documentation**: If you see something that could be clearer, please let us know.
+We use a feature-branch-based workflow. All pull requests should be targeted against the `main` branch.
 
-## Getting Started
+1.  **Create a Branch:** Create a new branch from the latest `main`. Please use the following naming convention:
+    - `feature/<feature-name>` for new features (e.g., `feature/post-editing`)
+    - `bugfix/<bug-name>` for bug fixes (e.g., `bugfix/login-form-validation`)
+    - `chore/<description>` for maintenance tasks (e.g., `chore/upgrade-dependencies`)
 
-To get started, you'll need to have a GitHub account. You'll also need to have Node.js and pnpm installed on your machine.
+2.  **Develop:** Make your changes on your branch. Ensure your code adheres to the project's coding standards.
 
-1.  Fork the repository on GitHub.
-2.  Clone your fork locally: `git clone https://github.com/your-username/polar.git`
-3.  Navigate to the project directory: `cd polar`
-4.  Install the dependencies: `pnpm install`
-5.  Create a new branch for your changes: `git checkout -b my-new-feature`
+3.  **Commit:** Write clear and concise commit messages.
 
-## How to Contribute
+4.  **Test:** Add or update tests for your changes. Run the entire test suite to ensure nothing has broken.
+    ```bash
+    pnpm test
+    ```
 
-### Reporting Bugs
+5.  **Push & Pull Request:** Push your branch to the remote repository and open a Pull Request (PR) against the `main` branch.
+    - Provide a clear title and description for your PR.
+    - Link any relevant issues.
 
-If you find a bug, please open an issue on GitHub. Please include as much detail as possible, including:
+6.  **Code Review:** At least one team member must review and approve your PR before it can be merged. Address any feedback or requested changes.
 
-*   A clear and descriptive title.
-*   A detailed description of the bug, including steps to reproduce it.
-*   The expected behavior and what actually happened.
-*   Your operating system and browser (if applicable).
+## Coding Standards
 
-### Suggesting Features
+### TypeScript
+- **Type Safety:** Avoid using `any` whenever possible. Leverage TypeScript's utility types and type inference.
+- **ESM:** Use ES Module syntax (`import`/`export`).
+- **Readability:** Write clean, readable, and self-documenting code.
 
-If you have an idea for a new feature, please open an issue on GitHub. Please include:
+### Linting & Formatting
+- We use **ESLint** for code quality and **Prettier** for code formatting.
+- Before committing, it's a good practice to run the linter:
+  ```bash
+  pnpm lint
+  ```
+- The CI pipeline will fail if there are any linting or formatting errors.
 
-*   A clear and descriptive title.
-*   A detailed description of the feature you'd like to see.
-*   Any mockups or screenshots that might help explain your idea.
+## Development Process
 
-### Submitting Pull Requests
-
-1.  Make your changes in your local repository.
-2.  Commit your changes: `git commit -m "feat: Add some new feature"`
-3.  Push your changes to your fork: `git push origin my-new-feature`
-4.  Open a pull request on GitHub.
-
-Please make sure your pull request includes:
-
-*   A clear and descriptive title.
-*   A detailed description of the changes you've made.
-*   A reference to the issue you're addressing (if applicable).
-
-## Code of Conduct
-
-By participating in this project, you are expected to uphold our [Code of Conduct](CODE_OF_CONDUCT.md).
-
-## License
-
-By contributing to Polar, you agree that your contributions will be licensed under the [Polar Restricted Use and Attribution License (P-RUAL)](LICENSE).
+- **Keep it Small:** PRs should be small and focused on a single task. This makes them easier and faster to review.
+- **Stay Updated:** Regularly rebase your branch on the latest `main` to avoid complex merge conflicts.
+  ```bash
+  git fetch origin
+  git rebase origin/main
+  ```
+- **Communicate:** If you're working on a large feature, communicate your plan with the team to ensure alignment.

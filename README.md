@@ -1,260 +1,90 @@
-<div align="center">
-  <img src="./assets/screen1.png" alt="Polar" width="600" />
-  
-  # **Polar**
-  
-  [![License: P-RUAL](https://img.shields.io/badge/P-RUAL-yellow.svg)](/LICENSE)
-  [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue.svg)](https://www.typescriptlang.org/)
-  [![Node.js](https://img.shields.io/badge/Node.js-20+-green.svg)](https://nodejs.org/)
-  [![pnpm](https://img.shields.io/badge/pnpm-10.20.0-orange.svg)](https://pnpm.io/)
-  [![Turborepo](https://img.shields.io/badge/Turborepo-2.5.6-blueviolet.svg)](https://turbo.build/)
-  
-  A modern full-stack social platform to connect with nearby friends based on location.
-  
-  [🌐 polar](https://polar.usbo.tech) | [📱 Frontend](./apps/frontend/) | [⚡ Backend](./apps/backend/) | [🎨 License](/LICENSE)
-</div>
+# Polar Social Network Platform
 
----
-> [!WARNING]
-> There is currently **no stable release** of **Polar** available.  
-> Expect breaking changes, incomplete features, and frequent updates.
+Welcome to the Polar Social Network Platform! This is a modern, type-safe, and scalable social network built on a TypeScript-first monorepo.
 
+Our mission is to foster authentic connections through a seamless, high-performance, and secure user experience.
 
-## ✨ Features
+## Technology Stack
 
-- 🚀 **Share & Engage**: Create posts, leave comments, and show appreciation with likes
-- 👤 **Profile Customization**: Personalize your profile to express yourself
-- 🔍 **Discover People**: Find and connect with new friends and interesting people
-- 💬 **Real-time Chat**: Communicate instantly with your friends
-- 📍 **Location-based Discovery**: Find people nearby and potentially find your next date!
-- 🏗️ **Modern Architecture**: Built with TypeScript, tRPC, Vue.js, and Express.js
+The platform is built on a robust, modern technology stack chosen for performance, scalability, and developer experience.
 
-## 🏗️ Architecture
+| Category | Technology | Justification |
+|---|---|---|
+| **Monorepo** | **PNPM Workspaces & Turborepo** | Efficient dependency management and incremental, cached builds. |
+| **API** | **tRPC** | End-to-end type-safe APIs without schema generation. |
+| **Backend** | **Node.js, TypeScript, Express.js** | High-performance I/O, running the tRPC server. |
+| **Frontend** | **React, TypeScript, Vite** | Modern component architecture with a lightning-fast dev environment. |
+| **Database ORM** | **Prisma** | Type-safe database client and declarative schema management. |
+| **Database** | **PostgreSQL** | A reliable and feature-rich relational database. |
+| **Caching** | **Redis** | High-performance in-memory cache for sessions and frequent queries. |
+| **Deployment** | **Docker & Nginx** | Containerized services for consistent environments and routing. |
 
-This is a **monorepo** built with modern tools and best practices:
+## Monorepo Structure
 
-### 🛠️ Tech Stack
+The project is organized as a PNPM/Turborepo monorepo to promote code sharing and developer velocity.
 
-- **Frontend**: Vue.js 3 + TypeScript + Vite + Pinia
-- **Backend**: Node.js + Express.js + TypeScript + tRPC
-- **Database**: MariaDB + Prisma ORM
-- **Caching**: Redis
-- **Authentication**: Better Auth + JWT
-- **File Storage**: ImageKit
-- **Monorepo**: Turborepo + pnpm workspaces
-- **Type Safety**: Full end-to-end type safety with tRPC
+```
+/
+├── apps/                 # Deployable applications (backend, frontend)
+├── packages/             # Shared libraries (db, api, types, utils)
+├── docs/                 # Detailed documentation guides
+├── .github/              # CI/CD Workflows
+├── CONTRIBUTING.md       # Contributor guidelines
+└── README.md             # This file
+```
 
-### 📁 System design
+## Getting Started
 
-![tech_stack](/assets/tech_stack.jpg)
-
-## 🚀 Quick Start
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
 
-- **Node.js**: >= 20.0.0
-- **pnpm**: >= 10.0.0
-- **MariaDB**: Latest stable version
-- **Redis**: Latest stable version
+- Node.js (v18+)
+- PNPM (v8+)
+- Docker and Docker Compose
 
-### Installation
+### Local Development Setup
 
-1. **Clone the repository**
-
+1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/UsboKirishima/polar.git
+    git clone <repository-url>
     cd polar
     ```
 
-2. **Install dependencies**
-
+2.  **Install dependencies:**
     ```bash
     pnpm install
     ```
 
-3. **Set up environment variables**
-
+3.  **Start backing services (PostgreSQL & Redis):**
     ```bash
-    # Copy example environment files
+    docker-compose up -d
+    ```
+
+4.  **Configure Environment Variables:**
+    Copy all `.env.example` files to `.env` in their respective `apps/*` directories.
+    ```bash
     cp apps/backend/.env.example apps/backend/.env
-    cp apps/frontend/.env.example apps/frontend/.env
-
-    # Edit the files with your configuration
     ```
 
-4. **Set up the database**
-
+5.  **Run database migrations:**
+    This command applies any pending database schema changes.
     ```bash
-    # Generate Prisma client
-    pnpm db:generate
-
-    # Run database migrations
-    pnpm db:migrate
+    pnpm --filter @polar/db exec prisma migrate dev
     ```
 
-5. **Start development servers**
-
+6.  **Start all applications in development mode:**
+    This will start the backend and frontend with hot-reloading.
     ```bash
-    # Start all services in development mode
     pnpm dev
-
-    # Or start individual services
-    pnpm dev --filter=@polar/backend
-    pnpm dev --filter=@polar/frontend
     ```
+    Your frontend should now be available at `http://localhost:5173` and the backend is listening for tRPC requests.
 
-### Code Standards
+## Further Documentation
 
-- **TypeScript**: Strict mode enabled with comprehensive type checking
-- **ESLint**: Antfu's ESLint config with custom rules
-- **Prettier**: Consistent code formatting
-- **Conventional Commits**: Follow conventional commit format
-
-## 🔧 Configuration
-
-### Environment Variables
-
-#### Backend (`apps/backend/.env`)
-
-```bash
-# Database
-DATABASE_URL="mariadb://user:password@localhost:5432/polar"
-
-# Redis
-REDIS_URL="redis://localhost:6379"
-
-# Authentication
-JWT_SECRET="your-jwt-secret"
-BCRYPT_ROUNDS=12
-
-# ImageKit (for file uploads)
-IMAGEKIT_PUBLIC_KEY="your-public-key"
-IMAGEKIT_PRIVATE_KEY="your-private-key"
-IMAGEKIT_URL_ENDPOINT="your-url-endpoint"
-
-# Server
-PORT=3000
-NODE_ENV="development"
-```
-
-#### Frontend (`apps/frontend/.env`)
-
-```bash
-# API Configuration
-VITE_API_URL="http://localhost:3000"
-VITE_WS_URL="ws://localhost:3000"
-
-# Environment
-NODE_ENV="development"
-```
-
-### Database Schema
-
-The database schema is defined in `packages/db/src/schema.prisma`. Key entities:
-
-- **User**: User accounts and profiles
-- **Post**: User posts and content
-- **Comment**: Comments on posts
-- **Like**: Post and comment likes
-- **Chat**: Direct messaging
-- **Location**: User location data
-
-## 🚀 Deployment
-
-### Production Build
-
-```bash
-# Build applications (packages are consumed as-is)
-pnpm build
-
-# Build for production with optimizations
-NODE_ENV=production pnpm build
-```
-
-### Docker Deployment
-
-```bash
-# Build Docker images
-docker-compose build
-
-# Start services
-docker-compose up -d
-```
-
-### Environment-specific Builds
-
-```bash
-# Staging
-pnpm build --filter=@polar/backend
-pnpm build --filter=@polar/frontend
-
-# Production
-NODE_ENV=production pnpm build --filter=@polar/backend
-NODE_ENV=production pnpm build --filter=@polar/frontend
-```
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these guidelines:
-
-1. **Fork the repository** and create your feature branch
-2. **Follow the code standards** and run linting/formatting
-3. **Write tests** for new functionality
-4. **Update documentation** as needed
-5. **Submit a pull request** with a clear description
-
-### Development Setup for Contributors
-
-1. Follow the Quick Start guide above
-2. Install development dependencies: `pnpm install`
-3. Set up pre-commit hooks: `pnpm prepare`
-4. Make your changes and ensure all tests pass: `pnpm test`
-
-**Working with Packages:**
-
-- Changes to packages are immediately visible (no build step!)
-- Type checking works across the entire monorepo
-- Just save your `.ts` files and restart the consuming application
-- Use `pnpm type-check` to verify types across all packages
-
-## 📚 Documentation
-
-- **API Documentation**: See `apps/backend/docs/`
-- **Component Documentation**: See `apps/frontend/docs/`
-- **Package Documentation**: Each package has its own README
-- **Architecture Decision Records**: See `docs/adr/`
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-1. **TypeScript errors**: Run `pnpm type-check` to identify issues across packages
-2. **Module resolution issues**: Clear node_modules and reinstall (`pnpm clean && pnpm install`)
-3. **Database connection**: Verify MariaDB is running and connection string is correct
-4. **Redis connection**: Ensure Redis server is running
-
-### Getting Help
-
-- **Issues**: [GitHub Issues](https://github.com/UsboKirishima/polar/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/UsboKirishima/polar/discussions)
-- **Documentation**: Check package-specific READMEs
-
-## 📄 License
-
-This project is licensed under the Polar Restricted Use and Attribution License (P-RUAL) - see the [LICENSE](./LICENSE) file for details.
-
-## 👤 Author
-
-**Davide Usberti**
-
-- Website: [usbo.tech](https://usbo.tech)
-- Email: usbertibox@gmail.com
-- GitHub: [@UsboKirishima](https://github.com/UsboKirishima)
-
----
-
-<div align="center">
-  Made with ❤️ by <a href="https://usbo.tech">Davide Usberti</a>
-  
-  ⭐ Star this project if you find it helpful!
-</div>
+- **[Contribution Guidelines](./CONTRIBUTING.md)**: How to contribute, our Git workflow, and coding standards.
+- **[Backend Architecture](./apps/backend/README.md)**: In-depth guide to the backend service.
+- **[Frontend Architecture](./apps/frontend/README.md)**: In-depth guide to the frontend application.
+- **[API Guide](./packages/api/README.md)**: How to use and define tRPC API procedures.
+- **[Database Guide](./docs/DATABASE.md)**: Information on the database schema, migrations, and seeding.
+- **[Deployment Guide](./docs/DEPLOYMENT.md)**: Details on our CI/CD, deployment, and operational practices.

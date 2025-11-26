@@ -22,12 +22,16 @@ func main() {
 	postsController := controllers.PostController{
 		DB: db,
 	}
+	recommendationController := controllers.RecommendationController{
+		DB: db,
+	}
 
 	/* Initializing the REST API */
 	router := gin.Default()
 
 	router.GET("/hello", apiHello)
 	router.GET("/posts", postsController.ApiGetAllPosts)
+	router.GET("/recommendations", recommendationController.ApiGetRecommendations)
 
 	router.Run("localhost:8080")
 }
