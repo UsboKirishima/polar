@@ -1,6 +1,7 @@
-L'admin panel sarà semplicemente una CLI command-based sviluppata in python con i principali comandi di amministrazione.
+L'admin panel sarà semplicemente una CLI command-based sviluppata in python con i principali comandi
+di amministrazione.
 
-```sql 
+```sql
 < > - Obbligatorio
 [ ] - Opzionale
 
@@ -13,4 +14,5 @@ admin  list                          -- Mostra tutti gli admins
 admin  <add|remove> <userId>         -- Aggiunge/Rimuove amministratori
 
 ```
+
 Molto minimale, senza colori. Si interfaccia direttamente con il server.

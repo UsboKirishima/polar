@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
-import * as services from '@/interface';
-import { useLogStore } from './logs';
+import * as services from '@/interface'
+import { useLogStore } from './logs'
 
-type PendingRequests = Awaited<ReturnType<typeof services.friend.fetchPendingRequests>>;
-type FriendsType = Awaited<ReturnType<typeof services.friend.fetchFriends>>;
+type PendingRequests = Awaited<ReturnType<typeof services.friend.fetchPendingRequests>>
+type FriendsType = Awaited<ReturnType<typeof services.friend.fetchFriends>>
 
 export const useFriendStore = defineStore('friend', {
     state: () => ({
@@ -14,18 +14,17 @@ export const useFriendStore = defineStore('friend', {
     }),
 
     actions: {
-
         /**
          * Fetch pending friend requests for the logged-in user
          */
         async fetchPendingRequests() {
-            const logs = useLogStore();
+            const logs = useLogStore()
 
             this.loading = true
             this.error = null
 
             try {
-                const response = await services.friend.fetchPendingRequests();
+                const response = await services.friend.fetchPendingRequests()
                 this.pendingRequests = response
             } catch (err: any) {
                 const msg = err.response?.data?.message || 'Failed to fetch pending requests'
@@ -40,13 +39,13 @@ export const useFriendStore = defineStore('friend', {
          * Fetch all friends for the logged-in user
          */
         async fetchFriends() {
-            const logs = useLogStore();
+            const logs = useLogStore()
 
             this.loading = true
             this.error = null
 
             try {
-                const response = await services.friend.fetchFriends();
+                const response = await services.friend.fetchFriends()
                 this.friends = response
             } catch (err: any) {
                 const msg = err.response?.message || 'Failed to fetch friends'
@@ -61,17 +60,16 @@ export const useFriendStore = defineStore('friend', {
          * Send a new friend request
          */
         async sendRequest(receiverId: string) {
-            const logs = useLogStore();
+            const logs = useLogStore()
 
             this.loading = true
             this.error = null
 
             try {
-                await services.friend.sendRequest(receiverId);
+                await services.friend.sendRequest(receiverId)
                 await this.fetchPendingRequests()
 
                 logs.showSuccess(`Sent friend request to \`${receiverId}\``)
-
             } catch (err: any) {
                 const msg = err.response?.message || 'Failed to send friend request'
                 this.error = msg
@@ -91,11 +89,10 @@ export const useFriendStore = defineStore('friend', {
             this.error = null
 
             try {
-                await services.friend.sendRequestByUsername(username);
+                await services.friend.sendRequestByUsername(username)
                 await this.fetchPendingRequests()
 
                 logs.showSuccess(`Sent friend request to @${username}`)
-
             } catch (err: any) {
                 const msg = err.response?.message || 'Failed to send friend request'
                 this.error = msg
@@ -115,12 +112,11 @@ export const useFriendStore = defineStore('friend', {
             this.error = null
 
             try {
-                await services.friend.acceptRequest(senderId);
+                await services.friend.acceptRequest(senderId)
                 await this.fetchFriends()
                 await this.fetchPendingRequests()
 
                 logs.showSuccess(`Accepted friend request from \`${senderId}\``)
-
             } catch (err: any) {
                 const msg = err.response?.message || 'Failed to accept friend request'
                 this.error = msg
@@ -144,7 +140,6 @@ export const useFriendStore = defineStore('friend', {
                 await this.fetchPendingRequests()
 
                 logs.showSuccess(`Denied friend request from \`${senderId}\``)
-
             } catch (err: any) {
                 const msg = err.response?.message || 'Failed to deny friend request'
                 this.error = msg
@@ -168,7 +163,6 @@ export const useFriendStore = defineStore('friend', {
                 await this.fetchFriends()
 
                 logs.showSuccess(`Removed friend \`${friendId}\``)
-
             } catch (err: any) {
                 const msg = err.response?.message || 'Failed to remove friend'
                 this.error = msg

@@ -21,7 +21,6 @@ export const useSettingsStore = defineStore('settings', {
     }),
 
     actions: {
-
         /* ========== GENERIC ACTION WRAPPER WITH LOGS ========== */
         async handleAction<T>(fn: () => Promise<T>, errorMessage: string, successMessage?: string) {
             const logs = useLogStore()
@@ -37,13 +36,11 @@ export const useSettingsStore = defineStore('settings', {
                 }
 
                 return result
-
             } catch (err: any) {
                 const msg = err.response?.data?.message || errorMessage
                 this.error = msg
                 logs.showErr(msg)
                 throw err
-
             } finally {
                 this.loading = false
             }
@@ -62,7 +59,7 @@ export const useSettingsStore = defineStore('settings', {
                     return userResponse.data
                 },
                 'Failed to fetch settings',
-                'Settings loaded'
+                'Settings loaded',
             )
         },
 
@@ -75,7 +72,7 @@ export const useSettingsStore = defineStore('settings', {
                     return response.data
                 },
                 `Failed to fetch ${type}`,
-                `${type.charAt(0).toUpperCase() + type.slice(1)} fetched`
+                `${type.charAt(0).toUpperCase() + type.slice(1)} fetched`,
             )
         },
 
@@ -99,7 +96,7 @@ export const useSettingsStore = defineStore('settings', {
                     return response.data.data
                 },
                 `Failed to upload ${type}`,
-                `${type.charAt(0).toUpperCase() + type.slice(1)} updated`
+                `${type.charAt(0).toUpperCase() + type.slice(1)} updated`,
             )
         },
 
@@ -114,7 +111,7 @@ export const useSettingsStore = defineStore('settings', {
                     }
                 },
                 `Failed to delete ${type}`,
-                `${type.charAt(0).toUpperCase() + type.slice(1)} removed`
+                `${type.charAt(0).toUpperCase() + type.slice(1)} removed`,
             )
         },
 

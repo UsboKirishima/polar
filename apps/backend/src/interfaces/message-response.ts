@@ -1,4 +1,4 @@
 type MessageResponse = {
-    message: string;
-};
-export default MessageResponse;
+    message: string
+}
+export default MessageResponse

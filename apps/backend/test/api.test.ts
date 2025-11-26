@@ -1,7 +1,7 @@
-import request from 'supertest';
-import { describe, it } from 'vitest';
+import request from 'supertest'
+import { describe, it } from 'vitest'
 
-import app from '../src/app.js';
+import app from '../src/app.js'
 
 describe('GET /api/v1', () => {
     it('responds with a json message', () =>
@@ -11,5 +11,5 @@ describe('GET /api/v1', () => {
             .expect('Content-Type', /json/)
             .expect(200, {
                 message: 'API - 👋🌎🌍🌏',
-            }));
-});
+            }))
+})

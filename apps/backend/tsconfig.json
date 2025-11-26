@@ -10,14 +10,6 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "typeRoots": [
-    "./src/types",
-    "./node_modules/@types"
-  ],
-  "include": [
-    "./*.js",
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "test/**/*.ts"
-  ]
+  "typeRoots": ["./src/types", "./node_modules/@types"],
+  "include": ["./*.js", "src/**/*.ts", "src/**/*.d.ts", "test/**/*.ts"]
 }

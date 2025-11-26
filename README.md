@@ -15,10 +15,9 @@
 </div>
 
 ---
-> [!WARNING]
-> There is currently **no stable release** of **Polar** available.  
-> Expect breaking changes, incomplete features, and frequent updates.
 
+> [!WARNING] There is currently **no stable release** of **Polar** available.  
+> Expect breaking changes, incomplete features, and frequent updates.
 
 ## ✨ Features
 
@@ -241,7 +240,8 @@ We welcome contributions! Please follow these guidelines:
 
 ## 📄 License
 
-This project is licensed under the Polar Restricted Use and Attribution License (P-RUAL) - see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the Polar Restricted Use and Attribution License (P-RUAL) - see the
+[LICENSE](./LICENSE) file for details.
 
 ## 👤 Author
 

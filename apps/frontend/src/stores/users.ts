@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import * as services from '../interface';
-import { trpc } from '@/trpc';
-import { useLogStore } from './logs';
+import * as services from '../interface'
+import { trpc } from '@/trpc'
+import { useLogStore } from './logs'
 
 type Users = Awaited<ReturnType<typeof trpc.user.getAll.query>>
 
@@ -13,7 +13,6 @@ export const useUserStore = defineStore('user', {
     }),
 
     actions: {
-
         async fetchUsers() {
             const logs = useLogStore()
 
@@ -67,6 +66,5 @@ export const useUserStore = defineStore('user', {
                 this.loading = false
             }
         },
-
     },
 })

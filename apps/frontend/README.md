@@ -3,6 +3,7 @@
 This is the Vue.js code base for Polar's client.
 
 ## Idea
+
 The first idea is to make a simple and performance-focused website with a minimal UI and soft colors.
 
 ## Technologies
@@ -16,14 +17,14 @@ The first idea is to make a simple and performance-focused website with a minima
 ## Configuration
 
 - Setup `.env`
-    ```bash
-    cp .env.example .env
-    ```
+  ```bash
+  cp .env.example .env
+  ```
 - Build for production:
-    ```bash
-    pnpm build
-    ```
-- Run 
-    ```bash
-    pnpm preview
-    ```
+  ```bash
+  pnpm build
+  ```
+- Run
+  ```bash
+  pnpm preview
+  ```

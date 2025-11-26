@@ -1,7 +1,28 @@
 {
   "name": "@polar/types",
   "version": "1.0.0",
+  "packageManager": "pnpm@10.20.0",
   "description": "Shared TypeScript types and Zod schemas for Polar",
+  "author": "Davide Usberti <usbertibox@gmail.com> (https://usbo.tech)",
+  "license": "MIT",
+  "homepage": "https://github.com/UsboKirishima/polar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UsboKirishima/polar.git",
+    "directory": "packages/types"
+  },
+  "bugs": {
+    "url": "https://github.com/UsboKirishima/polar/issues"
+  },
+  "keywords": [
+    "types",
+    "typescript",
+    "zod",
+    "schemas",
+    "validation",
+    "polar",
+    "monorepo"
+  ],
   "main": "dist/index.js",
   "module": "index.ts",
   "types": "dist/index.d.ts",
@@ -18,27 +39,6 @@
     "test": "echo \"No tests specified\"",
     "clean": "rm -rf dist && rm -rf node_modules"
   },
-  "keywords": [
-    "types",
-    "typescript",
-    "zod",
-    "schemas",
-    "validation",
-    "polar",
-    "monorepo"
-  ],
-  "author": "Davide Usberti <usbertibox@gmail.com> (https://usbo.tech)",
-  "license": "MIT",
-  "homepage": "https://github.com/UsboKirishima/polar",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/UsboKirishima/polar.git",
-    "directory": "packages/types"
-  },
-  "bugs": {
-    "url": "https://github.com/UsboKirishima/polar/issues"
-  },
-  "packageManager": "pnpm@10.20.0",
   "dependencies": {
     "zod": "^3.25.76"
   },

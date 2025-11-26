@@ -13,34 +13,17 @@
         "tsconfig.json",
         "package.json"
       ],
-      "outputs": [
-        "dist/**",
-        "build/**",
-        ".next/**",
-        "!.next/cache/**"
-      ],
-      "env": [
-        "NODE_ENV"
-      ],
-      "dependsOn": [
-        "^build"
-      ]
+      "outputs": ["dist/**", "build/**", ".next/**", "!.next/cache/**"],
+      "env": ["NODE_ENV"],
+      "dependsOn": ["^build"]
     },
     "dev": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     },
     "type-check": {
-      "inputs": [
-        "src/**/*.ts",
-        "src/**/*.tsx",
-        "*.ts",
-        "tsconfig.json",
-        "package.json"
-      ],
+      "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "tsconfig.json", "package.json"],
       "outputs": []
     },
     "lint": {
@@ -85,9 +68,7 @@
         "vitest.config.*",
         "package.json"
       ],
-      "outputs": [
-        "coverage/**"
-      ]
+      "outputs": ["coverage/**"]
     },
     "test:watch": {
       "cache": false,
@@ -100,13 +81,8 @@
     },
     "db:generate": {
       "cache": false,
-      "inputs": [
-        "src/schema.prisma",
-        "prisma/schema.prisma"
-      ],
-      "outputs": [
-        "node_modules/.prisma/**"
-      ]
+      "inputs": ["src/schema.prisma", "prisma/schema.prisma"],
+      "outputs": ["node_modules/.prisma/**"]
     },
     "db:push": {
       "cache": false
@@ -131,15 +107,6 @@
       "cache": false
     }
   },
-  "globalDependencies": [
-    ".env",
-    ".env.local",
-    ".env.production",
-    ".env.development"
-  ],
-  "globalEnv": [
-    "NODE_ENV",
-    "DATABASE_URL",
-    "REDIS_URL"
-  ]
+  "globalDependencies": [".env", ".env.local", ".env.production", ".env.development"],
+  "globalEnv": ["NODE_ENV", "DATABASE_URL", "REDIS_URL"]
 }

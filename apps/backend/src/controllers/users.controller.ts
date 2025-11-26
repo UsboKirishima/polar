@@ -1,45 +1,48 @@
-import type { TUserId, TUsername } from '@polar/types/zod.js';
-import type { NextFunction, Request, Response } from 'express';
+import type { TUserId, TUsername } from '@polar/types/zod.js'
+import type { NextFunction, Request, Response } from 'express'
 
-import { userService } from '@polar/services';
-import { userIdSchema, usernameSchema } from '@polar/types/zod.js';
+import { userService } from '@polar/services'
+import { userIdSchema, usernameSchema } from '@polar/types/zod.js'
 
 /*
  * @deprecated Use tRPC API instead
  */
 function validateUserId(res: Response, userId: string) {
-    const validationResult = userIdSchema.safeParse(userId);
+    const validationResult = userIdSchema.safeParse(userId)
     if (!validationResult.success) {
         res.status(400).json({
             message: 'Invalid user ID',
             errors: validationResult.error.errors,
-        });
-        return;
+        })
+        return
     }
-    return validationResult.data;
+    return validationResult.data
 }
 /*
  * Get user by id
  * @deprecated Use tRPC API instead
  */
-export async function getUserById(req: Request, res: Response, next: NextFunction) {
+export async function getUserById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
     try {
-        const userId: TUserId = req.params.id;
-        const parsedUserId = validateUserId(res, userId);
-        if (!parsedUserId)
-            return;
+        const userId: TUserId = req.params.id
+        const parsedUserId = validateUserId(res, userId)
+        if (!parsedUserId) return
 
-        const userAndProfile = await userService.findUserAndProfileById(parsedUserId);
+        const userAndProfile =
+            await userService.findUserAndProfileById(parsedUserId)
         if (!userAndProfile) {
-            res.status(404).json({ message: 'User not found' });
-            return;
+            res.status(404).json({ message: 'User not found' })
+            return
         }
 
-        const { password, ...userWithoutPassword } = userAndProfile;
-        res.json(userWithoutPassword);
-    }
-    catch (err) {
-        next(err);
+        const { password, ...userWithoutPassword } = userAndProfile
+        res.json(userWithoutPassword)
+    } catch (err) {
+        next(err)
     }
 }
 
@@ -47,26 +50,30 @@ export async function getUserById(req: Request, res: Response, next: NextFunctio
  * Get user by username
  * @deprecated Use tRPC API instead
  */
-export async function getUserByUsername(req: Request, res: Response, next: NextFunction) {
+export async function getUserByUsername(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
     try {
-        const username: TUsername = req.params.username;
+        const username: TUsername = req.params.username
 
         if (!username) {
-            res.status(400).json({ error: 'username is required' });
-            return;
+            res.status(400).json({ error: 'username is required' })
+            return
         }
 
-        const userAndProfile = await userService.findUserAndProfileByUsername(username);
+        const userAndProfile =
+            await userService.findUserAndProfileByUsername(username)
         if (!userAndProfile) {
-            res.status(404).json({ message: 'User not found' });
-            return;
+            res.status(404).json({ message: 'User not found' })
+            return
         }
 
-        const { password, ...userWithoutPassword } = userAndProfile;
-        res.json(userWithoutPassword);
-    }
-    catch (err) {
-        next(err);
+        const { password, ...userWithoutPassword } = userAndProfile
+        res.json(userWithoutPassword)
+    } catch (err) {
+        next(err)
     }
 }
 
@@ -74,27 +81,33 @@ export async function getUserByUsername(req: Request, res: Response, next: NextF
  * Modify username
  * @deprecated Use tRPC API instead
  */
-export async function modifyUsername(req: Request, res: Response, next: NextFunction) {
+export async function modifyUsername(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
     try {
-        const userId: TUserId = req.params.id;
-        const usernameData: TUsername = req.body.username;
+        const userId: TUserId = req.params.id
+        const usernameData: TUsername = req.body.username
 
-        const parsedUsername = usernameSchema.parse(usernameData);
-        const parsedUserId = validateUserId(res, userId);
-        if (!parsedUserId)
-            return;
+        const parsedUsername = usernameSchema.parse(usernameData)
+        const parsedUserId = validateUserId(res, userId)
+        if (!parsedUserId) return
 
-        const user = await userService.findUserAndProfileById(parsedUserId);
+        const user = await userService.findUserAndProfileById(parsedUserId)
         if (!user?.profile) {
-            res.status(404).json({ message: 'This user has no associated profile' });
-            return;
+            res.status(404).json({
+                message: 'This user has no associated profile',
+            })
+            return
         }
 
-        await userService.updateProfileById(user.profile.id, { username: parsedUsername });
-        res.status(200).json({ message: 'Username updated successfully' });
-    }
-    catch (err) {
-        next(err);
+        await userService.updateProfileById(user.profile.id, {
+            username: parsedUsername,
+        })
+        res.status(200).json({ message: 'Username updated successfully' })
+    } catch (err) {
+        next(err)
     }
 }
 
@@ -102,21 +115,24 @@ export async function modifyUsername(req: Request, res: Response, next: NextFunc
  * Get all friends
  * @deprecated Use tRPC API instead
  */
-export async function getAllFriends(req: Request, res: Response, next: NextFunction) {
+export async function getAllFriends(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
     try {
-        const userId: TUserId = req.params.id;
-        const user = await userService.findAllFriendsByUserId(userId);
+        const userId: TUserId = req.params.id
+        const user = await userService.findAllFriendsByUserId(userId)
 
         if (!user) {
-            res.status(404).json({ message: 'user not found' });
-            return;
+            res.status(404).json({ message: 'user not found' })
+            return
         }
 
-        const friendsOnly = user.friends;
-        res.status(200).json(friendsOnly);
-    }
-    catch (err) {
-        next(err);
+        const friendsOnly = user.friends
+        res.status(200).json(friendsOnly)
+    } catch (err) {
+        next(err)
     }
 }
 
@@ -124,12 +140,15 @@ export async function getAllFriends(req: Request, res: Response, next: NextFunct
  * Get all users
  * @deprecated Use tRPC API instead
  */
-export async function getAllUsers(req: Request, res: Response, next: NextFunction) {
+export async function getAllUsers(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
     try {
-        const users = await userService.getAllUsers();
-        res.status(200).json(users);
-    }
-    catch (err) {
-        next(err);
+        const users = await userService.getAllUsers()
+        res.status(200).json(users)
+    } catch (err) {
+        next(err)
     }
 }

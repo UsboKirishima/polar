@@ -1,13 +1,13 @@
 {
   "extends": "@polar/typescript-config/base",
   "compilerOptions": {
-    "outDir": "dist",
+    "composite": true,
     "rootDir": ".",
+    "moduleResolution": "nodenext",
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true,
-    "moduleResolution": "nodenext",
-    "composite": true,
+    "outDir": "dist",
+    "sourceMap": true
   },
   "include": ["src/**/*", "*.ts"],
   "exclude": ["dist", "node_modules", "**/*.test.ts", "**/*.spec.ts"]

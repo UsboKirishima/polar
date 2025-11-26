@@ -1,20 +1,20 @@
-import { initTRPC, TRPCError } from '@trpc/server';
-import { Context } from './context';
-import { transformer } from './transformer';
+import { initTRPC, TRPCError } from '@trpc/server'
+import { Context } from './context'
+import { transformer } from './transformer'
 
 export const t = initTRPC.context<Context>().create({
-    transformer: transformer
-});
+    transformer: transformer,
+})
 
-export const publicProcedure = t.procedure;
-export const protectedProcedure = publicProcedure.use(async (opts) => {
+export const publicProcedure = t.procedure
+export const protectedProcedure = publicProcedure.use(async opts => {
     if (!opts.ctx.user) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' });
+        throw new TRPCError({ code: 'UNAUTHORIZED' })
     }
 
     return opts.next({
         ctx: {
             user: opts.ctx.user,
         },
-    });
-});
+    })
+})

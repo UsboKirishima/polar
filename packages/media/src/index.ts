@@ -11,7 +11,11 @@ export const imageKit = new ImageKit({
   urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT as string,
 })
 
-export async function uploadMedia(type: MediaType, file: Express.Multer.File, userId: string) {
+export async function uploadMedia(
+  type: MediaType,
+  file: Express.Multer.File,
+  userId: string,
+) {
   const { url } = await imageKit.upload({
     file: file.buffer,
     fileName: `user-${userId}.png`,
@@ -19,7 +23,9 @@ export async function uploadMedia(type: MediaType, file: Express.Multer.File, us
   })
 
   const service
-        = type === 'avatars' ? avatarService.uploadAvatar : bannerService.uploadBanner
+        = type === 'avatars'
+          ? avatarService.uploadAvatar
+          : bannerService.uploadBanner
 
   return service(userId, url)
 }

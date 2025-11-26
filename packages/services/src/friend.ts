@@ -1,22 +1,23 @@
-import { db } from "@polar/db";
-import { cacheManager } from "./cache";
+import { db } from '@polar/db'
+import { cacheManager } from './cache'
 
-const CACHE_TTL = 60; // Expiriation value (60 seconds)
+const CACHE_TTL = 60 // Expiriation value (60 seconds)
 const CACHE_KEYS = {
-    pendingRequests: (receiverId: string) => `friend_requests:pending:${receiverId}`,
+    pendingRequests: (receiverId: string) =>
+        `friend_requests:pending:${receiverId}`,
     sentRequests: (senderId: string) => `friend_requests:sent:${senderId}`,
-    userFriends: (userId: string) => `freidns:${userId}`
+    userFriends: (userId: string) => `freidns:${userId}`,
 }
 
-type AllPedindingReq = Awaited<ReturnType<typeof __getAllPendingFriendRequests>>;
-type AllFriendsByUserId = Awaited<ReturnType<typeof __getAllFriendsByUserId>>;
-type AllSentReq = Awaited<ReturnType<typeof __getAllSentRequests>>;
+type AllPedindingReq = Awaited<ReturnType<typeof __getAllPendingFriendRequests>>
+type AllFriendsByUserId = Awaited<ReturnType<typeof __getAllFriendsByUserId>>
+type AllSentReq = Awaited<ReturnType<typeof __getAllSentRequests>>
 
 export async function __getAllPendingFriendRequests(userId: string) {
     return await db.friendRequest.findMany({
         where: {
             receiverId: userId,
-            status: "PENDING",
+            status: 'PENDING',
         },
         include: {
             sender: {
@@ -27,13 +28,13 @@ export async function __getAllPendingFriendRequests(userId: string) {
                     profile: {
                         include: {
                             avatar: true,
-                            banner: true
-                        }
+                            banner: true,
+                        },
                     },
                 },
             },
         },
-    });
+    })
 }
 
 export async function __getAllFriendsByUserId(userId: string) {
@@ -48,23 +49,23 @@ export async function __getAllFriendsByUserId(userId: string) {
                     profile: {
                         include: {
                             avatar: true,
-                            banner: true
-                        }
+                            banner: true,
+                        },
                     },
                 },
             },
         },
-    });
+    })
 }
 
 export async function __getAllSentRequests(userId: string) {
     return await db.user.findUnique({
         where: {
-            id: userId
+            id: userId,
         },
         select: {
-            sentFriendRequests: true
-        }
+            sentFriendRequests: true,
+        },
     })
 }
 
@@ -73,9 +74,12 @@ export async function __getAllSentRequests(userId: string) {
  * - Check if the request has been sent to itself.
  * - Check if there are no requests already pending.
  */
-export async function createFriendRequest(senderId: string, receiverId: string) {
+export async function createFriendRequest(
+    senderId: string,
+    receiverId: string
+) {
     if (senderId === receiverId) {
-        throw new Error("You cannot send a request to yourself.");
+        throw new Error('You cannot send a request to yourself.')
     }
 
     const existingRequest = await db.friendRequest.findUnique({
@@ -85,24 +89,27 @@ export async function createFriendRequest(senderId: string, receiverId: string) 
                 receiverId,
             },
         },
-    });
+    })
 
     if (existingRequest) {
-        throw new Error("Request already sent to this user");
+        throw new Error('Request already sent to this user')
     }
 
     await cacheManager.delete(CACHE_KEYS.pendingRequests(receiverId))
-    await cacheManager.delete(CACHE_KEYS.sentRequests(senderId));
+    await cacheManager.delete(CACHE_KEYS.sentRequests(senderId))
 
     return await db.friendRequest.create({
         data: {
             senderId,
             receiverId,
         },
-    });
+    })
 }
 
-export async function acceptFriendRequest(senderId: string, receiverId: string) {
+export async function acceptFriendRequest(
+    senderId: string,
+    receiverId: string
+) {
     return await db.$transaction(async (tx: any) => {
         const request = await tx.friendRequest.findUnique({
             where: {
@@ -111,10 +118,10 @@ export async function acceptFriendRequest(senderId: string, receiverId: string) 
                     receiverId,
                 },
             },
-        });
+        })
 
-        if (!request || request.status !== "PENDING") {
-            throw new Error("Request not found or already managed.");
+        if (!request || request.status !== 'PENDING') {
+            throw new Error('Request not found or already managed.')
         }
 
         await tx.friendRequest.update({
@@ -124,25 +131,24 @@ export async function acceptFriendRequest(senderId: string, receiverId: string) 
                     receiverId,
                 },
             },
-            data: { status: "ACCEPTED" },
-        });
+            data: { status: 'ACCEPTED' },
+        })
 
         await tx.friendship.createMany({
             data: [
                 { userId: senderId, friendId: receiverId },
                 { userId: receiverId, friendId: senderId },
             ],
-        });
+        })
 
         /* Invalidate pending friend requests */
-        await cacheManager.delete(CACHE_KEYS.pendingRequests(receiverId));
+        await cacheManager.delete(CACHE_KEYS.pendingRequests(receiverId))
 
         /* Invalidate the friend list for both users */
-        await cacheManager.delete(CACHE_KEYS.userFriends(senderId));
-        await cacheManager.delete(CACHE_KEYS.userFriends(receiverId));
-    });
+        await cacheManager.delete(CACHE_KEYS.userFriends(senderId))
+        await cacheManager.delete(CACHE_KEYS.userFriends(receiverId))
+    })
 }
-
 
 export async function denyFriendRequest(senderId: string, receiverId: string) {
     const result = await db.friendRequest.update({
@@ -152,78 +158,73 @@ export async function denyFriendRequest(senderId: string, receiverId: string) {
                 receiverId,
             },
         },
-        data: { status: "REJECTED" },
-    });
+        data: { status: 'REJECTED' },
+    })
 
-    await cacheManager.delete(CACHE_KEYS.pendingRequests(receiverId));
-    await cacheManager.delete(CACHE_KEYS.sentRequests(senderId));
+    await cacheManager.delete(CACHE_KEYS.pendingRequests(receiverId))
+    await cacheManager.delete(CACHE_KEYS.sentRequests(senderId))
 
-    return result;
+    return result
 }
 
 export async function removeFriendship(userId: string, friendId: string) {
-
-    await cacheManager.delete(CACHE_KEYS.userFriends(userId));
-    await cacheManager.delete(CACHE_KEYS.userFriends(friendId));
+    await cacheManager.delete(CACHE_KEYS.userFriends(userId))
+    await cacheManager.delete(CACHE_KEYS.userFriends(friendId))
 
     return await db.friendship.delete({
         where: {
             userId_friendId: {
                 userId,
-                friendId
-            }
-        }
+                friendId,
+            },
+        },
     })
 }
 
 export async function getAllPendingFriendRequests(userId: string) {
-    const cacheKey = CACHE_KEYS.pendingRequests(userId);
+    const cacheKey = CACHE_KEYS.pendingRequests(userId)
 
-    const cached =
-        await cacheManager.get<AllPedindingReq>(cacheKey);
-    if (cached)
-        return cached;
+    const cached = await cacheManager.get<AllPedindingReq>(cacheKey)
+    if (cached) return cached
 
-    const result = await __getAllPendingFriendRequests(userId);
+    const result = await __getAllPendingFriendRequests(userId)
     if (result) {
         cacheManager.set(cacheKey, result, {
-            ttl: CACHE_TTL
-        });
-    }
-
-    return result;
-}
-
-export async function getAllFriendsByUserId(userId: string) {
-    const cacheKey = CACHE_KEYS.userFriends(userId);
-
-    const cached =
-        await cacheManager.get<AllFriendsByUserId>(cacheKey)
-    if (cached) return cached;
-
-    const result = await __getAllFriendsByUserId(userId);
-    if (result) {
-        cacheManager.set(cacheKey, result, {
-            ttl: CACHE_TTL
+            ttl: CACHE_TTL,
         })
     }
 
-    return result;
+    return result
+}
+
+export async function getAllFriendsByUserId(userId: string) {
+    const cacheKey = CACHE_KEYS.userFriends(userId)
+
+    const cached = await cacheManager.get<AllFriendsByUserId>(cacheKey)
+    if (cached) return cached
+
+    const result = await __getAllFriendsByUserId(userId)
+    if (result) {
+        cacheManager.set(cacheKey, result, {
+            ttl: CACHE_TTL,
+        })
+    }
+
+    return result
 }
 
 export async function getAllSentRequests(userId: string) {
-    const cacheKey = CACHE_KEYS.sentRequests(userId);
+    const cacheKey = CACHE_KEYS.sentRequests(userId)
 
-    const cached =
-        await cacheManager.get<AllSentReq>(cacheKey);
-    if (cached) return cached;
+    const cached = await cacheManager.get<AllSentReq>(cacheKey)
+    if (cached) return cached
 
-    const result = await __getAllSentRequests(userId);
+    const result = await __getAllSentRequests(userId)
     if (result) {
         cacheManager.set(cacheKey, result, {
-            ttl: CACHE_TTL
-        });
+            ttl: CACHE_TTL,
+        })
     }
 
-    return result;
+    return result
 }
