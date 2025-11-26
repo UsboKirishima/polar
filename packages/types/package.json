@@ -9,6 +9,7 @@
     "dist/**/*"
   ],
   "scripts": {
+    "with-env": "dotenv -e ../../apps/backend/.env --",
     "dev": "tsc -p tsconfig.json --watch",
     "build": "tsc -p tsconfig.json",
     "lint": "eslint .",
@@ -42,8 +43,9 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@polar/typescript-config": "workspace:*",
     "@antfu/eslint-config": "^3.10.1",
+    "@polar/typescript-config": "workspace:*",
+    "dotenv": "^17.2.3",
     "eslint": "^9.17.0",
     "typescript": "^5.9.2"
   },

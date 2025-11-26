@@ -39,6 +39,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^3.10.1",
     "@polar/typescript-config": "workspace:*",
+    "dotenv": "^17.2.3",
     "eslint": "^9.17.0",
     "typescript": "^5.9.2"
   },
