@@ -1,0 +1,26 @@
+#!/usr/bin/python3
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+print(bcolors.BOLD + """
+
+__________      .__                
+\\______   \\____ |  | _____ _______ 
+ |     ___/  _ \\|  | \\__  \\\\_  __ \\
+ |    |  (  <_> )  |__/ __ \\|  | \\/
+ |____|   \\____/|____(____  /__|   
+                          \\/         
+""" + bcolors.ENDC + bcolors.OKCYAN + """
+ Welcome to the Polar guided setup!
+""" + bcolors.WARNING + """=====================================
+""")
+

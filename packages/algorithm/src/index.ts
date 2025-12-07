@@ -25,12 +25,12 @@
  * - `REFUSED` → ignored
  */
 export const SCORES: Record<string, number> = {
-  POPOULARITY_SCORE: 0.7, // Balanced popularity impact
-  SUGGESTED_SCORE: 0.8, // Strong match with user interests
-  NEAR_SCORE: 0.5, // Liked by friends
-  TRUSTED: 0.6, // Created by a friend
-  SECURE: 0.9, // Matches categories of liked posts
-  RECENT: 1.0, // Highest priority for freshness
+    POPOULARITY_SCORE: 0.7, // Balanced popularity impact
+    SUGGESTED_SCORE: 0.8, // Strong match with user interests
+    NEAR_SCORE: 0.5, // Liked by friends
+    TRUSTED: 0.6, // Created by a friend
+    SECURE: 0.9, // Matches categories of liked posts
+    RECENT: 1.0, // Highest priority for freshness
 }
 
 /**
