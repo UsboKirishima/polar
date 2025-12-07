@@ -2,16 +2,13 @@
 import { onMounted, computed } from 'vue'
 import { useFriendStore } from '@/stores/friends'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faCancel, faCheck, faCross, faCrosshairs } from '@fortawesome/free-solid-svg-icons'
-import { useRouter } from 'vue-router'
+import { faCancel, faCheck } from '@fortawesome/free-solid-svg-icons'
 import PageLoading from '../PageLoading.vue'
-import type { Friendship } from '@/types/trpc'
 import type { User } from '@/types/trpc'
-import Userinfo from '../Userinfo.vue'
+import Userinfo from '../UserInfo.vue'
 import type { FriendsType } from '@/views/UserDetails.vue'
 import { ref } from 'vue'
 
-// Props
 const props = defineProps<{
     currentPage: 'friends' | 'requests'
     hideRemoveBtn?: boolean
@@ -20,9 +17,7 @@ const props = defineProps<{
 
 const parsedFriends = ref<FriendsType>([]);
 
-// Store
 const friendStore = useFriendStore()
-const router = useRouter()
 
 // Fetch data on mount depending on currentPage
 onMounted(async () => {

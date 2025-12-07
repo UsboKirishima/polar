@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
@@ -39,7 +39,7 @@ const menuItems = computed(() => [
     <nav class="desktop_nav">
         <router-link to="/" class="logo"><img src="/logo_no_bg.png" alt="Polar" /></router-link>
         <ul>
-            <li v-for="item in menuItems">
+            <li v-bind:key="item.path" v-for="item in menuItems">
                 <router-link :to="item.path" class="box">
                     <FontAwesomeIcon class="icon" :icon="item.icon" />
                     {{ item.label[0].toUpperCase() + item.label.slice(1) }}

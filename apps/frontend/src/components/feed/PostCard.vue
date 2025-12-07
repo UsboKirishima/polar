@@ -4,23 +4,18 @@ import { usePostStore } from '@/stores/posts'
 import type { Post, User } from '@/types/trpc'
 import {
     faCommentDots,
-    faComments,
     faCopy,
     faEllipsisVertical,
-    faFileWord,
     faFlag,
-    faFlorinSign,
-    faHeartBroken,
-    faListDots,
     faTrash,
     faHeart as likedIcon,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import Username from '../Username.vue'
+import Username from '../UserName.vue'
 import ProfileFloatCard from '../profile/ProfileFloatCard.vue'
-import { colorMap, getColorRgba, type ColorEnum } from '@/utils/colors'
+import { getColorRgba, type ColorEnum } from '@/utils/colors'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { trpc } from '@/trpc'
@@ -91,12 +86,14 @@ const handleCopyLink = async () => {
     try {
         await navigator.clipboard.writeText(`${window.location.origin}/posts/${postMutable.value.id}`);
 
+        /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
         let copySuccess = true;
 
         setTimeout(() => {
             copySuccess = false;
         }, 2000);
 
+        /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     } catch (err) {
         alert('Failed to copy url address');
     }
@@ -111,11 +108,6 @@ const handleReport = async () => {
 
 const closeMenuOnClickOutside = (event: MouseEvent) => {
     const clickedElement = event.target as HTMLElement;
-
-    const postHeader = document.querySelector(`.post-actions`);
-
-    const optionsContainer = clickedElement.closest('.post-header')?.querySelector('.options');
-
     if (isOptsOpen.value &&
         !clickedElement.closest('.options') &&
         !clickedElement.closest('.actions')) {
@@ -133,13 +125,15 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="post-container" v-if="postMutable && isPostShowable" :style="{ background: getColorRgba(post.color as ColorEnum) }">
+    <div class="post-container" v-if="postMutable && isPostShowable"
+        :style="{ background: getColorRgba(post.color as ColorEnum) }">
         <div>
             <div class="post-header">
                 <router-link :to="`/users/${post.author.id}`" iv class="user-info" @mouseenter="profileHover = true"
                     @mouseleave="profileHover = false" @mousemove="handleMouseMove">
                     <Transition name="fade-slide">
-                        <ProfileFloatCard v-if="profileHover" :user="post.author as User" :mouse-x="mouseX" :mouse-y="mouseY" />
+                        <ProfileFloatCard v-if="profileHover" :user="post.author as User" :mouse-x="mouseX"
+                            :mouse-y="mouseY" />
                     </Transition>
                     <img :src="post.author.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="" />
                     <div class="h-info">

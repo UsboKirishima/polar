@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import type { Ref } from 'vue'
-import List from './List.vue'
-import type { Friend, Suggestion } from './ListItem.vue'
+import List from './ItemList.vue'
 import type { User } from '@/types/trpc';
 
-const props = defineProps<{
+defineProps<{
     friends: User[]
     suggestions: User[]
     verifiedUsers: User[]

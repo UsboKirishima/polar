@@ -1,17 +1,13 @@
 <script setup lang="ts">
 import type { Post, User } from '@/types/trpc'
-import Username from '../Username.vue'
+import Username from '../UserName.vue'
 import { useFriendStore } from '@/stores/friends'
-import type { Friendship } from '@/types/trpc'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
     faAdd,
-    faArrowLeft,
     faCheck,
     faEdit,
-    faSignOut,
-    faSquareArrowUpRight,
-    faWindowClose,
+    faSignOut
 } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'

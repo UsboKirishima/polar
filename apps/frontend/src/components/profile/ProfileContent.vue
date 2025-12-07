@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import type { Like, Post, PostComment, User, UserComment, UserLike } from '@/types/trpc'
-import type { Friendship } from '@/types/trpc'
+import type { Post, User, UserComment, UserLike } from '@/types/trpc'
 import { ref } from 'vue'
 import FeedPosts from '../feed/FeedPosts.vue'
 import FriendsList from '../friends/FriendsList.vue'
 import PostCard from '../feed/PostCard.vue'
-import dayjs from 'dayjs'
-import Userinfo from '../Userinfo.vue'
-import type { trpc } from '@/trpc'
+import Userinfo from '../UserInfo.vue'
 import type { FriendsType } from '@/views/UserDetails.vue'
 
-const props = defineProps<{
+defineProps<{
     isProfilePage: boolean
     user: User | null
     posts: Post[]
@@ -60,7 +57,7 @@ const view = ref<'posts' | 'friends' | 'likes' | 'comments'>('posts')
             <div v-if="!user?.comments.length">
                 <p class="nch">No comments here.</p>
             </div>
-            <div v-for="comment in user?.comments" class="comments">
+            <div v-bind:key="comment.id" v-for="comment in user?.comments" class="comments">
                 <PostCard :post="comment.post as Post" />
                 <div class="comment">
                     <Userinfo :user="user" />

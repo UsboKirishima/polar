@@ -43,29 +43,27 @@ const nearYouPeople = ref([
 </script>
 
 <template>
-    <transition name="fade">
-        <div class="near_you">
-            <h2>Near You</h2>
-            <p v-if="nearYouPeople.length == 0" class="no_people">No people found near you.</p>
-            <ul v-else>
-                <li v-for="user in nearYouPeople" :key="user.username">
-                    <div class="user_info">
-                        <div>
-                            <img :src="user.avatar" alt="" />
-                            <a href="#">{{ user.username }}</a>
-                        </div>
-                        <p class="status">
-                            {{ user.status.slice(0, 50) || 'No Status'
-                            }}{{ user.status.length > 50 ? '...' : '' }}
-                        </p>
+    <div class="near_you">
+        <h2>Near You</h2>
+        <p v-if="nearYouPeople.length == 0" class="no_people">No people found near you.</p>
+        <ul v-else>
+            <li v-for="user in nearYouPeople" :key="user.username">
+                <div class="user_info">
+                    <div>
+                        <img :src="user.avatar" alt="" />
+                        <a href="#">{{ user.username }}</a>
                     </div>
-                    <div class="details">
-                        <p class="distance">{{ user.distance }}</p>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </transition>
+                    <p class="status">
+                        {{ user.status.slice(0, 50) || 'No Status'
+                        }}{{ user.status.length > 50 ? '...' : '' }}
+                    </p>
+                </div>
+                <div class="details">
+                    <p class="distance">{{ user.distance }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
 </template>
 
 <style scoped>

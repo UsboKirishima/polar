@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import type { User } from '@/types/trpc'
-import { Transition } from 'vue'
-import Username from '../Username.vue'
+import Username from '../UserName.vue'
 
-const props = defineProps<{
+defineProps<{
     user: User
     mouseX: number
     mouseY: number

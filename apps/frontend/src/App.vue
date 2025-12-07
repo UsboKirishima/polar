@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import Sidebar from './components/Sidebar.vue'
+import Sidebar from './components/SideBar.vue'
 import { useLogStore } from './stores/logs';
 import { faCheckCircle, faInfo, faMessage } from '@fortawesome/free-solid-svg-icons';
 import PageLoading from './components/PageLoading.vue';

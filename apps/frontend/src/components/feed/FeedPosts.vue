@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { Post } from '@/types/trpc'
 import PostCard from './PostCard.vue'
-const props = defineProps<{
+defineProps<{
     posts: Array<Post>
 }>()
 </script>
 
 <template>
-    <div v-for="post in posts">
+    <div v-bind:key="post.id" v-for="post in posts">
         <PostCard :post="post" class="post" />
     </div>
 </template>

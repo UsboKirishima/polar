@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { faArrowRight, faAt, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faAt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { ref } from 'vue'
 import { useFriendStore } from '../../stores/friends'

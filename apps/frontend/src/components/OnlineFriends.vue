@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useTransitionState } from 'vue'
+import { ref } from 'vue'
 
 const onlineFriends = ref([
     { username: 'usbo', avatar: '/pfp_placeholder.png', last_access: 'now' },

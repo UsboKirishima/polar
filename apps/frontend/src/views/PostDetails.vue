@@ -10,7 +10,7 @@ import { faArrowLeft, faArrowRight, faCopy, faEllipsisVertical, faFlag, faTrash 
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import PageLoading from '@/components/PageLoading.vue'
-import Userinfo from '@/components/Userinfo.vue'
+import Userinfo from '@/components/UserInfo.vue'
 
 dayjs.extend(relativeTime)
 

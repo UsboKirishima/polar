@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Userinfo from '@/components/Userinfo.vue'
+import Userinfo from '@/components/UserInfo.vue'
 import { useAuthStore } from '@/stores/auth'
 import { usePostStore } from '@/stores/posts'
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'

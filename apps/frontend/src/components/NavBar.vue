@@ -23,7 +23,7 @@ const menuItems = computed(() => [
     <nav class="desktop_nav">
         <a href="#/" class="logo"><img src="/polar_no_bg_resized.png" alt="Polar" /></a>
         <ul>
-            <li v-for="item in menuItems">
+            <li v-bind:key="item.path" v-for="item in menuItems">
                 <a :href="item.path">{{ item.label }}</a>
             </li>
         </ul>

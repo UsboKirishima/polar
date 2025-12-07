@@ -2,7 +2,7 @@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faAdd } from '@fortawesome/free-solid-svg-icons'
 import type { User } from '@/types/trpc'
-import Username from '../Username.vue'
+import Username from '../UserName.vue'
 import { RouterLink } from 'vue-router'
 
 export interface Friend {
@@ -17,7 +17,7 @@ export interface Suggestion {
     friendsCount: number
 }
 
-const props = defineProps<{
+defineProps<{
     data: User
     type: 'feed' | 'suggestion' | 'verified'
 }>()

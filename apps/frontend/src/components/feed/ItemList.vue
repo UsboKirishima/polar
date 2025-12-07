@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import type { User } from '@/types/trpc';
 import ListItem from './ListItem.vue'
-import type { Friend, Suggestion } from './ListItem.vue'
 
-const props = defineProps<{
+defineProps<{
     data: Array<User>
     type: 'feed' | 'suggestion' | 'verified'
 }>()

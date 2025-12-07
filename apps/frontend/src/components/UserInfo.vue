@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { User } from '@/types/trpc'
 import { ref } from 'vue'
-import Username from './Username.vue'
+import Username from './UserName.vue'
 import ProfileFloatCard from './profile/ProfileFloatCard.vue'
 
-const props = defineProps<{
+defineProps<{
     user: User | null
     disableOver?: boolean
 }>()
