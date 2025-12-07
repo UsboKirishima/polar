@@ -1,8 +1,8 @@
-import pino from 'pino'
+import pino from 'pino';
 
-import { env } from './env.js'
+import { env } from './env.js';
 
-const level = env.NODE_ENV === 'production' ? 'info' : 'debug'
+const level = env.NODE_ENV === 'production' ? 'info' : 'debug';
 
 const logger = pino({
     level,
@@ -14,6 +14,6 @@ const logger = pino({
             ignore: 'pid,hostname',
         },
     },
-})
+});
 
-export default logger
+export default logger;

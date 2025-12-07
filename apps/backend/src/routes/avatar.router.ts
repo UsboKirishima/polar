@@ -1,12 +1,12 @@
-import { Router } from 'express'
-import multer from 'multer'
+import { Router } from 'express';
+import multer from 'multer';
 
-import * as avatarController from '../controllers/avatar.controller'
-import { isAuthenticated } from '../middlewares.js'
+import * as avatarController from '../controllers/avatar.controller';
+import { isAuthenticated } from '../middlewares.js';
 
-const router = Router()
-const storage = multer.memoryStorage()
-const upload = multer({ storage })
+const router = Router();
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 /**
  * SECURITY WARNING
@@ -20,22 +20,22 @@ const upload = multer({ storage })
  * ======================== CURRENT USER ========================
  */
 
-const uploadMiddlerwares = [isAuthenticated, upload.single('avatar')]
+const uploadMiddlerwares = [isAuthenticated, upload.single('avatar')];
 
 // GET /avatar -> Get user requester avatar (Auth required)
-router.get('/', isAuthenticated, avatarController.getUserAvatar)
+router.get('/', isAuthenticated, avatarController.getUserAvatar);
 
 // POST /avatar -> Upload requester avatar (Auth required)
-router.post('/', uploadMiddlerwares, avatarController.uploadAvatar)
+router.post('/', uploadMiddlerwares, avatarController.uploadAvatar);
 
 // DELETE /avatar -> Remove the requester avatar (Auth required)
-router.delete('/', isAuthenticated, avatarController.deleteUserAvatar)
+router.delete('/', isAuthenticated, avatarController.deleteUserAvatar);
 
 /**
  * ======================== ALL USERS ========================
  */
 
 // GET /avatar/:userId -> Get avatar by given user id
-router.get('/:userId', avatarController.getAvatarByUserId)
+router.get('/:userId', avatarController.getAvatarByUserId);
 
-export default router
+export default router;
