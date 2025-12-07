@@ -1,11 +1,8 @@
-import {
-    ClientClosedError,
-    createClient,
-    RedisClientOptions,
+import type {
     RedisClientType,
 } from 'redis'
 
-export interface CacheManagerOptions {
+export type CacheManagerOptions = {
     max_retries?: number
     retry_delay?: number /* milliseconds */
 }
@@ -15,7 +12,7 @@ export type CacheKey = string
 /**
  * Options required in set method
  */
-export interface CacheSetOptions {
+export type CacheSetOptions = {
     ttl?: number
 }
 
@@ -44,8 +41,10 @@ export default class CacheManager {
     private _retry_delay: number = 1000
 
     public constructor(client: RedisInstance, opts?: CacheManagerOptions) {
-        if (opts?.max_retries) this.max_retries = opts.max_retries
-        if (opts?.retry_delay) this.retry_delay = opts.retry_delay
+        if (opts?.max_retries)
+            this.max_retries = opts.max_retries
+        if (opts?.retry_delay)
+            this.retry_delay = opts.retry_delay
 
         this.client = client as RedisClientType
     }
@@ -57,19 +56,21 @@ export default class CacheManager {
      * @memberof CacheManager
      */
     public async connect(): Promise<void> {
-        if (this.client.isOpen) return
+        if (this.client.isOpen)
+            return
 
         let attempts = 0
         while (!this.client.isOpen && attempts < this.max_retries) {
             try {
                 await this.client.connect()
                 this.cacheLog('log', 'Connected to redis')
-            } catch (err) {
+            }
+            catch {
                 attempts++
-                const delay = this.retry_delay * Math.pow(2, attempts - 1)
+                const delay = this.retry_delay * 2 ** (attempts - 1)
                 this.cacheLog(
                     'warn',
-                    `Connection failed (attempt ${attempts}/${this.max_retries}), retrying in ${delay}ms...`
+                    `Connection failed (attempt ${attempts}/${this.max_retries}), retrying in ${delay}ms...`,
                 )
                 await new Promise(res => setTimeout(res, delay))
             }
@@ -89,11 +90,13 @@ export default class CacheManager {
      * @memberof CacheManager
      */
     public async get<T>(key: CacheKey): Promise<T | null> {
-        if (!this.client.isOpen) await this.connect()
+        if (!this.client.isOpen)
+            await this.connect()
 
         const data = await this.client.get(key)
 
-        if (!data) return null
+        if (!data)
+            return null
 
         const parsedData = this.deserializeJSON<T>(data)
 
@@ -112,9 +115,10 @@ export default class CacheManager {
     public async set(
         key: CacheKey,
         content: object,
-        opts?: CacheSetOptions
+        opts?: CacheSetOptions,
     ): Promise<void> {
-        if (!this.client.isOpen) await this.connect()
+        if (!this.client.isOpen)
+            await this.connect()
 
         const parsedContent = this.serializeJSON(content)
 
@@ -134,12 +138,14 @@ export default class CacheManager {
      * @memberof CacheManager
      */
     public async delete(key: CacheKey): Promise<void> {
-        if (!this.client.isOpen) await this.connect()
+        if (!this.client.isOpen)
+            await this.connect()
         await this.client.del(key)
     }
 
     public async disconnect(): Promise<void> {
-        if (!this.client.isOpen) return
+        if (!this.client.isOpen)
+            return
 
         this.client.quit()
         this.cacheLog('log', 'Disconnected from redis')
@@ -154,18 +160,19 @@ export default class CacheManager {
     private deserializeJSON<T>(str: string): T | null {
         try {
             return JSON.parse(str) as T
-        } catch (e) {
+        }
+        catch {
             this.cacheLog('warn', 'Invalid JSON data in cache')
             return null
         }
     }
 
     private cacheLog = (type: 'error' | 'log' | 'warn', msg: string): void =>
-        (type == 'error'
+        (type === 'error'
             ? console.error
             : type === 'log'
-              ? console.log
-              : console.warn)('[CACHE] ' + msg)
+                ? console.warn
+                : console.warn)(`[CACHE] ${msg}`)
 
     /* ============ Getters and Setters ============= */
 

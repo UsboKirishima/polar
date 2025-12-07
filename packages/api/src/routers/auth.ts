@@ -1,17 +1,18 @@
-import { loginInfoSchema, userSchema } from '@polar/types'
-import { protectedProcedure, publicProcedure, t } from '../trpc'
 import { authService, userService } from '@polar/services'
-import { resultErr, generateTokens } from '@polar/utils'
-import bcrypt from 'bcrypt'
+import { loginInfoSchema, userSchema } from '@polar/types'
+import { generateTokens } from '@polar/utils'
 import { TRPCError } from '@trpc/server'
+import bcrypt from 'bcrypt'
+
+import { protectedProcedure, publicProcedure, t } from '../trpc'
 
 export const authRouter = t.router({
     register: publicProcedure
         .input(userSchema)
-        .mutation(async ({ input, ctx }) => {
+        .mutation(async ({ input }) => {
             try {
                 const existingUser = await userService.findUserByEmail(
-                    input.email
+                    input.email,
                 )
                 if (existingUser) {
                     throw new TRPCError({
@@ -37,8 +38,10 @@ export const authRouter = t.router({
                 })
 
                 return { accessToken, refreshToken }
-            } catch (error: any) {
-                if (error instanceof TRPCError) throw error
+            }
+            catch (error: any) {
+                if (error instanceof TRPCError)
+                    throw error
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: error?.message ?? 'Failed to signup',
@@ -47,10 +50,10 @@ export const authRouter = t.router({
         }),
     login: publicProcedure
         .input(loginInfoSchema)
-        .mutation(async ({ input, ctx }) => {
+        .mutation(async ({ input }) => {
             try {
                 const existingUser = await userService.findUserByEmail(
-                    input.email
+                    input.email,
                 )
                 if (!existingUser) {
                     throw new TRPCError({
@@ -61,7 +64,7 @@ export const authRouter = t.router({
 
                 const validPassword = await bcrypt.compare(
                     input.password,
-                    existingUser.password
+                    existingUser.password,
                 )
                 if (!validPassword) {
                     throw new TRPCError({
@@ -70,26 +73,29 @@ export const authRouter = t.router({
                     })
                 }
 
-                const { accessToken, refreshToken } =
-                    generateTokens(existingUser)
+                const { accessToken, refreshToken }
+                    = generateTokens(existingUser)
                 await authService.addRefreshTokenToWhitelist({
                     refreshToken,
                     userId: existingUser.id,
                 })
 
                 return { accessToken, refreshToken }
-            } catch (error: any) {
-                if (error instanceof TRPCError) throw error
+            }
+            catch (error: any) {
+                if (error instanceof TRPCError)
+                    throw error
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: error?.message ?? 'Authentication failed.',
                 })
             }
         }),
-    ping: protectedProcedure.query(async ({ ctx }) => {
+    ping: protectedProcedure.query(async () => {
         try {
             return { message: 'Pong' }
-        } catch (error: any) {
+        }
+        catch (error: any) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: error?.message ?? 'Failed to ping server',

@@ -1,26 +1,26 @@
-import { protectedProcedure, t } from '../trpc'
-import { z } from 'zod/v4'
-import { profileSchema, userIdSchema, usernameSchema } from '@polar/types/zod'
-import { uploadMedia } from '@polar/media'
-
-import {
-    userService,
-    postService,
-    bannerService,
-    avatarService,
-} from '@polar/services'
-import { TRPCError } from '@trpc/server'
-
 import type { Express } from 'express'
+
+import { uploadMedia } from '@polar/media'
+import {
+    avatarService,
+    bannerService,
+    postService,
+    userService,
+} from '@polar/services'
+import { profileSchema, userIdSchema, usernameSchema } from '@polar/types/zod'
+import { TRPCError } from '@trpc/server'
+import { z } from 'zod/v4'
+
+import { protectedProcedure, t } from '../trpc'
 
 export const fileSchema = z.custom<Express.Multer.File>(
     val =>
         val && typeof val === 'object' && 'buffer' in val && 'mimetype' in val,
-    { message: 'Invalid file upload' }
+    { message: 'Invalid file upload' },
 )
 
 function removePassword<T extends Record<string, any>>(
-    obj: T
+    obj: T,
 ): Omit<T, 'password'> {
     const newObj = { ...obj }
     delete (newObj as any).password
@@ -31,16 +31,18 @@ export const userRouter = t.router({
     getMe: protectedProcedure.query(async ({ ctx }) => {
         try {
             const user = await userService.findUserAndProfileById(
-                ctx.user.userId
+                ctx.user.userId,
             )
-            if (!user)
+            if (!user) {
                 throw new TRPCError({
                     code: 'NOT_FOUND',
                     message: `User not found: ${ctx.user.userId}`,
                 })
+            }
 
             return removePassword(user)
-        } catch (error) {
+        }
+        catch (error) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: 'Failed to fetch user profile.',
@@ -53,7 +55,8 @@ export const userRouter = t.router({
         try {
             const usersMatch = await userService.searchUsers(input)
             return usersMatch.map((u: any) => removePassword(u))
-        } catch (error) {
+        }
+        catch (error) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: 'Failed to search users.',
@@ -65,7 +68,8 @@ export const userRouter = t.router({
     getAll: protectedProcedure.query(async () => {
         try {
             return await userService.getAllUsers()
-        } catch (error) {
+        }
+        catch (error) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: 'Failed to fetch users.',
@@ -77,13 +81,15 @@ export const userRouter = t.router({
     getById: protectedProcedure.input(userIdSchema).query(async ({ input }) => {
         try {
             const user = await userService.findUserAndProfileById(input)
-            if (!user)
+            if (!user) {
                 throw new TRPCError({
                     code: 'NOT_FOUND',
                     message: `User not found: ${input}`,
                 })
+            }
             return removePassword(user)
-        } catch (error) {
+        }
+        catch (error) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: 'Failed to fetch user by ID.',
@@ -96,15 +102,17 @@ export const userRouter = t.router({
         .input(usernameSchema)
         .query(async ({ input }) => {
             try {
-                const user =
-                    await userService.findUserAndProfileByUsername(input)
-                if (!user)
+                const user
+                    = await userService.findUserAndProfileByUsername(input)
+                if (!user) {
                     throw new TRPCError({
                         code: 'NOT_FOUND',
                         message: `User not found: ${input}`,
                     })
+                }
                 return removePassword(user)
-            } catch (error) {
+            }
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to fetch user by username.',
@@ -118,16 +126,18 @@ export const userRouter = t.router({
         .query(async ({ input }) => {
             try {
                 const friends = await userService.findAllFriendsByUserId(input)
-                if (!friends)
+                if (!friends) {
                     throw new TRPCError({
                         code: 'INTERNAL_SERVER_ERROR',
                         message: `Failed to retrieve friends for user ID: ${input}`,
                     })
+                }
 
                 return friends.friends.map((friend: any) =>
-                    removePassword(friend)
+                    removePassword(friend),
                 )
-            } catch (error) {
+            }
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to fetch user friends.',
@@ -141,7 +151,8 @@ export const userRouter = t.router({
         .query(async ({ input }) => {
             try {
                 return await postService.getPostsByUserId(input)
-            } catch (error) {
+            }
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to fetch user posts.',
@@ -162,16 +173,18 @@ export const userRouter = t.router({
                 const data = await uploadMedia(
                     'avatars',
                     input,
-                    ctx.user.userId
+                    ctx.user.userId,
                 )
-                if (!('avatar' in data))
+                if (!('avatar' in data)) {
                     throw new TRPCError({
                         code: 'BAD_REQUEST',
                         message: 'Failed to upload avatar.',
                     })
+                }
 
                 return data
-            } catch (error) {
+            }
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to set avatar.',
@@ -192,16 +205,18 @@ export const userRouter = t.router({
                 const data = await uploadMedia(
                     'banners',
                     input,
-                    ctx.user.userId
+                    ctx.user.userId,
                 )
-                if (!('banner' in data))
+                if (!('banner' in data)) {
                     throw new TRPCError({
                         code: 'BAD_REQUEST',
                         message: 'Failed to upload banner.',
                     })
+                }
 
                 return data
-            } catch (error) {
+            }
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to set banner.',
@@ -215,19 +230,21 @@ export const userRouter = t.router({
         .mutation(async ({ input, ctx }) => {
             try {
                 const profile = await userService.getProfileByUserId(
-                    ctx.user.userId
+                    ctx.user.userId,
                 )
-                if (!profile || !profile.profile)
+                if (!profile || !profile.profile) {
                     throw new TRPCError({
                         code: 'BAD_REQUEST',
                         message: `Failed to modify information for user ${ctx.user.userId}`,
                     })
+                }
 
                 await userService.updateProfileById(profile.profile.id, input)
                 return {
                     message: `Successfully updated profile for ${ctx.user.userId}`,
                 }
-            } catch (error) {
+            }
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to edit profile.',

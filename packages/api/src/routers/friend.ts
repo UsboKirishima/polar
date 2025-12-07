@@ -1,8 +1,9 @@
-import { protectedProcedure, t } from '../trpc'
-import { TRPCError } from '@trpc/server'
 import { friendService } from '@polar/services'
 import { userIdSchema } from '@polar/types/zod'
+import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+
+import { protectedProcedure, t } from '../trpc'
 
 export const friendRouter = t.router({
     /**
@@ -11,9 +12,11 @@ export const friendRouter = t.router({
     getReceivedRequests: protectedProcedure.query(async ({ ctx }) => {
         try {
             return await friendService.getAllPendingFriendRequests(
-                ctx.user.userId
+                ctx.user.userId,
             )
-        } catch (error) {
+        }
+        /* eslint-disable-next-line unused-imports/no-unused-vars */
+        catch (error) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: 'Failed to fetch received friend requests',
@@ -27,7 +30,9 @@ export const friendRouter = t.router({
     getSentRequests: protectedProcedure.query(async ({ ctx }) => {
         try {
             return await friendService.getAllSentRequests(ctx.user.userId)
-        } catch (error) {
+        }
+        /* eslint-disable-next-line unused-imports/no-unused-vars */
+        catch (error) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: 'Failed to fetch sent friend requests',
@@ -41,7 +46,9 @@ export const friendRouter = t.router({
     getAll: protectedProcedure.query(async ({ ctx }) => {
         try {
             return await friendService.getAllFriendsByUserId(ctx.user.userId)
-        } catch (error) {
+        }
+        /* eslint-disable-next-line unused-imports/no-unused-vars */
+        catch (error) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: 'Failed to fetch friends',
@@ -58,7 +65,7 @@ export const friendRouter = t.router({
             try {
                 const friendRequest = await friendService.createFriendRequest(
                     ctx.user.userId,
-                    input
+                    input,
                 )
 
                 if (!friendRequest.id) {
@@ -69,7 +76,9 @@ export const friendRouter = t.router({
                 }
 
                 return friendRequest
-            } catch (error) {
+            }
+            /* eslint-disable-next-line unused-imports/no-unused-vars */
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Error while sending friend request',
@@ -86,7 +95,9 @@ export const friendRouter = t.router({
             try {
                 await friendService.acceptFriendRequest(input, ctx.user.userId)
                 return { ok: true, message: 'Accepted friend request' }
-            } catch (error) {
+            }
+            /* eslint-disable-next-line unused-imports/no-unused-vars */
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to accept friend request',
@@ -103,7 +114,9 @@ export const friendRouter = t.router({
             try {
                 await friendService.denyFriendRequest(input, ctx.user.userId)
                 return { ok: true, message: 'Friend request ignored' }
-            } catch (error) {
+            }
+            /* eslint-disable-next-line unused-imports/no-unused-vars */
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to deny friend request',
@@ -120,7 +133,9 @@ export const friendRouter = t.router({
             try {
                 await friendService.removeFriendship(ctx.user.userId, input)
                 return { ok: true, message: 'Friend successfully removed' }
-            } catch (error) {
+            }
+            /* eslint-disable-next-line unused-imports/no-unused-vars */
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to remove friend',

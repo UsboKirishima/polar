@@ -14,7 +14,7 @@ export const imageKit = new ImageKit({
 export async function uploadMedia(
     type: MediaType,
     file: Express.Multer.File,
-    userId: string
+    userId: string,
 ) {
     const { url } = await imageKit.upload({
         file: file.buffer,
@@ -22,8 +22,8 @@ export async function uploadMedia(
         folder: `/${type}`,
     })
 
-    const service =
-        type === 'avatars'
+    const service
+        = type === 'avatars'
             ? avatarService.uploadAvatar
             : bannerService.uploadBanner
 

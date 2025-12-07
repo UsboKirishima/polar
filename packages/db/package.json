@@ -1,62 +1,62 @@
 {
-  "name": "@polar/db",
-  "version": "1.0.0",
-  "packageManager": "pnpm@10.20.0",
-  "description": "The database instance package for Polar",
-  "author": "Davide Usberti <usbertibox@gmail.com> (https://usbo.tech)",
-  "license": "MIT",
-  "homepage": "https://github.com/UsboKirishima/polar",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/UsboKirishima/polar.git",
-    "directory": "packages/db"
-  },
-  "bugs": {
-    "url": "https://github.com/UsboKirishima/polar/issues"
-  },
-  "keywords": [
-    "database",
-    "prisma",
-    "orm",
-    "polar",
-    "typescript",
-    "monorepo"
-  ],
-  "main": "dist/src/index.js",
-  "module": "src/index.ts",
-  "types": "dist/src/index.d.ts",
-  "files": [
-    "dist/src/**/*"
-  ],
-  "scripts": {
-    "with-env": "dotenv -e ../../apps/backend/.env --",
-    "dev": "tsc -p tsconfig.json --watch",
-    "build": "tsc -p tsconfig.json",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "type-check": "tsc --noEmit",
-    "test": "echo \"No tests specified\"",
-    "clean": "rm -rf dist && rm -rf node_modules",
-    "postinstall": "prisma generate --schema src/schema.prisma",
-    "db:generate": "pnpm with-env prisma generate --schema src/schema.prisma",
-    "db:push": "pnpm with-env prisma db push --schema src/schema.prisma",
-    "db:migrate": "pnpm with-env prisma migrate dev --schema src/schema.prisma",
-    "db:studio": "pnpm with-env prisma studio --schema src/schema.prisma"
-  },
-  "dependencies": {
-    "@prisma/adapter-mariadb": "^7.0.0",
-    "@prisma/client": "^7.0.0",
-    "typescript": "^5.9.2"
-  },
-  "devDependencies": {
-    "@antfu/eslint-config": "^3.10.1",
-    "@polar/typescript-config": "workspace:*",
-    "@types/node": "^24.9.2",
-    "dotenv": "^17.2.3",
-    "eslint": "^9.17.0",
-    "prisma": "^7.0.0"
-  },
-  "publishConfig": {
-    "access": "public"
-  }
+    "name": "@polar/db",
+    "version": "1.0.0",
+    "packageManager": "pnpm@10.20.0",
+    "description": "The database instance package for Polar",
+    "author": "Davide Usberti <usbertibox@gmail.com> (https://usbo.tech)",
+    "license": "MIT",
+    "homepage": "https://github.com/UsboKirishima/polar",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/UsboKirishima/polar.git",
+        "directory": "packages/db"
+    },
+    "bugs": {
+        "url": "https://github.com/UsboKirishima/polar/issues"
+    },
+    "keywords": [
+        "database",
+        "prisma",
+        "orm",
+        "polar",
+        "typescript",
+        "monorepo"
+    ],
+    "main": "dist/src/index.js",
+    "module": "src/index.ts",
+    "types": "dist/src/index.d.ts",
+    "files": [
+        "dist/src/**/*"
+    ],
+    "scripts": {
+        "with-env": "dotenv -e ../../apps/backend/.env --",
+        "dev": "tsc -p tsconfig.json --watch",
+        "build": "tsc -p tsconfig.json",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "type-check": "tsc --noEmit",
+        "test": "echo \"No tests specified\"",
+        "clean": "rm -rf dist && rm -rf node_modules",
+        "postinstall": "prisma generate --schema src/schema.prisma",
+        "db:generate": "pnpm with-env prisma generate --schema src/schema.prisma",
+        "db:push": "pnpm with-env prisma db push --schema src/schema.prisma",
+        "db:migrate": "pnpm with-env prisma migrate dev --schema src/schema.prisma",
+        "db:studio": "pnpm with-env prisma studio --schema src/schema.prisma"
+    },
+    "dependencies": {
+        "@prisma/adapter-mariadb": "^7.0.0",
+        "@prisma/client": "^7.0.0",
+        "typescript": "^5.9.2"
+    },
+    "devDependencies": {
+        "@antfu/eslint-config": "^3.10.1",
+        "@polar/typescript-config": "workspace:*",
+        "@types/node": "^24.9.2",
+        "dotenv": "^17.2.3",
+        "eslint": "^9.17.0",
+        "prisma": "^7.0.0"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
 }

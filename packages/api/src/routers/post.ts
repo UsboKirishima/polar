@@ -1,5 +1,4 @@
 import { postService } from '@polar/services'
-import { protectedProcedure, t } from '../trpc'
 import {
     commentEditSchema,
     commentIdSchema,
@@ -9,11 +8,13 @@ import {
     updatePostSchema,
 } from '@polar/types/zod'
 import { TRPCError } from '@trpc/server'
+
+import { protectedProcedure, t } from '../trpc'
 import { userRouter } from './user'
 
 async function isUserThePostAuthor(
     userId: string,
-    postId: string
+    postId: string,
 ): Promise<boolean> {
     const userPosts = await postService.getPostsByUserId(userId)
     return userPosts.some(post => post.id === postId)
@@ -23,13 +24,15 @@ export const postRouter = t.router({
     getById: protectedProcedure.input(postIdSchema).query(async ({ input }) => {
         try {
             const post = await postService.getPostByid(input)
-            if (!post)
+            if (!post) {
                 throw new TRPCError({
                     code: 'NOT_FOUND',
                     message: 'Post not found.',
                 })
+            }
             return post
-        } catch (error) {
+        }
+        catch (error) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: 'Failed to fetch post.',
@@ -41,7 +44,8 @@ export const postRouter = t.router({
     getAll: protectedProcedure.query(async () => {
         try {
             return await postService.getAllPosts()
-        } catch (error) {
+        }
+        catch (error) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: 'Failed to fetch posts.',
@@ -63,7 +67,8 @@ export const postRouter = t.router({
              */
 
             return await postService.getAllPosts()
-        } catch (error) {
+        }
+        catch (error) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: 'Failed to fetch feed.',
@@ -76,18 +81,18 @@ export const postRouter = t.router({
         .input(postSchema)
         .mutation(async ({ input, ctx }) => {
             try {
-                console.log(input)
                 const newPost = await postService.createNewPost(
                     ctx.user.userId,
                     {
                         text: input.text,
                         categories: input.categories,
                         color: input.color,
-                    }
+                    },
                 )
 
                 return newPost
-            } catch (error) {
+            }
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to create post.',
@@ -100,24 +105,27 @@ export const postRouter = t.router({
         .input(updatePostSchema)
         .mutation(async ({ input, ctx }) => {
             try {
-                if (!(await isUserThePostAuthor(ctx.user.userId, input.postId)))
+                if (!(await isUserThePostAuthor(ctx.user.userId, input.postId))) {
                     throw new TRPCError({
                         code: 'FORBIDDEN',
-                        message: "You can't edit someone else's post.",
+                        message: 'You can\'t edit someone else\'s post.',
                     })
+                }
 
                 const updatedPost = await postService.updatePost(
                     input.postId,
-                    input.post
+                    input.post,
                 )
-                if (!updatedPost)
+                if (!updatedPost) {
                     throw new TRPCError({
                         code: 'BAD_REQUEST',
                         message: 'Failed to update post.',
                     })
+                }
 
                 return updatedPost
-            } catch (error) {
+            }
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to edit post.',
@@ -130,17 +138,19 @@ export const postRouter = t.router({
         .input(postIdSchema)
         .mutation(async ({ input, ctx }) => {
             try {
-                if (!(await isUserThePostAuthor(ctx.user.userId, input)))
+                if (!(await isUserThePostAuthor(ctx.user.userId, input))) {
                     throw new TRPCError({
                         code: 'FORBIDDEN',
-                        message: "You can't delete someone else's post.",
+                        message: 'You can\'t delete someone else\'s post.',
                     })
+                }
 
                 await postService.deletePost(input)
                 return {
                     message: `Post with id (${input}) was successfully deleted.`,
                 }
-            } catch (error) {
+            }
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to delete post.',
@@ -155,7 +165,8 @@ export const postRouter = t.router({
             try {
                 await postService.likePost(input, ctx.user.userId)
                 return { message: 'Post liked/unliked successfully.' }
-            } catch (error) {
+            }
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to toggle like.',
@@ -165,19 +176,20 @@ export const postRouter = t.router({
         }),
 
     toggleSave: protectedProcedure.input(postIdSchema).mutation(async () => {
-        /**
-         * !!! WARNING - NOT IMPLEMENTED YET !!!
-         * ===========================================
-         * This mutation is made for future purposes,
-         * in particoular the possibility to save a post
-         * maybe to rewatch it later.
-         */
+    /**
+     * !!! WARNING - NOT IMPLEMENTED YET !!!
+     * ===========================================
+     * This mutation is made for future purposes,
+     * in particoular the possibility to save a post
+     * maybe to rewatch it later.
+     */
         try {
             return {
                 message:
-                    'Post successfully saved (feature not yet implemented).',
+          'Post successfully saved (feature not yet implemented).',
             }
-        } catch (error) {
+        }
+        catch (error) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: 'Failed to toggle save.',
@@ -195,7 +207,8 @@ export const postRouter = t.router({
              * user in the context (@me)
              */
             return { message: '...post' }
-        } catch (error) {
+        }
+        catch (error) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: 'Failed to fetch saved posts.',
@@ -209,14 +222,16 @@ export const postRouter = t.router({
         .query(async ({ input }) => {
             try {
                 const comment = await postService.getCommentById(input)
-                if (!comment)
+                if (!comment) {
                     throw new TRPCError({
                         code: 'NOT_FOUND',
                         message: 'Comment not found.',
                     })
+                }
 
                 return comment
-            } catch (error) {
+            }
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to fetch comment.',
@@ -232,16 +247,18 @@ export const postRouter = t.router({
                 const comment = await postService.createNewComment(
                     ctx.user.userId,
                     { text: input.text },
-                    input.postId
+                    input.postId,
                 )
-                if (!comment)
+                if (!comment) {
                     throw new TRPCError({
                         code: 'BAD_REQUEST',
                         message: 'Failed to create comment.',
                     })
+                }
 
                 return { message: 'Comment created successfully.' }
-            } catch (error) {
+            }
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to create comment.',
@@ -255,16 +272,18 @@ export const postRouter = t.router({
         .mutation(async ({ input, ctx }) => {
             try {
                 const comment = await postService.getCommentById(
-                    input.commentId
+                    input.commentId,
                 )
-                if (comment?.userId !== ctx.user.userId)
+                if (comment?.userId !== ctx.user.userId) {
                     throw new TRPCError({
                         code: 'FORBIDDEN',
-                        message: "You cannot edit someone else's comment.",
+                        message: 'You cannot edit someone else\'s comment.',
                     })
+                }
 
                 return { message: 'Comment successfully edited.' }
-            } catch (error) {
+            }
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to edit comment.',
@@ -278,27 +297,30 @@ export const postRouter = t.router({
         .mutation(async ({ input, ctx }) => {
             try {
                 const comment = await postService.deleteComment(input)
-                if (!comment)
+                if (!comment) {
                     throw new TRPCError({
                         code: 'NOT_FOUND',
                         message: 'Comment not found.',
                     })
+                }
 
                 const userCaller = userRouter.createCaller(ctx)
                 const userPosts = await userCaller.getAll()
 
                 if (
-                    comment.userId !== ctx.user.userId ||
-                    !userPosts.some(p => p.id === comment.postId)
-                )
+                    comment.userId !== ctx.user.userId
+                    || !userPosts.some(p => p.id === comment.postId)
+                ) {
                     throw new TRPCError({
                         code: 'FORBIDDEN',
                         message:
-                            'You can only delete your comments or comments under your posts.',
+              'You can only delete your comments or comments under your posts.',
                     })
+                }
 
                 return { message: 'Comment successfully deleted.' }
-            } catch (error) {
+            }
+            catch (error) {
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to delete comment.',

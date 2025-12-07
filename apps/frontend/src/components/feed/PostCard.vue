@@ -86,14 +86,14 @@ const handleCopyLink = async () => {
     try {
         await navigator.clipboard.writeText(`${window.location.origin}/posts/${postMutable.value.id}`);
 
-        /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+        /* eslint-disable-next-line unused-imports/no-unused-vars */
         let copySuccess = true;
 
         setTimeout(() => {
             copySuccess = false;
         }, 2000);
 
-        /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+        /* eslint-disable-next-line unused-imports/no-unused-vars */
     } catch (err) {
         alert('Failed to copy url address');
     }

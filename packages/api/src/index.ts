@@ -1,5 +1,5 @@
 export * from './context'
 export * from './router'
-export * from './trpc'
-export * from './routers'
 export type { AppRouter } from './router'
+export * from './routers'
+export * from './trpc'

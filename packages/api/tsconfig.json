@@ -1,18 +1,18 @@
 {
-  "extends": "@polar/typescript-config/base",
-  "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": ".",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "module": "esnext",
-    "target": "esnext",
-    "moduleResolution": "bundler",
-    "composite": true,
-    "emitDeclarationOnly": false,
-    "skipLibCheck": true
-  },
-  "include": ["src/**/*", "*.ts"],
-  "exclude": ["dist", "node_modules", "**/*.test.ts", "**/*.spec.ts"]
+    "extends": "@polar/typescript-config/base",
+    "compilerOptions": {
+        "composite": true,
+        "target": "esnext",
+        "rootDir": ".",
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "declaration": true,
+        "declarationMap": true,
+        "emitDeclarationOnly": false,
+        "outDir": "dist",
+        "sourceMap": true,
+        "skipLibCheck": true
+    },
+    "include": ["src/**/*", "*.ts"],
+    "exclude": ["dist", "node_modules", "**/*.test.ts", "**/*.spec.ts"]
 }

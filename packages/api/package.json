@@ -1,69 +1,69 @@
 {
-  "name": "@polar/api",
-  "version": "1.0.0",
-  "description": "The tRPC procedure routes for Polar",
-  "main": "dist/src/index.js",
-  "module": "src/index.ts",
-  "types": "dist/src/index.d.ts",
-  "files": [
-    "dist/src/**/*"
-  ],
-  "scripts": {
-    "with-env": "dotenv -e ../../apps/backend/.env --",
-    "dev": "tsc -p tsconfig.json --watch",
-    "build": "tsc -p tsconfig.json",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "type-check": "tsc --noEmit",
-    "test": "echo \"No tests specified\"",
-    "clean": "rm -rf dist && rm -rf node_modules"
-  },
-  "keywords": [
-    "trpc",
-    "api",
-    "routes",
-    "procedures",
-    "polar",
-    "typescript",
-    "monorepo"
-  ],
-  "author": "Davide Usberti <usbertibox@gmail.com> (https://usbo.tech)",
-  "license": "MIT",
-  "homepage": "https://github.com/UsboKirishima/polar",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/UsboKirishima/polar.git",
-    "directory": "packages/api"
-  },
-  "bugs": {
-    "url": "https://github.com/UsboKirishima/polar/issues"
-  },
-  "packageManager": "pnpm@10.20.0",
-  "dependencies": {
-    "@polar/media": "workspace:*",
-    "@polar/services": "workspace:*",
-    "@polar/types": "workspace:*",
-    "@polar/utils": "workspace:*",
-    "@trpc/server": "^11.6.0",
-    "@types/bcrypt": "^6.0.0",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/multer": "^2.0.0",
-    "bcrypt": "^6.0.0",
-    "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "multer": "^2.0.2",
-    "superjson": "^2.2.5",
-    "zod": "^4.1.12"
-  },
-  "devDependencies": {
-    "@antfu/eslint-config": "^3.10.1",
-    "@polar/typescript-config": "workspace:*",
-    "@types/express": "^5.0.3",
-    "dotenv": "^17.2.3",
-    "eslint": "^9.17.0",
-    "typescript": "^5.9.2"
-  },
-  "publishConfig": {
-    "access": "public"
-  }
+    "name": "@polar/api",
+    "version": "1.0.0",
+    "packageManager": "pnpm@10.20.0",
+    "description": "The tRPC procedure routes for Polar",
+    "author": "Davide Usberti <usbertibox@gmail.com> (https://usbo.tech)",
+    "license": "MIT",
+    "homepage": "https://github.com/UsboKirishima/polar",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/UsboKirishima/polar.git",
+        "directory": "packages/api"
+    },
+    "bugs": {
+        "url": "https://github.com/UsboKirishima/polar/issues"
+    },
+    "keywords": [
+        "trpc",
+        "api",
+        "routes",
+        "procedures",
+        "polar",
+        "typescript",
+        "monorepo"
+    ],
+    "main": "dist/src/index.js",
+    "module": "src/index.ts",
+    "types": "dist/src/index.d.ts",
+    "files": [
+        "dist/src/**/*"
+    ],
+    "scripts": {
+        "with-env": "dotenv -e ../../apps/backend/.env --",
+        "dev": "tsc -p tsconfig.json --watch",
+        "build": "tsc -p tsconfig.json",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "type-check": "tsc --noEmit",
+        "test": "echo \"No tests specified\"",
+        "clean": "rm -rf dist && rm -rf node_modules"
+    },
+    "dependencies": {
+        "@polar/media": "workspace:*",
+        "@polar/services": "workspace:*",
+        "@polar/types": "workspace:*",
+        "@polar/utils": "workspace:*",
+        "@trpc/server": "^11.6.0",
+        "@types/bcrypt": "^6.0.0",
+        "@types/jsonwebtoken": "^9.0.10",
+        "@types/multer": "^2.0.0",
+        "bcrypt": "^6.0.0",
+        "express": "^5.1.0",
+        "jsonwebtoken": "^9.0.2",
+        "multer": "^2.0.2",
+        "superjson": "^2.2.5",
+        "zod": "^4.1.12"
+    },
+    "devDependencies": {
+        "@antfu/eslint-config": "^3.10.1",
+        "@polar/typescript-config": "workspace:*",
+        "@types/express": "^5.0.3",
+        "dotenv": "^17.2.3",
+        "eslint": "^9.17.0",
+        "typescript": "^5.9.2"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
 }

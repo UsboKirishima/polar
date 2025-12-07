@@ -5,6 +5,7 @@ const globalForPrisma = globalThis as unknown as {
     prisma: PrismaClient | undefined
 }
 
+/* eslint-disable-next-line node/prefer-global/process */
 const connectionString = process.env.DATABASE_URL as string
 
 const url = new URL(connectionString)
@@ -16,17 +17,20 @@ const adapter = new PrismaMariaDb({
     database: url.pathname.replace(/^\//, ''),
 })
 
-export const db =
-    globalForPrisma.prisma ??
-    new PrismaClient({
-        log:
-            process.env.NODE_ENV === 'development'
-                ? ['query', 'error', 'warn']
-                : ['error'],
-        adapter,
-    })
+export const db
+  = globalForPrisma.prisma
+      ?? new PrismaClient({
+          log:
+      /* eslint-disable-next-line node/prefer-global/process */
+      process.env.NODE_ENV === 'development'
+          ? ['query', 'error', 'warn']
+          : ['error'],
+          adapter,
+      })
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
+/* eslint-disable-next-line node/prefer-global/process */
+if (process.env.NODE_ENV !== 'production')
+    globalForPrisma.prisma = db
 
 export { PostBgColor } from '@prisma/client'
 export type { User } from '@prisma/client'

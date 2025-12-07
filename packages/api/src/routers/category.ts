@@ -1,9 +1,9 @@
-import { TRPCError } from '@trpc/server'
-import { protectedProcedure, publicProcedure, t } from '../trpc'
-
 import { postService } from '@polar/services'
-import { z } from 'zod/v4'
 import { categoryIdSchema, categoryNameSchema } from '@polar/types/zod'
+import { TRPCError } from '@trpc/server'
+import { z } from 'zod/v4'
+
+import { protectedProcedure, publicProcedure, t } from '../trpc'
 
 export const categoryRouter = t.router({
     /**
@@ -13,7 +13,8 @@ export const categoryRouter = t.router({
         try {
             const cats = await postService.getAllCategories()
             return cats
-        } catch (error: any) {
+        }
+        catch (error: any) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: error?.message ?? 'Failed to fetch categories',
@@ -28,7 +29,8 @@ export const categoryRouter = t.router({
         try {
             const results = await postService.searchCategory(input)
             return results
-        } catch (error: any) {
+        }
+        catch (error: any) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: error?.message ?? 'Failed to search categories',
@@ -51,8 +53,10 @@ export const categoryRouter = t.router({
                     })
                 }
                 return cat
-            } catch (error: any) {
-                if (error instanceof TRPCError) throw error
+            }
+            catch (error: any) {
+                if (error instanceof TRPCError)
+                    throw error
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: error?.message ?? 'Failed to fetch category by ID',
@@ -75,8 +79,10 @@ export const categoryRouter = t.router({
                     })
                 }
                 return cat
-            } catch (error: any) {
-                if (error instanceof TRPCError) throw error
+            }
+            catch (error: any) {
+                if (error instanceof TRPCError)
+                    throw error
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message:
