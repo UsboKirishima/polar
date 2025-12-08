@@ -16,7 +16,8 @@
 
 ---
 
-> [!WARNING] There is currently **no stable release** of **Polar** available.  
+> [!WARNING]
+> There is currently **no stable release** of **Polar** available.  
 > Expect breaking changes, incomplete features, and frequent updates.
 
 ## ✨ Features
