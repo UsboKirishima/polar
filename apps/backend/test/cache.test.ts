@@ -1,5 +1,5 @@
 import CacheManager from '@polar/redis-manager';
-import { createClient } from 'redis';
+import { createClient, RedisClientType } from 'redis';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 type TestData = {
@@ -8,7 +8,9 @@ type TestData = {
 };
 
 describe('CacheManager', () => {
-    const redisClient = createClient({ url: 'redis://localhost:6379' });
+    const redisClient: RedisClientType = createClient({
+        url: process.env.REDIS_URL ?? 'redis://localhost:6379',
+    }) as RedisClientType;
     const cache = new CacheManager(redisClient, {
         max_retries: 3,
         retry_delay: 200,

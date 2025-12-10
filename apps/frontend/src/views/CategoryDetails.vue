@@ -3,11 +3,11 @@ import FeedPosts from '@/components/feed/FeedPosts.vue'
 import HeaderBar from '@/components/HeaderBar.vue'
 import PageLoading from '@/components/PageLoading.vue'
 import { usePostStore } from '@/stores/posts'
-import type { Category, Post } from '@/types/trpc'
+import type { CategoryByName, Post } from '@/types/trpc'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
-const category = ref<Category>()
+const category = ref<CategoryByName>()
 const route = useRoute()
 const postStore = usePostStore()
 const err = ref('')

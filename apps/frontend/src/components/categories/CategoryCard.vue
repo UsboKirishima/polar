@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { Category } from '@/types/trpc'
+import type { Category, CategoryByName } from '@/types/trpc'
 import { faHashtag } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { ref } from 'vue'
 
 const props = defineProps<{
-    category: Category
+    category: Category | CategoryByName
 }>()
 
 const categoryName = ref(

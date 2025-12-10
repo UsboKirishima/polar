@@ -9,8 +9,8 @@ import {
 } from '@polar/types/zod'
 import { TRPCError } from '@trpc/server'
 
-import { protectedProcedure, t } from '../trpc'
-import { userRouter } from './user'
+import { protectedProcedure, t } from '../trpc.js'
+import { userRouter } from './user.js'
 
 async function isUserThePostAuthor(
     userId: string,

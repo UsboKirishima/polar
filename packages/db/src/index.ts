@@ -32,5 +32,4 @@ export const db
 if (process.env.NODE_ENV !== 'production')
     globalForPrisma.prisma = db
 
-export { PostBgColor } from '@prisma/client'
-export type { User } from '@prisma/client'
+export * from '@prisma/client';

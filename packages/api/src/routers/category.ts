@@ -3,7 +3,7 @@ import { categoryIdSchema, categoryNameSchema } from '@polar/types/zod'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod/v4'
 
-import { protectedProcedure, publicProcedure, t } from '../trpc'
+import { protectedProcedure, publicProcedure, t } from '../trpc.js'
 
 export const categoryRouter = t.router({
     /**

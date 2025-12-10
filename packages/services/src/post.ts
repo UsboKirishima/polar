@@ -5,7 +5,7 @@ import {
     TPostSchema,
 } from '@polar/types/zod'
 import { db } from '@polar/db'
-import { cacheManager } from './cache'
+import { cacheManager } from './cache.js'
 
 const CACHE_TTL = 60 // Caching expiration (60 seconds)
 const CACHE_KEYS = {

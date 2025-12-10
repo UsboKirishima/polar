@@ -11,7 +11,7 @@ import { profileSchema, userIdSchema, usernameSchema } from '@polar/types/zod'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod/v4'
 
-import { protectedProcedure, t } from '../trpc'
+import { protectedProcedure, t } from '../trpc.js'
 
 export const fileSchema = z.custom<Express.Multer.File>(
     val =>

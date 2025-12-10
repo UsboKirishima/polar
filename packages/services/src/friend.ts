@@ -1,5 +1,5 @@
 import { db } from '@polar/db'
-import { cacheManager } from './cache'
+import { cacheManager } from './cache.js'
 
 const CACHE_TTL = 60 // Expiriation value (60 seconds)
 const CACHE_KEYS = {

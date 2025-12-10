@@ -1,4 +1,4 @@
-import type { TProfileSchema, TUserSchema } from './zod'
+import type { TProfileSchema, TUserSchema } from './zod.js'
 
 export type SimpleUserSchema = TUserSchema
 export type SimpleProfileSchema = TProfileSchema

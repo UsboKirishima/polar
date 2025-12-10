@@ -1,8 +1,8 @@
-import type { TUserId, TUsername } from '@polar/types/zod.js';
+import type { TUserId, TUsername } from '@polar/types/zod';
 import type { NextFunction, Request, Response } from 'express';
 
 import { userService } from '@polar/services';
-import { userIdSchema, usernameSchema } from '@polar/types/zod.js';
+import { userIdSchema, usernameSchema } from '@polar/types/zod';
 
 /*
  * @deprecated Use tRPC API instead

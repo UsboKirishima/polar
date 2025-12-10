@@ -3,7 +3,7 @@ import { userIdSchema } from '@polar/types/zod'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
-import { protectedProcedure, t } from '../trpc'
+import { protectedProcedure, t } from '../trpc.js'
 
 export const friendRouter = t.router({
     /**

@@ -19,6 +19,7 @@ export type PostCategory = ArrayElement<Post['categories']>
 
 // I'll assume `trpc.category.getById.query` exists for the full category type.
 export type Category = NonNullable<Awaited<ReturnType<typeof trpc.category.getById.query>>>
+export type CategoryByName = NonNullable<Awaited<ReturnType<typeof trpc.category.getByName.query>>>
 
 type Friendships = Awaited<ReturnType<typeof trpc.friend.getAll.query>>
 export type Friendship = ArrayElement<Friendships>

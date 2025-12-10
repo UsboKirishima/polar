@@ -4,7 +4,7 @@ import { generateTokens } from '@polar/utils'
 import { TRPCError } from '@trpc/server'
 import bcrypt from 'bcrypt'
 
-import { protectedProcedure, publicProcedure, t } from '../trpc'
+import { protectedProcedure, publicProcedure, t } from '../trpc.js'
 
 export const authRouter = t.router({
     register: publicProcedure

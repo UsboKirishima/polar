@@ -4,8 +4,8 @@ import {
     friendRouter,
     postRouter,
     userRouter,
-} from './routers'
-import { t } from './trpc'
+} from './routers/index.js'
+import { t } from './trpc.js'
 
 export const appRouter = t.router({
     user: userRouter,

@@ -2,6 +2,7 @@
   "name": "@polar/services",
   "version": "1.0.0",
   "description": "The Polar's business logic package",
+  "type": "module",
   "main": "dist/src/index.js",
   "module": "src/index.ts",
   "types": "dist/src/index.d.ts",
@@ -45,6 +46,7 @@
     "@polar/redis-manager": "workspace:*",
     "@polar/types": "workspace:*",
     "@polar/utils": "workspace:*",
+    "@prisma/client": "^7.0.0",
     "@types/bcrypt": "^6.0.0",
     "bcrypt": "^6.0.0",
     "redis": "^5.9.0"

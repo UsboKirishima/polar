@@ -2,9 +2,9 @@ import bcrypt from 'bcrypt'
 import type {
     SimpleProfileSchema,
     SimpleUserSchema,
-} from '@polar/types/general.js'
+} from '@polar/types/general'
 import { db, User } from '@polar/db'
-import { cacheManager } from './cache'
+import { cacheManager } from './cache.js'
 
 export const CACHE_TTL = 60
 export const CACHE_KEY = {

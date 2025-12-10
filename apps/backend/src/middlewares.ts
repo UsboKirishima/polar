@@ -1,4 +1,4 @@
-import type { JwtPayload } from '@polar/types/general.js';
+import type { JwtPayload } from '@polar/types/general';
 import type { NextFunction, Request, Response } from 'express';
 
 import * as jwt from 'jsonwebtoken';
