@@ -11,7 +11,7 @@
   
   A modern full-stack social platform to connect with nearby friends based on location.
   
-  [🌐 polar](https://polar.usbo.tech) | [📱 Frontend](./apps/frontend/) | [⚡ Backend](./apps/backend/) | [🎨 License](/LICENSE)
+  [polar](https://polar.usbo.tech) | [Frontend](./apps/frontend/) | [Backend](./apps/backend/) | [License](/LICENSE)
 </div>
 
 ---
@@ -20,20 +20,16 @@
 > There is currently **no stable release** of **Polar** available.  
 > Expect breaking changes, incomplete features, and frequent updates.
 
-## ✨ Features
+## Features
 
-- 🚀 **Share & Engage**: Create posts, leave comments, and show appreciation with likes
-- 👤 **Profile Customization**: Personalize your profile to express yourself
-- 🔍 **Discover People**: Find and connect with new friends and interesting people
-- 💬 **Real-time Chat**: Communicate instantly with your friends
-- 📍 **Location-based Discovery**: Find people nearby and potentially find your next date!
-- 🏗️ **Modern Architecture**: Built with TypeScript, tRPC, Vue.js, and Express.js
+- **Share & Engage**: Create posts, leave comments, and show appreciation with likes
+- **Profile Customization**: Personalize your profile to express yourself
+- **Discover People**: Find and connect with new friends and interesting people
+- **Real-time Chat**: Communicate instantly with your friends
+- **Location-based Discovery**: Find people nearby and potentially find your next date!
+- **Modern Architecture**: Built with TypeScript, tRPC, Vue.js, and Express.js
 
-## 🏗️ Architecture
-
-This is a **monorepo** built with modern tools and best practices:
-
-### 🛠️ Tech Stack
+### Tech Stack
 
 - **Frontend**: Vue.js 3 + TypeScript + Vite + Pinia
 - **Backend**: Node.js + Express.js + TypeScript + tRPC
@@ -44,11 +40,11 @@ This is a **monorepo** built with modern tools and best practices:
 - **Monorepo**: Turborepo + pnpm workspaces
 - **Type Safety**: Full end-to-end type safety with tRPC
 
-### 📁 System design
+### System design
 
 ![tech_stack](/assets/tech_stack.jpg)
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -110,7 +106,7 @@ This is a **monorepo** built with modern tools and best practices:
 - **Prettier**: Consistent code formatting
 - **Conventional Commits**: Follow conventional commit format
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 
@@ -193,7 +189,7 @@ NODE_ENV=production pnpm build --filter=@polar/backend
 NODE_ENV=production pnpm build --filter=@polar/frontend
 ```
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Please follow these guidelines:
 
@@ -217,14 +213,14 @@ We welcome contributions! Please follow these guidelines:
 - Just save your `.ts` files and restart the consuming application
 - Use `pnpm type-check` to verify types across all packages
 
-## 📚 Documentation
+## Documentation
 
 - **API Documentation**: See `apps/backend/docs/`
 - **Component Documentation**: See `apps/frontend/docs/`
 - **Package Documentation**: Each package has its own README
 - **Architecture Decision Records**: See `docs/adr/`
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -239,12 +235,12 @@ We welcome contributions! Please follow these guidelines:
 - **Discussions**: [GitHub Discussions](https://github.com/UsboKirishima/polar/discussions)
 - **Documentation**: Check package-specific READMEs
 
-## 📄 License
+## License
 
 This project is licensed under the Polar Restricted Use and Attribution License (P-RUAL) - see the
 [LICENSE](./LICENSE) file for details.
 
-## 👤 Author
+## Author
 
 **Davide Usberti**
 
