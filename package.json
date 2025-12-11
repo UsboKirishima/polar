@@ -10,7 +10,9 @@
   },
   "scripts": {
     "dev": "turbo run dev --parallel --filter='./apps/*'",
-    "build": "turbo run build --filter='./packages/*'",
+    "build": "turbo run build",
+    "build:apps": "turbo run build --filter='./apps/*'",
+    "build:pkgs": "turbo run build --filter='./packages/*'",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
     "type-check": "turbo run type-check",
@@ -27,7 +29,8 @@
     "db:generate": "turbo run db:generate",
     "db:push": "turbo run db:push",
     "db:migrate": "turbo run db:migrate",
-    "db:studio": "turbo run db:studio"
+    "db:studio": "turbo run db:studio",
+    "prepare": "husky"
   },
   "keywords": [
     "monorepo",
@@ -48,6 +51,7 @@
   },
   "packageManager": "pnpm@10.25.0",
   "devDependencies": {
+    "husky": "^9.1.7",
     "prettier": "3.6.2",
     "prisma": "^7.0.0",
     "tsdown": "^0.15.11",
