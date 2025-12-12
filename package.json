@@ -54,8 +54,7 @@
     "husky": "^9.1.7",
     "prettier": "3.6.2",
     "prisma": "^7.0.0",
-    "tsdown": "^0.15.11",
-    "turbo": "^2.5.6",
+    "turbo": "^2.5.8",
     "typescript": "^5.9.2"
   },
   "pnpm": {
@@ -71,5 +70,8 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "dotenv": "^17.2.3"
+  }
 }

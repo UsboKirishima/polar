@@ -1,25 +1,36 @@
-FROM node:22-alpine AS builder
-
+FROM node:22-alpine AS base
+RUN apk add --no-cache libc6-compat
+RUN npm install -g pnpm@10.25.0 turbo@2.5.8
 WORKDIR /app
 
-RUN npm install -g pnpm
+# --- PRUNE ---
+FROM base AS prepare
+COPY . .
+RUN pnpm turbo prune --scope=@polar/backend --docker
 
-# Copy monorepo files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
-COPY packages ./packages
-COPY apps/backend ./apps/backend
+# --- BUILDER ---
+FROM base AS builder
 
-RUN pnpm install --filter backend...
-RUN pnpm --filter backend build
+COPY --from=prepare /app/out/json/ ./
 
-# --- runtime ---
-FROM node:22-alpine
+COPY package.json ./
+COPY pnpm-workspace.yaml ./
+COPY pnpm-lock.yaml ./pnpm-lock.yaml
+
+COPY --from=prepare /app/out/full/ ./
+
+RUN pnpm install --frozen-lockfile
+
+RUN pnpm turbo run build --filter=@polar/backend
+
+# --- RUNNER ---
+FROM node:22-alpine AS runner
 WORKDIR /app
-
-RUN npm install -g pnpm
+RUN addgroup -S nodejs && adduser -S expressjs -G nodejs
+USER expressjs
 
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/apps/backend/dist ./dist
-COPY apps/backend/package.json ./
 
-CMD ["node", "dist/index.js"]
+EXPOSE 4000
+CMD ["node", "dist/src/index.js"]

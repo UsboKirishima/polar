@@ -1,33 +1,31 @@
-# BUILD STAGE
-FROM node:22-alpine AS builder
+FROM node:22-alpine AS base
 
 WORKDIR /app
 
-# Install global pnpm
-RUN npm install -g pnpm
+FROM base AS prepare
 
-# Copy workspace files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
-COPY packages ./packages
-COPY apps/backend ./apps/backend
+RUN npm install -g pnpm@10.25.0 turbo@2.5.8
 
-# Install backend deps only
-RUN pnpm install --filter backend...
+COPY . .
 
-# Build
-RUN pnpm --filter backend build
+RUN turbo prune @polar/backend --docker
 
-# RUNTIME STAGE
-FROM node:22-alpine
+FROM base AS builder
 
-WORKDIR /app
+COPY --from=prepare /app/out/json/ .
+RUN pnpm install --frozen-lockfile --prod
 
-RUN npm install -g pnpm
+COPY --from=prepare /app/out/full/ .
 
-# Copy built files + node_modules
-COPY --from=builder /app/apps/backend/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/apps/backend/package.json ./
+RUN pnpm turbo build
+
+FROM base AS runner
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 expressjs
+USER expressjs
+
+COPY --from=builder --chown=expressjs:nodejs /app/apps/backend/dist ./dist
 
 ENV NODE_ENV=production
 EXPOSE 4000

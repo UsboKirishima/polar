@@ -8,6 +8,7 @@
   "main": "dist/src/index.js",
   "module": "dist/index.mjs",
   "types": "dist/src/index.d.ts",
+  "packageManager": "pnpm@10.25.0",
   "exports": {
     ".": {
       "require": "./dist/src/index.js",
