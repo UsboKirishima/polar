@@ -1,36 +1,47 @@
 FROM node:22-alpine AS base
-RUN apk add --no-cache libc6-compat
-RUN npm install -g pnpm@10.25.0 turbo@2.5.8
-WORKDIR /app
 
-# --- PRUNE ---
-FROM base AS prepare
-COPY . .
-RUN pnpm turbo prune --scope=@polar/backend --docker
-
-# --- BUILDER ---
 FROM base AS builder
+RUN npm install -g pnpm@10.25.0
+RUN corepack enable && corepack prepare pnpm@latest --activate
+ENV PNPM_HOME=/usr/local/bin
 
-COPY --from=prepare /app/out/json/ ./
+RUN apk add --no-cache libc6-compat
+RUN apk update
 
-COPY package.json ./
-COPY pnpm-workspace.yaml ./
-COPY pnpm-lock.yaml ./pnpm-lock.yaml
-
-COPY --from=prepare /app/out/full/ ./
-
-RUN pnpm install --frozen-lockfile
-
-RUN pnpm turbo run build --filter=@polar/backend
-
-# --- RUNNER ---
-FROM node:22-alpine AS runner
 WORKDIR /app
-RUN addgroup -S nodejs && adduser -S expressjs -G nodejs
+RUN pnpm add -g turbo@2.5.8
+COPY . .
+
+RUN turbo prune @polar/backend --docker
+
+FROM base AS installer
+RUN apk add --no-cache libc6-compat
+RUN apk update
+
+WORKDIR /app
+
+COPY .gitignore .gitignore
+COPY --from=builder /app/out/json/ .
+COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+
+COPY --from=builder /app/out/full/ .
+COPY turbo.json turbo.json
+
+RUN npm install -g pnpm
+RUN pnpm install
+
+RUN pnpm turbo build --filter=@polar/backend...
+
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+RUN addgroup --system --gid 1001 expressjs
+RUN adduser --system --uid 1001 expressjs
 USER expressjs
+COPY --from=installer /app .
 
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/apps/backend/dist ./dist
+EXPOSE 3000
 
-EXPOSE 4000
-CMD ["node", "dist/src/index.js"]
+CMD node apps/backend/dist/src/index.js
