@@ -21,7 +21,6 @@ const route = useRoute()
 
 const activePage = ref<string | null>(route.path)
 const setActivePage = (path: string | null) => {
-    console.log(path)
     activePage.value = path
 }
 

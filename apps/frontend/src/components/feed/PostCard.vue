@@ -19,6 +19,7 @@ import { getColorRgba, type ColorEnum } from '@/utils/colors'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { trpc } from '@/trpc'
+import { useLogStore } from '@/stores/logs'
 
 dayjs.extend(relativeTime)
 
@@ -26,7 +27,7 @@ const props = defineProps<{
     post: Post
 }>()
 
-const isPostShowable = ref<boolean>(true);
+const isPostShowable = ref<boolean>(true)
 
 // -------- Hover Card ---------
 const profileHover = ref(false)
@@ -34,7 +35,7 @@ const mouseX = ref(0)
 const mouseY = ref(0)
 
 // Options menu
-const isOptsOpen = ref<boolean>(false);
+const isOptsOpen = ref<boolean>(false)
 
 const handleMouseMove = (event: MouseEvent) => {
     mouseX.value = event.clientX
@@ -44,6 +45,8 @@ const handleMouseMove = (event: MouseEvent) => {
 const router = useRouter()
 const postStore = usePostStore()
 
+const logStore = useLogStore()
+
 const handlePostClick = () => {
     router.push(`/posts/${props.post.id}`)
 }
@@ -51,7 +54,7 @@ const handlePostClick = () => {
 const fetchPost = async () => {
     const data = await postStore.fetchPostById(props.post.id)
     if (data) {
-        isPostShowable.value = true;
+        isPostShowable.value = true
         postMutable.value = data
     }
 }
@@ -69,87 +72,114 @@ const handlePostLike = async () => {
 }
 
 const handlePostDelete = async () => {
-    await trpc.post.delete.mutate(postMutable.value.id);
-    await fetchPost();
+    await trpc.post.delete.mutate(postMutable.value.id)
+    await fetchPost()
 
-    isPostShowable.value = false;
-    isOptsOpen.value = false;
+    isPostShowable.value = false
+    isOptsOpen.value = false
 }
 
 const handleCopyLink = async () => {
     if (!navigator.clipboard) {
-        console.error('The clipboard API is not supported by your browser.');
-        alert('The clipboard API is not supported by your browser.');
-        return;
+        console.error('The clipboard API is not supported by your browser.')
+        logStore.showErr('The clipboard API is not supported by your browser.')
+        return
     }
 
     try {
-        await navigator.clipboard.writeText(`${window.location.origin}/posts/${postMutable.value.id}`);
+        await navigator.clipboard.writeText(
+            `${window.location.origin}/posts/${postMutable.value.id}`,
+        )
 
         /* eslint-disable-next-line unused-imports/no-unused-vars */
-        let copySuccess = true;
+        let copySuccess = true
+        logStore.showSuccess('Link copied to clipboard')
 
         setTimeout(() => {
-            copySuccess = false;
-        }, 2000);
+            copySuccess = false
+        }, 2000)
 
         /* eslint-disable-next-line unused-imports/no-unused-vars */
     } catch (err) {
-        alert('Failed to copy url address');
+        logStore.showErr('Failed to copy url address')
     }
 
-    isOptsOpen.value = false;
+    isOptsOpen.value = false
 }
 
 const handleReport = async () => {
-    alert('Not yet implmented')
-    isOptsOpen.value = false;
+    logStore.showInfo('Not yet implmented')
+    isOptsOpen.value = false
 }
 
 const closeMenuOnClickOutside = (event: MouseEvent) => {
-    const clickedElement = event.target as HTMLElement;
-    if (isOptsOpen.value &&
+    const clickedElement = event.target as HTMLElement
+    if (
+        isOptsOpen.value &&
         !clickedElement.closest('.options') &&
-        !clickedElement.closest('.actions')) {
-        isOptsOpen.value = false;
+        !clickedElement.closest('.actions')
+    ) {
+        isOptsOpen.value = false
     }
-};
+}
 
 onMounted(() => {
-    document.addEventListener('click', closeMenuOnClickOutside);
-});
+    document.addEventListener('click', closeMenuOnClickOutside)
+})
 
 onUnmounted(() => {
-    document.removeEventListener('click', closeMenuOnClickOutside);
-});
+    document.removeEventListener('click', closeMenuOnClickOutside)
+})
 </script>
 
 <template>
-    <div class="post-container" v-if="postMutable && isPostShowable"
-        :style="{ background: getColorRgba(post.color as ColorEnum) }">
+    <div
+        class="post-container"
+        v-if="postMutable && isPostShowable"
+        :style="{ background: getColorRgba(post.color as ColorEnum) }"
+    >
         <div>
             <div class="post-header">
-                <router-link :to="`/users/${post.author.id}`" iv class="user-info" @mouseenter="profileHover = true"
-                    @mouseleave="profileHover = false" @mousemove="handleMouseMove">
+                <router-link
+                    :to="`/users/${post.author.id}`"
+                    iv
+                    class="user-info"
+                    @mouseenter="profileHover = true"
+                    @mouseleave="profileHover = false"
+                    @mousemove="handleMouseMove"
+                >
                     <Transition name="fade-slide">
-                        <ProfileFloatCard v-if="profileHover" :user="post.author as User" :mouse-x="mouseX"
-                            :mouse-y="mouseY" />
+                        <ProfileFloatCard
+                            v-if="profileHover"
+                            :user="post.author as User"
+                            :mouse-x="mouseX"
+                            :mouse-y="mouseY"
+                        />
                     </Transition>
                     <img :src="post.author.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="" />
                     <div class="h-info">
-                        <Username :username="postMutable.author.profile?.fullName || 'Unknown'"
-                            :is-verified="postMutable.author.role === 'ADMIN'" />
+                        <Username
+                            :username="postMutable.author.profile?.fullName || 'Unknown'"
+                            :is-verified="postMutable.author.role === 'ADMIN'"
+                        />
                         <p class="place">@{{ post.author.profile?.username || 'Unknown' }}</p>
                     </div>
                 </router-link>
                 <div class="options" @click="isOptsOpen = !isOptsOpen">
-                    <FontAwesomeIcon :icon="faEllipsisVertical" :style="{ color: '#fff' }" class="dots" />
+                    <FontAwesomeIcon
+                        :icon="faEllipsisVertical"
+                        :style="{ color: '#fff' }"
+                        class="dots"
+                    />
                 </div>
                 <Transition name="fade-slide">
                     <div v-if="isOptsOpen" class="actions">
                         <ul>
-                            <li v-if="post.author.id === authRouter.user?.id" @click="handlePostDelete"
-                                class="delete-act">
+                            <li
+                                v-if="post.author.id === authRouter.user?.id"
+                                @click="handlePostDelete"
+                                class="delete-act"
+                            >
                                 <FontAwesomeIcon :icon="faTrash" /> Delete
                             </li>
                             <li class="report-act" @click="handleReport">
@@ -166,10 +196,19 @@ onUnmounted(() => {
         <div class="body" @click="handlePostClick">
             <p class="content">
                 <template v-for="(word, index) in post.text.split(' ')" :key="index">
-                    <a v-if="word.startsWith('#')" :href="`/categories/n/${word.slice(1)}`" class="hashtag">
+                    <a
+                        v-if="word.startsWith('#')"
+                        :href="`/categories/n/${word.slice(1)}`"
+                        class="hashtag"
+                    >
                         {{ word }}
                     </a>
-                    <a v-else-if="word.startsWith('@')" :href="`/users/u/${word.slice(1)}`" class="tags">{{ word }}</a>
+                    <a
+                        v-else-if="word.startsWith('@')"
+                        :href="`/users/u/${word.slice(1)}`"
+                        class="tags"
+                        >{{ word }}</a
+                    >
                     <span v-else>{{ word }}</span>
                     {{ index !== post.text.split(' ').length - 1 ? ' ' : '' }}
                 </template>
@@ -177,7 +216,10 @@ onUnmounted(() => {
         </div>
         <div class="controls">
             <div @click="handlePostLike">
-                <FontAwesomeIcon :icon="likedIcon" :style="hasLikesPost ? { color: '#ab5382' } : { color: '#fff' }" />
+                <FontAwesomeIcon
+                    :icon="likedIcon"
+                    :style="hasLikesPost ? { color: '#ab5382' } : { color: '#fff' }"
+                />
                 <p class="count">{{ postMutable.likes.length || 0 }}</p>
             </div>
             <div @click="handlePostClick">
