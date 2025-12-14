@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
@@ -14,8 +14,16 @@ import {
     faBars,
     faPlusCircle,
 } from '@fortawesome/free-solid-svg-icons'
+import { useRoute } from 'vue-router'
 
 const auth = useAuthStore()
+const route = useRoute()
+
+const activePage = ref<string | null>(route.path)
+const setActivePage = (path: string | null) => {
+    console.log(path)
+    activePage.value = path
+}
 
 const menuItems = computed(() => [
     { icon: faHouse, label: 'home', path: '/' },
@@ -39,8 +47,8 @@ const menuItems = computed(() => [
     <nav class="desktop_nav">
         <router-link to="/" class="logo"><img src="/logo_no_bg.png" alt="Polar" /></router-link>
         <ul>
-            <li v-bind:key="item.path" v-for="item in menuItems">
-                <router-link :to="item.path" class="box">
+            <li v-bind:key="item.path" v-for="item in menuItems" @click="setActivePage(item.path)">
+                <router-link :to="item.path" :class="['box', { active: item.path === activePage }]">
                     <FontAwesomeIcon class="icon" :icon="item.icon" />
                     {{ item.label[0].toUpperCase() + item.label.slice(1) }}
                 </router-link>
@@ -82,7 +90,8 @@ ul {
 
 li {
     list-style-type: none;
-    margin: 6px 12px;
+    margin: 4px 12px;
+    width: 100%;
 }
 
 li .box {
@@ -92,7 +101,17 @@ li .box {
     font-size: clamp(0.3rem, 1vw + 0.5rem, 1.1rem);
     font-weight: 400;
     text-decoration: none;
-    padding: 6px;
+    padding: 10px 6px;
+    border-radius: 16px;
+}
+
+.box {
+    opacity: 65%;
+}
+
+.active {
+    opacity: 100%;
+    transition: 0.4s ease;
 }
 
 li .box:hover {
