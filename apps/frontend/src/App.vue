@@ -1,27 +1,35 @@
 <script setup lang="ts">
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import Sidebar from './components/SideBar.vue'
-import { useLogStore } from './stores/logs';
-import { faCheckCircle, faInfo, faMessage } from '@fortawesome/free-solid-svg-icons';
-import PageLoading from './components/PageLoading.vue';
+import { useLogStore } from './stores/logs'
+import { faCheckCircle, faInfo, faMessage } from '@fortawesome/free-solid-svg-icons'
+import PageLoading from './components/PageLoading.vue'
 
-import { useAuthStore } from './stores/auth';
-import { useFriendStore } from './stores/friends';
-import { usePostStore } from './stores/posts';
-import { useSettingsStore } from './stores/settings';
-import { useUserStore } from './stores/users';
+import { useAuthStore } from './stores/auth'
+import { useFriendStore } from './stores/friends'
+import { usePostStore } from './stores/posts'
+import { useSettingsStore } from './stores/settings'
+import { useUserStore } from './stores/users'
 
-const logStore = useLogStore();
+const logStore = useLogStore()
 
-const authStore = useAuthStore();
-const friendStore = useFriendStore();
-const postStore = usePostStore();
-const settingStore = useSettingsStore();
-const userStore = useUserStore();
+const authStore = useAuthStore()
+const friendStore = useFriendStore()
+const postStore = usePostStore()
+const settingStore = useSettingsStore()
+const userStore = useUserStore()
 </script>
 
 <template>
-    <PageLoading v-if="authStore.loading || friendStore.loading || postStore.loading && !postStore.isLike || settingStore.loading || userStore.loading" />
+    <PageLoading
+        v-if="
+            authStore.loading ||
+            friendStore.loading ||
+            (postStore.loading && !postStore.isLike) ||
+            settingStore.loading ||
+            userStore.loading
+        "
+    />
     <div class="container">
         <Sidebar class="sidebar" />
         <div class="view">
@@ -31,16 +39,25 @@ const userStore = useUserStore();
     </div>
     <Transition name="fade-slide">
         <div v-if="logStore.type" :class="`log-box ${logStore.type}`" @click="logStore.type = null">
-            <FontAwesomeIcon class="icon" :icon="logStore.type === 'succ' ?
-                faCheckCircle
-                : logStore.type === 'err'
-                    ? faInfo
-                    : faMessage" />
-            <p>{{ logStore.type === 'succ'
-                ? logStore.success
-                : logStore.type === 'err'
-                    ? logStore.error
-                    : logStore.message }}</p>
+            <FontAwesomeIcon
+                class="icon"
+                :icon="
+                    logStore.type === 'succ'
+                        ? faCheckCircle
+                        : logStore.type === 'err'
+                          ? faInfo
+                          : faMessage
+                "
+            />
+            <p>
+                {{
+                    logStore.type === 'succ'
+                        ? logStore.success
+                        : logStore.type === 'err'
+                          ? logStore.error
+                          : logStore.message
+                }}
+            </p>
         </div>
     </Transition>
 </template>
@@ -103,9 +120,7 @@ const userStore = useUserStore();
 }
 
 .msg {
-    background: linear-gradient(135deg,
-            rgba(220, 240, 255, 0.28),
-            rgba(180, 215, 255, 0.18));
+    background: linear-gradient(135deg, rgba(220, 240, 255, 0.28), rgba(180, 215, 255, 0.18));
     border: 1px solid rgba(200, 230, 255, 0.45);
     box-shadow: 0 4px 18px rgba(150, 190, 255, 0.25);
 }

@@ -38,7 +38,12 @@ const nearYouPeople = ref([
         distance: '40km',
         status: 'Qualcuno che vende concerto di Drake?',
     },
-    { username: 'viscida', avatar: '/pfp_placeholder.png', distance: '41km', status: '' },
+    {
+        username: 'viscida',
+        avatar: '/pfp_placeholder.png',
+        distance: '41km',
+        status: '',
+    },
 ])
 </script>
 

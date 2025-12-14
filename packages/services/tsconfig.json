@@ -12,7 +12,7 @@
     "target": "esnext",
     "emitDeclarationOnly": false,
     "skipLibCheck": true,
-    "esModuleInterop": true,
+    "esModuleInterop": true
   },
   "include": ["src/**/*", "*.ts"],
   "exclude": ["dist", "node_modules", "**/*.test.ts", "**/*.spec.ts"]

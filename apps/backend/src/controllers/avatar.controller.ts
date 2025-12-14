@@ -1,7 +1,7 @@
-import type { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express'
 
-import { imageKit } from '@polar/media';
-import { avatarService } from '@polar/services';
+import { imageKit } from '@polar/media'
+import { avatarService } from '@polar/services'
 
 /**
  * @deprecated Use tRPC API instead
@@ -9,33 +9,32 @@ import { avatarService } from '@polar/services';
 export async function uploadAvatar(
     req: Request,
     res: Response,
-    next: NextFunction,
+    next: NextFunction
 ) {
     try {
-        const file = req.file;
-        const userId = req.payload?.userId;
+        const file = req.file
+        const userId = req.payload?.userId
 
         if (!userId) {
-            res.status(401).json({ error: 'Unauthorized' });
-            return;
+            res.status(401).json({ error: 'Unauthorized' })
+            return
         }
 
         if (!file) {
-            res.status(400).json({ message: 'file is required' });
-            return;
+            res.status(400).json({ message: 'file is required' })
+            return
         }
 
         const uploadResult = await imageKit.upload({
             file: file.buffer,
             fileName: `user-${userId}.png`,
             folder: '/avatars',
-        });
+        })
 
-        const data = await avatarService.uploadAvatar(userId, uploadResult.url);
-        res.status(200).json({ message: 'Avatar successfully uploaded', data });
-    }
-    catch (err) {
-        next(err);
+        const data = await avatarService.uploadAvatar(userId, uploadResult.url)
+        res.status(200).json({ message: 'Avatar successfully uploaded', data })
+    } catch (err) {
+        next(err)
     }
 }
 
@@ -45,21 +44,20 @@ export async function uploadAvatar(
 export async function getAvatarByUserId(
     req: Request,
     res: Response,
-    next: NextFunction,
+    next: NextFunction
 ) {
     try {
-        const userId: string = req.params.userId;
+        const userId: string = req.params.userId
 
         if (!userId) {
-            res.status(401).json({ error: 'Unauthorized' });
-            return;
+            res.status(401).json({ error: 'Unauthorized' })
+            return
         }
 
-        const data = await avatarService.getAvatarByUserId(userId);
-        res.status(200).json(data);
-    }
-    catch (err) {
-        next(err);
+        const data = await avatarService.getAvatarByUserId(userId)
+        res.status(200).json(data)
+    } catch (err) {
+        next(err)
     }
 }
 
@@ -69,21 +67,20 @@ export async function getAvatarByUserId(
 export async function getUserAvatar(
     req: Request,
     res: Response,
-    next: NextFunction,
+    next: NextFunction
 ) {
     try {
-        const userId: string = req.params.userId;
+        const userId: string = req.params.userId
 
         if (!userId) {
-            res.status(401).json({ error: 'Unauthorized' });
-            return;
+            res.status(401).json({ error: 'Unauthorized' })
+            return
         }
 
-        const data = await avatarService.getAvatarByUserId(userId);
-        res.status(200).json(data);
-    }
-    catch (err) {
-        next(err);
+        const data = await avatarService.getAvatarByUserId(userId)
+        res.status(200).json(data)
+    } catch (err) {
+        next(err)
     }
 }
 
@@ -93,20 +90,19 @@ export async function getUserAvatar(
 export async function deleteUserAvatar(
     req: Request,
     res: Response,
-    next: NextFunction,
+    next: NextFunction
 ) {
     try {
-        const userId: string = req.params.userId;
+        const userId: string = req.params.userId
 
         if (!userId) {
-            res.status(401).json({ error: 'Unauthorized' });
-            return;
+            res.status(401).json({ error: 'Unauthorized' })
+            return
         }
 
-        await avatarService.deleteAvatar(userId);
-        res.status(200).json({ message: `Avatar removed from user ${userId}` });
-    }
-    catch (err) {
-        next(err);
+        await avatarService.deleteAvatar(userId)
+        res.status(200).json({ message: `Avatar removed from user ${userId}` })
+    } catch (err) {
+        next(err)
     }
 }

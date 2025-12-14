@@ -9,7 +9,9 @@ export type ContextType = {
     user: JwtPayload | null
 }
 
-export async function createContext(opts: trpcExpress.CreateExpressContextOptions): Promise<ContextType> {
+export async function createContext(
+    opts: trpcExpress.CreateExpressContextOptions
+): Promise<ContextType> {
     let user: JwtPayload | null = null
     const authHeader = opts.req.headers.authorization
     /* eslint-disable-next-line node/prefer-global/process */
@@ -23,20 +25,18 @@ export async function createContext(opts: trpcExpress.CreateExpressContextOption
         const token = authHeader.split(' ')[1]
 
         try {
-            if (token === undefined)
-                throw new Error('Token not found')
+            if (token === undefined) throw new Error('Token not found')
 
             const payload = jwt.verify(token, secret)
 
             if (
-                typeof payload === 'object'
-                && payload !== null
-                && 'userId' in payload
+                typeof payload === 'object' &&
+                payload !== null &&
+                'userId' in payload
             ) {
                 user = payload as JwtPayload
             }
-        }
-        catch (err) {
+        } catch (err) {
             console.error('Token not valid:', (err as Error).message)
         }
     }

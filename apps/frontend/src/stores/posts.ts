@@ -72,8 +72,12 @@ export const usePostStore = defineStore('post', {
             this.loading = true
             this.error = null
             try {
-                /* @ts-ignore */
-                const response = await postService.create({ text, categories, color })
+                /* @ts-expect-error */
+                const response = await postService.create({
+                    text,
+                    categories,
+                    color,
+                })
                 this.posts.unshift(response as unknown as Post)
                 logs.showSuccess('Post created successfully')
             } catch (err: any) {

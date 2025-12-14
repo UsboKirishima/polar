@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { User } from '@/types/trpc';
+import type { User } from '@/types/trpc'
 import ListItem from './ListItem.vue'
 
 defineProps<{

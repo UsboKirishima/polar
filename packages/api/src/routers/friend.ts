@@ -12,11 +12,10 @@ export const friendRouter = t.router({
     getReceivedRequests: protectedProcedure.query(async ({ ctx }) => {
         try {
             return await friendService.getAllPendingFriendRequests(
-                ctx.user.userId,
+                ctx.user.userId
             )
-        }
-        /* eslint-disable-next-line unused-imports/no-unused-vars */
-        catch (error) {
+        } catch (error) {
+            /* eslint-disable-next-line unused-imports/no-unused-vars */
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: 'Failed to fetch received friend requests',
@@ -30,9 +29,8 @@ export const friendRouter = t.router({
     getSentRequests: protectedProcedure.query(async ({ ctx }) => {
         try {
             return await friendService.getAllSentRequests(ctx.user.userId)
-        }
-        /* eslint-disable-next-line unused-imports/no-unused-vars */
-        catch (error) {
+        } catch (error) {
+            /* eslint-disable-next-line unused-imports/no-unused-vars */
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: 'Failed to fetch sent friend requests',
@@ -46,9 +44,8 @@ export const friendRouter = t.router({
     getAll: protectedProcedure.query(async ({ ctx }) => {
         try {
             return await friendService.getAllFriendsByUserId(ctx.user.userId)
-        }
-        /* eslint-disable-next-line unused-imports/no-unused-vars */
-        catch (error) {
+        } catch (error) {
+            /* eslint-disable-next-line unused-imports/no-unused-vars */
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: 'Failed to fetch friends',
@@ -65,7 +62,7 @@ export const friendRouter = t.router({
             try {
                 const friendRequest = await friendService.createFriendRequest(
                     ctx.user.userId,
-                    input,
+                    input
                 )
 
                 if (!friendRequest.id) {
@@ -76,9 +73,8 @@ export const friendRouter = t.router({
                 }
 
                 return friendRequest
-            }
-            /* eslint-disable-next-line unused-imports/no-unused-vars */
-            catch (error) {
+            } catch (error) {
+                /* eslint-disable-next-line unused-imports/no-unused-vars */
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Error while sending friend request',
@@ -95,9 +91,8 @@ export const friendRouter = t.router({
             try {
                 await friendService.acceptFriendRequest(input, ctx.user.userId)
                 return { ok: true, message: 'Accepted friend request' }
-            }
-            /* eslint-disable-next-line unused-imports/no-unused-vars */
-            catch (error) {
+            } catch (error) {
+                /* eslint-disable-next-line unused-imports/no-unused-vars */
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to accept friend request',
@@ -114,9 +109,8 @@ export const friendRouter = t.router({
             try {
                 await friendService.denyFriendRequest(input, ctx.user.userId)
                 return { ok: true, message: 'Friend request ignored' }
-            }
-            /* eslint-disable-next-line unused-imports/no-unused-vars */
-            catch (error) {
+            } catch (error) {
+                /* eslint-disable-next-line unused-imports/no-unused-vars */
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to deny friend request',
@@ -133,9 +127,8 @@ export const friendRouter = t.router({
             try {
                 await friendService.removeFriendship(ctx.user.userId, input)
                 return { ok: true, message: 'Friend successfully removed' }
-            }
-            /* eslint-disable-next-line unused-imports/no-unused-vars */
-            catch (error) {
+            } catch (error) {
+                /* eslint-disable-next-line unused-imports/no-unused-vars */
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'Failed to remove friend',

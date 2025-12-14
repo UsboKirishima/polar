@@ -13,8 +13,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import type { trpc } from '@/trpc'
 
-export type FriendsType = Awaited<ReturnType<typeof trpc.friend.getAll.query>>;
-
+export type FriendsType = Awaited<ReturnType<typeof trpc.friend.getAll.query>>
 
 const userStore = useUserStore()
 const authStore = useAuthStore()
@@ -40,13 +39,13 @@ const formatDate = (date: Date) => {
 }
 
 const fetchPosts = async () => {
-    posts.value = await postStore.fetchAllPostsByUser(user.value!.id) as unknown as Post[];
+    posts.value = (await postStore.fetchAllPostsByUser(user.value!.id)) as unknown as Post[]
     if (!user.value) return
 }
 
 const fetchFriends = async () => {
     if (!user.value) return
-    friends.value = await userStore.getAllFriendsByUserId(user.value.id) as Friendship[];
+    friends.value = (await userStore.getAllFriendsByUserId(user.value.id)) as Friendship[]
 }
 
 onMounted(async () => await fetchUserData())
@@ -62,7 +61,7 @@ watch(
 
 async function fetchUserData() {
     try {
-        user.value = await userStore.getUserById(route.params.id as string) as User;
+        user.value = (await userStore.getUserById(route.params.id as string)) as User
         isProfilePage.value = route.params.id === authStore.user!.id
         await fetchPosts()
         await fetchFriends()
@@ -86,9 +85,20 @@ async function fetchUserData() {
             </h2>
         </div>
         <div class="container">
-            <ProfileHeader :is-profile-page="isProfilePage" :user="user" :posts="posts" :friends="friends" />
-            <ProfileContent :is-profile-page="isProfilePage" :user="user" :posts="posts" :friends="friends"
-                :comments="user!.comments || []" :likes="user!.likes || []" />
+            <ProfileHeader
+                :is-profile-page="isProfilePage"
+                :user="user"
+                :posts="posts"
+                :friends="friends"
+            />
+            <ProfileContent
+                :is-profile-page="isProfilePage"
+                :user="user"
+                :posts="posts"
+                :friends="friends"
+                :comments="user!.comments || []"
+                :likes="user!.likes || []"
+            />
         </div>
     </div>
 </template>

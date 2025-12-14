@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import * as services from '../interface'
-import { trpc } from '@/trpc'
+import type { trpc } from '@/trpc'
 import { useLogStore } from './logs'
 
 type Users = Awaited<ReturnType<typeof trpc.user.getAll.query>>

@@ -16,19 +16,21 @@ export default antfu({
 
         'ts/consistent-type-definitions': ['error', 'type'],
 
-        'perfectionist/sort-imports': ['error', {
-            tsconfigRootDir: '.',
-        }],
+        'perfectionist/sort-imports': [
+            'error',
+            {
+                tsconfigRootDir: '.',
+            },
+        ],
 
-        'unicorn/filename-case': ['error', {
-            case: 'kebabCase',
-            ignore: ['README.md'],
-        }],
+        'unicorn/filename-case': [
+            'error',
+            {
+                case: 'kebabCase',
+                ignore: ['README.md'],
+            },
+        ],
     },
 
-    ignores: [
-        'dist',
-        'node_modules',
-        '*.d.ts',
-    ],
+    ignores: ['dist', 'node_modules', '*.d.ts'],
 })

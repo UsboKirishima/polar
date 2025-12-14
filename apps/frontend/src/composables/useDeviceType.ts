@@ -22,5 +22,8 @@ export function useDeviceType() {
         window.removeEventListener('resize', updateDeviceType)
     })
 
-    return { deviceType, isMobile: computed(() => deviceType.value === 'mobile') }
+    return {
+        deviceType,
+        isMobile: computed(() => deviceType.value === 'mobile'),
+    }
 }

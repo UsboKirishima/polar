@@ -16,14 +16,20 @@ export default antfu({
 
         'ts/consistent-type-definitions': ['error', 'type'],
 
-        'perfectionist/sort-imports': ['error', {
-            tsconfigRootDir: '.',
-        }],
+        'perfectionist/sort-imports': [
+            'error',
+            {
+                tsconfigRootDir: '.',
+            },
+        ],
 
-        'unicorn/filename-case': ['error', {
-            case: 'kebabCase',
-            ignore: ['README.md', 'src/migrations/migration_lock.toml'],
-        }],
+        'unicorn/filename-case': [
+            'error',
+            {
+                case: 'kebabCase',
+                ignore: ['README.md', 'src/migrations/migration_lock.toml'],
+            },
+        ],
     },
 
     ignores: [

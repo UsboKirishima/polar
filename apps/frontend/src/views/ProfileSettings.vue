@@ -68,7 +68,7 @@ const autoResize = (e: Event) => {
 
 onMounted(async () => {
     if (authStore.user) {
-        user.value = await userStore.getUserById(authStore.user.id) as User
+        user.value = (await userStore.getUserById(authStore.user.id)) as User
         avatarPreview.value = user.value?.profile?.avatar?.url ?? ''
         bannerPreview.value = user.value?.profile?.banner?.url ?? ''
     }

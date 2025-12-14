@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { type Avatar, type Banner, type User } from '@/types/trpc'
+import type { Avatar, Banner, User } from '@/types/trpc'
 import {
     getUserAvatar,
     uploadUserAvatar,

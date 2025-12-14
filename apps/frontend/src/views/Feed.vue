@@ -13,8 +13,8 @@ import { useAuthStore } from '@/stores/auth'
 
 const friendStore = useFriendStore()
 const postStore = usePostStore()
-const userStore = useUserStore();
-const authStore = useAuthStore();
+const userStore = useUserStore()
+const authStore = useAuthStore()
 
 const feedConfig = {
     page: ref<'explore' | 'friends'>('explore'),
@@ -23,13 +23,13 @@ const feedConfig = {
 const setPage = async (page: 'explore' | 'friends') => {
     await friendStore.fetchFriends()
     await postStore.fetchAllPosts()
-    await userStore.fetchUsers();
+    await userStore.fetchUsers()
     feedConfig.page.value = page
 }
 
-const suggestions = ref<User[]>([]);
-const friends = ref<User[]>([]);
-const verified = ref<User[]>([]);
+const suggestions = ref<User[]>([])
+const friends = ref<User[]>([])
+const verified = ref<User[]>([])
 
 export interface PostAuthor {
     username: string
@@ -45,11 +45,15 @@ export interface PostComment {
 onMounted(async () => {
     await friendStore.fetchFriends()
     await postStore.fetchAllPosts()
-    await userStore.fetchUsers();
+    await userStore.fetchUsers()
 
-    suggestions.value = userStore.users?.sort((a, b) => b.friends.length - a.friends.length) as User[];
-    friends.value = userStore.users?.filter(u => u.friends.find(f => f.friendId === authStore.user?.id)) as User[];
-    verified.value = userStore.users?.filter((u) => u.role === 'ADMIN') as User[]; 
+    suggestions.value = userStore.users?.sort(
+        (a, b) => b.friends.length - a.friends.length,
+    ) as User[]
+    friends.value = userStore.users?.filter((u) =>
+        u.friends.find((f) => f.friendId === authStore.user?.id),
+    ) as User[]
+    verified.value = userStore.users?.filter((u) => u.role === 'ADMIN') as User[]
 })
 </script>
 

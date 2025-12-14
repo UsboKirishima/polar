@@ -1,5 +1,5 @@
 import * as CacheModule from '@polar/redis-manager'
-import { createClient, RedisClientType } from 'redis'
+import { createClient, type RedisClientType } from 'redis'
 
 export const redisClient: RedisClientType = createClient({
     url: process.env.REDIS_URL ?? 'redis://localhost:6379',

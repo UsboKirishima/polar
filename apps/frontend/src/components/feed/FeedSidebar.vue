@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import List from './ItemList.vue'
-import type { User } from '@/types/trpc';
+import type { User } from '@/types/trpc'
 
 defineProps<{
     friends: User[]
@@ -56,7 +56,6 @@ h2 {
     margin-bottom: 13px;
     font-size: clamp(0.8rem, 1vw + 0.5rem, 3rem);
 }
-
 
 @media (max-width: 1300px) {
     .feed-sidebar {

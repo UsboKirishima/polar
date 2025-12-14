@@ -15,7 +15,7 @@ const props = defineProps<{
     friends?: FriendsType
 }>()
 
-const parsedFriends = ref<FriendsType>([]);
+const parsedFriends = ref<FriendsType>([])
 
 const friendStore = useFriendStore()
 
@@ -24,7 +24,7 @@ onMounted(async () => {
     await friendStore.fetchFriends()
     await friendStore.fetchPendingRequests()
 
-    parsedFriends.value = props.friends as FriendsType ?? friendStore.friends as FriendsType;
+    parsedFriends.value = (props.friends as FriendsType) ?? (friendStore.friends as FriendsType)
 })
 
 // Computed properties to simplify template
@@ -81,7 +81,11 @@ const openFriend = (friendId: string) => {
 
         <div v-else-if="isRequestsPage">
             <ul v-if="friendStore.pendingRequests?.length" class="request-list">
-                <li v-for="request in friendStore.pendingRequests" :key="request.id" class="request-item">
+                <li
+                    v-for="request in friendStore.pendingRequests"
+                    :key="request.id"
+                    class="request-item"
+                >
                     <div class="indentifier" @click="openFriend(request.senderId)">
                         <Userinfo :user="request.sender as User" disable-over />
                     </div>

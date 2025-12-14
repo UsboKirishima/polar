@@ -1,15 +1,15 @@
 {
-    "extends": "@polar/typescript-config/base",
-    "compilerOptions": {
-        "composite": true,
-        "rootDir": ".",
-        "moduleResolution": "nodenext",
-        "declaration": true,
-        "declarationMap": true,
-        "outDir": "dist",
-        "sourceMap": true,
-        "skipLibCheck": true
-    },
-    "include": ["src/**/*", "*.ts"],
-    "exclude": ["dist", "node_modules", "**/*.test.ts", "**/*.spec.ts", "prisma/migrations", "generated/**"]
+  "extends": "@polar/typescript-config/base",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": ".",
+    "moduleResolution": "nodenext",
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*", "*.ts"],
+  "exclude": ["dist", "node_modules", "**/*.test.ts", "**/*.spec.ts", "prisma/migrations", "generated/**"]
 }

@@ -1,8 +1,8 @@
-import { PostBgColor } from '@polar/db'
+import type { PostBgColor } from '@polar/db'
 import {
     TPostCategory,
-    TPostCommentSchema,
-    TPostSchema,
+    type TPostCommentSchema,
+    type TPostSchema,
 } from '@polar/types/zod'
 import { db } from '@polar/db'
 import { cacheManager } from './cache.js'

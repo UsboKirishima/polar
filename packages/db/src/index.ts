@@ -17,19 +17,18 @@ const adapter = new PrismaMariaDb({
     database: url.pathname.replace(/^\//, ''),
 })
 
-export const db
-  = globalForPrisma.prisma
-      ?? new PrismaClient({
-          log:
-      /* eslint-disable-next-line node/prefer-global/process */
-      process.env.NODE_ENV === 'development'
-          ? ['query', 'error', 'warn']
-          : ['error'],
-          adapter,
-      })
+export const db =
+    globalForPrisma.prisma ??
+    new PrismaClient({
+        log:
+            /* eslint-disable-next-line node/prefer-global/process */
+            process.env.NODE_ENV === 'development'
+                ? ['query', 'error', 'warn']
+                : ['error'],
+        adapter,
+    })
 
 /* eslint-disable-next-line node/prefer-global/process */
-if (process.env.NODE_ENV !== 'production')
-    globalForPrisma.prisma = db
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
 
-export * from '@prisma/client';
+export * from '@prisma/client'

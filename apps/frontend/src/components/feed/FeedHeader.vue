@@ -3,9 +3,7 @@ defineProps<{
     currentPage: string
 }>()
 
-const emits = defineEmits<{
-    (e: 'change-page', page: 'explore' | 'friends'): void
-}>()
+const emits = defineEmits<(e: 'change-page', page: 'explore' | 'friends') => void>()
 </script>
 
 <template>

@@ -2,11 +2,18 @@
 import { ref, onMounted, Transition, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePostStore } from '@/stores/posts'
-import { type Post, type User } from '@/types/trpc'
+import type { Post, User } from '@/types/trpc'
 import { useAuthStore } from '@/stores/auth'
 import PostCard from '@/components/feed/PostCard.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faArrowLeft, faArrowRight, faCopy, faEllipsisVertical, faFlag, faTrash } from '@fortawesome/free-solid-svg-icons'
+import {
+    faArrowLeft,
+    faArrowRight,
+    faCopy,
+    faEllipsisVertical,
+    faFlag,
+    faTrash,
+} from '@fortawesome/free-solid-svg-icons'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import PageLoading from '@/components/PageLoading.vue'
@@ -20,7 +27,7 @@ const router = useRouter()
 const auth = useAuthStore()
 const postId = route.params.id as string
 
-const isOptsOpen = ref<Record<string, boolean>>({ '': false });
+const isOptsOpen = ref<Record<string, boolean>>({ '': false })
 
 const post = ref<Post | null>(null)
 const newComment = ref('')
@@ -56,7 +63,7 @@ const deleteComment = async (commentId: string) => {
 
 const handleReport = async () => {
     alert('Not yet implmented')
-    isOptsOpen.value = { '': false };
+    isOptsOpen.value = { '': false }
 }
 
 const goBack = () => {
@@ -64,27 +71,29 @@ const goBack = () => {
 }
 
 const closeMenuOnClickOutside = (event: MouseEvent) => {
-    const clickedElement = event.target as HTMLElement;
+    const clickedElement = event.target as HTMLElement
 
-    const postHeader = document.querySelector(`.post-actions`);
+    const postHeader = document.querySelector(`.post-actions`)
 
-    const optionsContainer = clickedElement.closest('.post-header')?.querySelector('.options');
+    const optionsContainer = clickedElement.closest('.post-header')?.querySelector('.options')
 
-    if (isOptsOpen.value &&
+    if (
+        isOptsOpen.value &&
         !clickedElement.closest('.options') &&
-        !clickedElement.closest('.actions')) {
-        isOptsOpen.value = { '': false };
+        !clickedElement.closest('.actions')
+    ) {
+        isOptsOpen.value = { '': false }
     }
-};
+}
 
 onMounted(async () => {
     await fetchPost()
-    document.addEventListener('click', closeMenuOnClickOutside);
-});
+    document.addEventListener('click', closeMenuOnClickOutside)
+})
 
 onUnmounted(() => {
-    document.removeEventListener('click', closeMenuOnClickOutside);
-});
+    document.removeEventListener('click', closeMenuOnClickOutside)
+})
 </script>
 
 <template>
@@ -103,27 +112,51 @@ onUnmounted(() => {
                 <h3>{{ post.comments.length }} comments</h3>
                 <div class="comment create">
                     <div class="profile">
-                        <img :src="auth.user?.profile?.avatar?.url ?? '/pfp_placeholder.png'" alt="" />
+                        <img
+                            :src="auth.user?.profile?.avatar?.url ?? '/pfp_placeholder.png'"
+                            alt=""
+                        />
                     </div>
-                    <input type="text" v-model="newComment" @keypress="handleKeyPress" placeholder="Post a comment" />
+                    <input
+                        type="text"
+                        v-model="newComment"
+                        @keypress="handleKeyPress"
+                        placeholder="Post a comment"
+                    />
                     <div class="send-btn" @click="submitComment">
                         <FontAwesomeIcon :icon="faArrowRight" />
                     </div>
                 </div>
-                <div v-for="comment in post!.comments.sort(
-                    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-                )" class="comment">
+                <div
+                    v-for="comment in post!.comments.sort(
+                        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+                    )"
+                    class="comment"
+                >
                     <div class="profile">
                         <Userinfo :user="comment.user as User" disable-over />
-                        <div class="options"
-                            @click="isOptsOpen[comment.id] === true ? isOptsOpen[comment.id] = false : isOptsOpen[comment.id] = true">
-                            <FontAwesomeIcon :icon="faEllipsisVertical" :style="{ color: '#fff' }" class="dots" />
+                        <div
+                            class="options"
+                            @click="
+                                isOptsOpen[comment.id] === true
+                                    ? (isOptsOpen[comment.id] = false)
+                                    : (isOptsOpen[comment.id] = true)
+                            "
+                        >
+                            <FontAwesomeIcon
+                                :icon="faEllipsisVertical"
+                                :style="{ color: '#fff' }"
+                                class="dots"
+                            />
                         </div>
                         <Transition name="fade-slide">
                             <div v-if="isOptsOpen[comment.id] === true" class="actions">
                                 <ul>
-                                    <li v-if="post.author.id === auth.user?.id" @click="deleteComment(comment.id)"
-                                        class="delete-act">
+                                    <li
+                                        v-if="post.author.id === auth.user?.id"
+                                        @click="deleteComment(comment.id)"
+                                        class="delete-act"
+                                    >
                                         <FontAwesomeIcon :icon="faTrash" /> Delete
                                     </li>
                                     <li class="report-act" @click="handleReport">
@@ -236,7 +269,7 @@ b {
     color: #ffffff7a;
 }
 
-.comments>.comment:last-child {
+.comments > .comment:last-child {
     border-radius: 0 0px 16px 16px;
 }
 

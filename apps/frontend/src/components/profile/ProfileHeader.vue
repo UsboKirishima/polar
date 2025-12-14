@@ -3,12 +3,7 @@ import type { Post, User } from '@/types/trpc'
 import Username from '../UserName.vue'
 import { useFriendStore } from '@/stores/friends'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import {
-    faAdd,
-    faCheck,
-    faEdit,
-    faSignOut
-} from '@fortawesome/free-solid-svg-icons'
+import { faAdd, faCheck, faEdit, faSignOut } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { onMounted, ref } from 'vue'
@@ -66,8 +61,11 @@ onMounted(async () => {
         </div>
         <div class="main">
             <div class="info">
-                <Username :username="user!.profile?.fullName || ''" :is-verified="user!.role === 'ADMIN' || false"
-                    class="username" />
+                <Username
+                    :username="user!.profile?.fullName || ''"
+                    :is-verified="user!.role === 'ADMIN' || false"
+                    class="username"
+                />
                 <p class="tag">@{{ user!.profile?.username || 'unknown' }}</p>
                 <p class="bio">
                     {{ user!.profile?.bio == 'unknown' ? 'no bio yet' : user!.profile?.bio }}

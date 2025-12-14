@@ -5,9 +5,7 @@ defineProps<{
     requestsCount: number
 }>()
 
-const emits = defineEmits<{
-    (e: 'change-page', page: 'friends' | 'requests'): void
-}>()
+const emits = defineEmits<(e: 'change-page', page: 'friends' | 'requests') => void>()
 </script>
 
 <template>

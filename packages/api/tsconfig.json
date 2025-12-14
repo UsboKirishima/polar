@@ -1,28 +1,20 @@
 {
-    "extends": "@polar/typescript-config/base",
-    "compilerOptions": {
-        "composite": true,
-        "target": "esnext",
-        "rootDir": ".",
-        "module": "nodenext",
-        "moduleResolution": "nodenext",
-        "declaration": true,
-        "declarationMap": true,
-        "emitDeclarationOnly": false,
-        "outDir": "dist",
-        "sourceMap": true,
-        "skipLibCheck": true,
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true
-    },
-    "include": [
-        "src/**/*",
-        "*.ts"
-    ],
-    "exclude": [
-        "dist",
-        "node_modules",
-        "**/*.test.ts",
-        "**/*.spec.ts"
-    ]
+  "extends": "@polar/typescript-config/base",
+  "compilerOptions": {
+    "composite": true,
+    "target": "esnext",
+    "rootDir": ".",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": false,
+    "outDir": "dist",
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["src/**/*", "*.ts"],
+  "exclude": ["dist", "node_modules", "**/*.test.ts", "**/*.spec.ts"]
 }

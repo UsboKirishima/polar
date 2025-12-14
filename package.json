@@ -21,8 +21,8 @@
     "clean": "turbo run clean && rm -rf node_modules",
     "clean:dist": "find . -name 'dist' -type d -not -path './node_modules/*' -exec rm -rf {} +",
     "clean:turbo": "rm -rf .turbo && turbo daemon stop",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
+    "format": "biome format --write .",
+    "format:check": "biome format --check .",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "turbo run build --filter='./apps/*' --filter=!@polar/frontend && changeset publish",
@@ -51,6 +51,7 @@
   },
   "packageManager": "pnpm@10.25.0",
   "devDependencies": {
+    "@biomejs/biome": "2.3.8",
     "husky": "^9.1.7",
     "prettier": "3.6.2",
     "prisma": "^7.0.0",

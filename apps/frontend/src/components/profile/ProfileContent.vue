@@ -13,7 +13,7 @@ defineProps<{
     posts: Post[]
     likes: UserLike[]
     comments: UserComment[]
-    friends: FriendsType;
+    friends: FriendsType
 }>()
 
 const view = ref<'posts' | 'friends' | 'likes' | 'comments'>('posts')
@@ -45,7 +45,12 @@ const view = ref<'posts' | 'friends' | 'likes' | 'comments'>('posts')
             <div v-if="!friends.length">
                 <p class="nch">No friends here.</p>
             </div>
-            <FriendsList v-else :current-page="'friends'" :friends="friends" :hide-remove-btn="!isProfilePage" />
+            <FriendsList
+                v-else
+                :current-page="'friends'"
+                :friends="friends"
+                :hide-remove-btn="!isProfilePage"
+            />
         </div>
         <div v-else-if="view === 'likes'" class="view">
             <div v-if="!user?.likes.length">
